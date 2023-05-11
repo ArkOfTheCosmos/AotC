@@ -1,0 +1,10 @@
+The AotC Rework is awesome, don't get me wrong, but I prefer the look of the old one WAY more. Combine that with a few other things I'd change/add, I decided to make this mod.
+If you have Calamity installed, it's craftable with shadowspec bars and the most cursed recipe you will ever see.
+
+If people are actually reading this and you find any issues or questions or whatever, ArkOfTheCosmos#6107 on discord, my DM's are open
+
+Ver 1.0.1: Fixed Prices and Reforging 
+
+Ver 1.0.2: Decreased volume of some audio effects, increased laser and star damage, increased star homing
+
+Ver 1.0.3: Fixed the laser not being able to crit, also increased stab damage

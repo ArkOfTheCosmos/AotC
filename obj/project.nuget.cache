@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "QQXThhMzJE5tfIyJommFrq38Fnxa/EeEynaIQvwVKBAzITphQKDycgBrbc3juKwcY219WfDZ2PTFO3i8RmptEQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Green Blizzard\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\AotC.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Green Blizzard\\.nuget\\packages\\tmodloader.codeassist\\0.1.5\\tmodloader.codeassist.0.1.5.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,3 @@
+displayName = The Ark of the Cosmos
+author = ArkoftheCosmos
+version = 1.0.3
