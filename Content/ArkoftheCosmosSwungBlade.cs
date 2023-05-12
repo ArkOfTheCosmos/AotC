@@ -290,7 +290,7 @@ namespace AotC.Content
                 else if (SwingType is 0f or 1f)
                 {
                     SoundEngine.PlaySound(in SoundID.DD2_MonkStaffSwing, Projectile.position);
-                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, Vector2.Zero, ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.chainDamageMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 1f).timeLeft = (int)(Projectile.timeLeft / 2f);
+                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, Projectile.velocity * 300, ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.chainDamageMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 1f).timeLeft = (int)(Projectile.timeLeft / 2f);
                 }
                 else
                 {

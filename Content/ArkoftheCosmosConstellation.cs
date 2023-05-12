@@ -29,6 +29,10 @@ namespace AotC.Content
                 {
                     return Owner.Center;
                 }
+                else if (AnchorType == 1f)
+                {
+                    return Vector2.Lerp(Projectile.Center.RotatedBy(-1, Owner.Center), Projectile.Center, 0.3f);
+                }
                 else
                 {
                     return new();
@@ -42,6 +46,10 @@ namespace AotC.Content
                 if (AnchorType == 0f)
                 {
                     return Main.MouseWorld;
+                }
+                else if (AnchorType == 1f)
+                {
+                    return Vector2.Lerp(Projectile.Center.RotatedBy(1, Owner.Center), Projectile.Center, 0.3f);
                 }
                 else
                 {
@@ -60,6 +68,12 @@ namespace AotC.Content
                     Vector2 val2 = AnchorEnd - AnchorStart;
                     return val * MathHelper.Clamp((val2).Length(), 0f, ArkoftheCosmos.MaxThrowReach);
                 }
+                else if (AnchorType == 1f)
+                {
+                    Vector2 val = (AnchorEnd - AnchorStart).SafeNormalize(Vector2.Zero);
+                    Vector2 val2 = AnchorEnd - AnchorStart;
+                    return val * val2.Length();
+                }
                 else
                 {
                     return new();
@@ -75,7 +89,7 @@ namespace AotC.Content
         public override void SetDefaults()
         {
             Projectile.DamageType = DamageClass.Melee;
-            Projectile.width = Projectile.height = 8;
+            Projectile.width = Projectile.height = 80;
             Projectile.tileCollide = false;
             Projectile.friendly = true;
             Projectile.penetrate = -1;
@@ -108,7 +122,6 @@ namespace AotC.Content
                    //particle.Color = particle.Color + CalamityUtils.HsvToRgb(Main.GlobalTimeWrappedHourly * 255 % 255, 1f, 1f);
                 }
             }
-            Projectile.Center = Owner.Center;
             /*if (!Owner.channel && Projectile.timeLeft > 20)
             {
                 Projectile.timeLeft = 20;
@@ -118,7 +131,55 @@ namespace AotC.Content
                 Projectile.Kill();
                 return;
             }
-            if (Timer % 10f == 0f)
+            if (AnchorType == 0f)
+            {
+                Projectile.Center = Owner.Center;
+                if (Timer % 10f == 0f)
+                {
+                    Particles.Clear();
+                    float num = Main.rand.NextFloat();
+                    Color val = Main.hslToRgb(num, 1f, 0.5f);
+                    Vector2 val2 = AnchorStart;
+                    Particle particle2 = new GenericSparkle(val2, Vector2.Zero, Color.White, val, Main.rand.NextFloat(1f, 1.5f), 20, 0f, 3f);
+                    BootlegSpawnParticle(particle2);
+                    Particle particle3;
+                    for (float num2 = 0f + Main.rand.NextFloat(0.2f, 0.5f); num2 < 1f; num2 += Main.rand.NextFloat(0.2f, 0.5f))
+                    {
+                        num = (num + 0.16f) % 1f;
+                        val = Main.hslToRgb(num, 1f, 0.5f);
+                        Vector2 val3 = Main.rand.NextFloat(-50f, 50f) * SizeVector.RotatedBy(1.5707963705062866).SafeNormalize(Vector2.Zero);
+                        particle2 = new GenericSparkle(AnchorStart + SizeVector * num2 + val3, Vector2.Zero, Color.White, val, Main.rand.NextFloat(1f, 1.5f), 20, 0f, 3f);
+                        BootlegSpawnParticle(particle2);
+                        particle3 = new BloomLineVFX(val2, AnchorStart + SizeVector * num2 + val3 - val2, 0.8f, val, 20, capped: true, telegraph: true);
+                        BootlegSpawnParticle(particle3);
+                        if (Main.rand.NextBool())
+                        {
+                            num = (num + 0.16f) % 1f;
+                            val = Main.hslToRgb(num, 1f, 0.5f);
+                            val3 = Main.rand.NextFloat(-50f, 50f) * SizeVector.RotatedBy(1.5707963705062866).SafeNormalize(Vector2.Zero);
+                            particle2 = new GenericSparkle(AnchorStart + SizeVector * num2 + val3, Vector2.Zero, Color.White, val, Main.rand.NextFloat(1f, 1.5f), 20, 0f, 3f);
+                            BootlegSpawnParticle(particle2);
+                            particle3 = new BloomLineVFX(val2, AnchorStart + SizeVector * num2 + val3 - val2, 0.8f, val, 20, capped: true, telegraph: true);
+                            BootlegSpawnParticle(particle3);
+                        }
+                        val2 = AnchorStart + SizeVector * num2 + val3;
+                    }
+                    num = (num + 0.16f) % 1f;
+                    val = Main.hslToRgb(num, 1f, 0.5f);
+                    particle2 = new GenericSparkle(AnchorStart + SizeVector, Vector2.Zero, Color.White, val, Main.rand.NextFloat(1f, 1.5f), 20, 0f, 3f);
+                    BootlegSpawnParticle(particle2);
+                    particle3 = new BloomLineVFX(val2, AnchorStart + SizeVector - val2, 0.8f, val, 20, capped: true);
+                    BootlegSpawnParticle(particle3);
+                }
+            }
+
+
+
+
+
+
+            //swing
+            else if (AnchorType == 1f && Timer == Projectile.ai[1])
             {
                 Particles.Clear();
                 float num = Main.rand.NextFloat();
@@ -154,7 +215,14 @@ namespace AotC.Content
                 BootlegSpawnParticle(particle2);
                 particle3 = new BloomLineVFX(val2, AnchorStart + SizeVector - val2, 0.8f, val, 20, capped: true);
                 BootlegSpawnParticle(particle3);
-            }
+            } 
+
+
+
+
+
+
+
             Vector2 val4 = Vector2.Zero;
             if (Timer > Projectile.oldPos.Length)
             {
@@ -171,6 +239,7 @@ namespace AotC.Content
                 }
             }
             Particles.RemoveAll((Particle particle) => particle.Time >= particle.Lifetime && particle.SetLifetime);
+            Projectile.Center = Owner.Center;
         }
 
         public override bool PreDraw(ref Color lightColor)
