@@ -33,6 +33,10 @@ namespace AotC.Content
                 {
                     return Vector2.Lerp(Projectile.Center.RotatedBy(-1, Owner.Center), Projectile.Center, 0.3f);
                 }
+                else if (AnchorType == 2f)
+                {
+                    return Vector2.Lerp(Projectile.Center.RotatedBy(1, Owner.Center), Projectile.Center, 0.3f);
+                }
                 else
                 {
                     return new();
@@ -51,6 +55,10 @@ namespace AotC.Content
                 {
                     return Vector2.Lerp(Projectile.Center.RotatedBy(1, Owner.Center), Projectile.Center, 0.3f);
                 }
+                else if (AnchorType == 2f)
+                {
+                    return Vector2.Lerp(Projectile.Center.RotatedBy(-1, Owner.Center), Projectile.Center, 0.3f);
+                }
                 else
                 {
                     return new();
@@ -68,7 +76,7 @@ namespace AotC.Content
                     Vector2 val2 = AnchorEnd - AnchorStart;
                     return val * MathHelper.Clamp((val2).Length(), 0f, ArkoftheCosmos.MaxThrowReach);
                 }
-                else if (AnchorType == 1f)
+                else if (AnchorType == 1f || AnchorType == 2f)
                 {
                     Vector2 val = (AnchorEnd - AnchorStart).SafeNormalize(Vector2.Zero);
                     Vector2 val2 = AnchorEnd - AnchorStart;
@@ -179,12 +187,12 @@ namespace AotC.Content
 
 
             //swing
-            else if (AnchorType == 1f && Timer == Projectile.ai[1])
+            else if (AnchorType is 1f or 2f && Timer == Projectile.ai[1])
             {
                 Particles.Clear();
                 float num = Main.rand.NextFloat();
                 Color val = Main.hslToRgb(num, 1f, 0.5f);
-                Vector2 val2 = AnchorStart;
+                Vector2 val2 = Vector2.Lerp((AnchorStart).RotatedBy(AnchorType == 1f ? -0.5f : 0.5f, Owner.Center), Owner.Center, Main.rand.NextFloat(0f, 0.5f));
                 Particle particle2 = new GenericSparkle(val2, Vector2.Zero, Color.White, val, Main.rand.NextFloat(1f, 1.5f), 20, 0f, 3f);
                 BootlegSpawnParticle(particle2);
                 Particle particle3;
@@ -192,7 +200,7 @@ namespace AotC.Content
                 {
                     num = (num + 0.16f) % 1f;
                     val = Main.hslToRgb(num, 1f, 0.5f);
-                    Vector2 val3 = Main.rand.NextFloat(-50f, 50f) * SizeVector.RotatedBy(1.5707963705062866).SafeNormalize(Vector2.Zero);
+                    Vector2 val3 = Main.rand.NextFloat(-100f, 100f) * SizeVector.RotatedBy(1.5707963705062866).SafeNormalize(Vector2.Zero);
                     particle2 = new GenericSparkle(AnchorStart + SizeVector * num2 + val3, Vector2.Zero, Color.White, val, Main.rand.NextFloat(1f, 1.5f), 20, 0f, 3f);
                     BootlegSpawnParticle(particle2);
                     particle3 = new BloomLineVFX(val2, AnchorStart + SizeVector * num2 + val3 - val2, 0.8f, val, 20, capped: true, telegraph: true);
@@ -201,7 +209,7 @@ namespace AotC.Content
                     {
                         num = (num + 0.16f) % 1f;
                         val = Main.hslToRgb(num, 1f, 0.5f);
-                        val3 = Main.rand.NextFloat(-50f, 50f) * SizeVector.RotatedBy(1.5707963705062866).SafeNormalize(Vector2.Zero);
+                        val3 = Main.rand.NextFloat(-100f, 100f) * SizeVector.RotatedBy(1.5707963705062866).SafeNormalize(Vector2.Zero);
                         particle2 = new GenericSparkle(AnchorStart + SizeVector * num2 + val3, Vector2.Zero, Color.White, val, Main.rand.NextFloat(1f, 1.5f), 20, 0f, 3f);
                         BootlegSpawnParticle(particle2);
                         particle3 = new BloomLineVFX(val2, AnchorStart + SizeVector * num2 + val3 - val2, 0.8f, val, 20, capped: true, telegraph: true);
@@ -211,9 +219,10 @@ namespace AotC.Content
                 }
                 num = (num + 0.16f) % 1f;
                 val = Main.hslToRgb(num, 1f, 0.5f);
-                particle2 = new GenericSparkle(AnchorStart + SizeVector, Vector2.Zero, Color.White, val, Main.rand.NextFloat(1f, 1.5f), 20, 0f, 3f);
+                float val5 = Main.rand.NextFloat(0f, 0.5f);
+                particle2 = new GenericSparkle(Vector2.Lerp((AnchorStart + SizeVector).RotatedBy(AnchorType == 1f ? 0.5f : -0.5f, Owner.Center), Owner.Center, val5), Vector2.Zero, Color.White, val, Main.rand.NextFloat(1f, 1.5f), 20, 0f, 3f);
                 BootlegSpawnParticle(particle2);
-                particle3 = new BloomLineVFX(val2, AnchorStart + SizeVector - val2, 0.8f, val, 20, capped: true);
+                particle3 = new BloomLineVFX(val2, Vector2.Lerp((AnchorStart + SizeVector).RotatedBy(AnchorType == 1f ? 0.5f : -0.5f, Owner.Center), Owner.Center, val5) - val2, 0.8f, val, 20, capped: true);
                 BootlegSpawnParticle(particle3);
             } 
 
