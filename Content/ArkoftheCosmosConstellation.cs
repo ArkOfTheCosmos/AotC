@@ -13,6 +13,8 @@ namespace AotC.Content
     {
         public List<Particle> Particles;
 
+        public float randRot = Main.rand.NextFloat(-MathHelper.Pi, MathHelper.Pi);
+
         public override string Texture => "AotC/Content/InvisibleProj";
 
         public Player Owner => Main.player[Projectile.owner];
@@ -25,7 +27,7 @@ namespace AotC.Content
         {
             get
             {
-                if (AnchorType == 0f)
+                if (AnchorType is 0f or 4f)
                 {
                     return Owner.Center;
                 }
@@ -36,6 +38,10 @@ namespace AotC.Content
                 else if (AnchorType == 2f)
                 {
                     return Vector2.Lerp(Projectile.Center.RotatedBy(1, Owner.Center), Projectile.Center, 0.3f);
+                }
+                else if (AnchorType == 3f)
+                {
+                    return Projectile.Center;
                 }
                 else
                 {
@@ -59,6 +65,15 @@ namespace AotC.Content
                 {
                     return Vector2.Lerp(Projectile.Center.RotatedBy(-1, Owner.Center), Projectile.Center, 0.3f);
                 }
+                else if (AnchorType == 3f)
+                {
+                    return Projectile.Center + Projectile.velocity * 1000f;
+                }
+                else if (AnchorType == 4f)
+                {
+                    Main.NewText(Owner.Center + new Vector2(1, 1));
+                    return Owner.Center + new Vector2(1,1).RotatedBy(randRot, Owner.Center);
+                }
                 else
                 {
                     return new();
@@ -74,13 +89,13 @@ namespace AotC.Content
                 {
                     Vector2 val = (AnchorEnd - AnchorStart).SafeNormalize(Vector2.Zero);
                     Vector2 val2 = AnchorEnd - AnchorStart;
-                    return val * MathHelper.Clamp((val2).Length(), 0f, ArkoftheCosmos.MaxThrowReach);
+                    return val * MathHelper.Clamp(val2.Length(), 0f, ArkoftheCosmos.MaxThrowReach);
                 }
-                else if (AnchorType == 1f || AnchorType == 2f)
+                else if (AnchorType is 1f or 2f or 3f or 4f)
                 {
                     Vector2 val = (AnchorEnd - AnchorStart).SafeNormalize(Vector2.Zero);
                     Vector2 val2 = AnchorEnd - AnchorStart;
-                    return val * val2.Length();
+                    return val * MathHelper.Clamp(val2.Length(), 0f, ArkoftheCosmos.MaxThrowReach * 3f);
                 }
                 else
                 {
@@ -135,11 +150,18 @@ namespace AotC.Content
                 Projectile.Kill();
                 return;
             }
-            if (AnchorType == 0f)
+            if (AnchorType is 0f or 3f or 4f)
             {
-                Projectile.Center = Owner.Center;
+                if (!(AnchorType == 3f))
+                {
+                    Projectile.Center = Owner.Center;
+                }     
                 if (Timer % 10f == 0f)
                 {
+                    if (AnchorType == 4f)
+                    {
+                        randRot = Main.rand.NextFloat(-MathHelper.Pi, MathHelper.Pi);
+                    }
                     Particles.Clear();
                     float num = Main.rand.NextFloat();
                     Color val = Main.hslToRgb(num, 1f, 0.5f);
@@ -244,7 +266,10 @@ namespace AotC.Content
                 }
             }
             Particles.RemoveAll((Particle particle) => particle.Time >= particle.Lifetime && particle.SetLifetime);
-            Projectile.Center = Owner.Center;
+            if (!(AnchorType == 3f))
+            {
+                Projectile.Center = Owner.Center;
+            }
         }
 
         public override bool PreDraw(ref Color lightColor)

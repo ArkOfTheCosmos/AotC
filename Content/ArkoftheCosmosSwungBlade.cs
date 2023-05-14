@@ -186,7 +186,6 @@ namespace AotC.Content
         //setting defaults
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Ark of the Cosmos");
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 10;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
         }
@@ -281,10 +280,12 @@ namespace AotC.Content
                 {
                     Projectile.localNPCHitCooldown = (int)(Projectile.localNPCHitCooldown / 4f);
                     SoundEngine.PlaySound(in Sounds.AotCAudio.Slash, Projectile.position);
+                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, Projectile.velocity * 300, ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.chainDamageMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 4f).timeLeft = Projectile.timeLeft;
                 }
                 else if (SwingType == 3f)
                 {
                     Projectile.damage *= 3;
+                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, Projectile.velocity, ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.chainDamageMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 3f).timeLeft = Projectile.timeLeft;
                 }
 
                 else if (SwingType is 0f or 1f)
@@ -357,17 +358,17 @@ namespace AotC.Content
                 if (Owner.whoAmI == Main.myPlayer && (Projectile.timeLeft - 30) % Math.Ceiling((double)(MaxThrowTime / 3)) == 0.0)
                 {
                     float f = Projectile.rotation - (float)Math.PI * 23f / 80f * Owner.direction;
-                    float val2 = Main.rand.NextFloat(-(float)Math.PI/2, (float)Math.PI/2);
+                    float val2 = Main.rand.NextFloat(-(float)Math.PI / 2, (float)Math.PI / 2);
                     for (int i = 0; i < 8; i++)
                     {
-                        Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Projectile.Center + f.ToRotationVector2() * 10f, (val2 + i * (float)Math.PI/4f).ToRotationVector2() * 20f, ModContent.ProjectileType<EonBolt>(), (int)(ArkoftheCosmos.SwirlBoltDamageMultiplier / ArkoftheCosmos.SwirlBoltAmount * Projectile.damage), 0f, Owner.whoAmI, 0.55f, (float)Math.PI / 20f).timeLeft = 100;
+                        Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Projectile.Center + f.ToRotationVector2() * 10f, (val2 + i * (float)Math.PI / 4f).ToRotationVector2() * 20f, ModContent.ProjectileType<EonBolt>(), (int)(ArkoftheCosmos.SwirlBoltDamageMultiplier / ArkoftheCosmos.SwirlBoltAmount * Projectile.damage), 0f, Owner.whoAmI, 0.55f, (float)Math.PI / 20f).timeLeft = 100;
                         SoundEngine.PlaySound(in SoundID.Item9, Projectile.position);
                     }
                 }
                 if (Math.Abs(ThrowCompletion - 0.2f + 0.1f) <= 0.005f && ChanceMissed == 0f && Main.myPlayer == Owner.whoAmI)
                 {
                     //GeneralParticleHandler.SpawnParticle(new PulseRing(Projectile.Center, Vector2.get_Zero(), Color.get_OrangeRed(), 0.05f, 1.8f, 8));
-                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, Vector2.Zero, ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.chainDamageMultiplier), 0f, Owner.whoAmI,(int)(Projectile.timeLeft / 2f), 0f).timeLeft = (int)(Projectile.timeLeft / 2f);
+                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, Vector2.Zero, ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.chainDamageMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 0f).timeLeft = (int)(Projectile.timeLeft / 2f);
                 }
                 //Projectile.Center = Vector2.Lerp(Projectile.Center, Main.CurrentPan, 0.025f * ThrowRatio());
                 Projectile.Center = Projectile.Center.MoveTowards(Main.MouseWorld, 40f * ThrowRatio());

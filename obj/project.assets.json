@@ -31,19 +31,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\bendu\\.nuget\\packages\\": {}
+    "C:\\Users\\Green Blizzard\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\bendu\\OneDrive\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\AotC.csproj",
+      "projectUniqueName": "C:\\Users\\Green Blizzard\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\AotC.csproj",
       "projectName": "AotC",
-      "projectPath": "C:\\Users\\bendu\\OneDrive\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\AotC.csproj",
-      "packagesPath": "C:\\Users\\bendu\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\bendu\\OneDrive\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\obj\\",
+      "projectPath": "C:\\Users\\Green Blizzard\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\AotC.csproj",
+      "packagesPath": "C:\\Users\\Green Blizzard\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Green Blizzard\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\bendu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Green Blizzard\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -80,8 +80,7 @@
           "net47",
           "net471",
           "net472",
-          "net48",
-          "net481"
+          "net48"
         ],
         "assetTargetFallback": true,
         "warn": true,
@@ -90,7 +89,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.301\\RuntimeIdentifierGraph.json"
       }
     }
   }

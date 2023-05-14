@@ -51,7 +51,7 @@ public class EonBolt : ModProjectile
         base.Projectile.timeLeft = 160;
         base.Projectile.DamageType = DamageClass.Melee;
         base.Projectile.tileCollide = false;
-        Projectile.scale = 1.3f;
+        Projectile.scale = 1.1f;
     }
 
     public void BootlegSpawnParticle(Particle particle)
@@ -72,7 +72,7 @@ public class EonBolt : ModProjectile
         base.Projectile.rotation = base.Projectile.velocity.ToRotation() + (float)Math.PI / 2f;
         if (Head == null)
         {
-            Particle particle2 = new GenericSparkle(Projectile.Center, Vector2.Zero, Color.White, Color.Plum, 2f, 2, 0.06f, 3f, needed: true);
+            Particle particle2 = new GenericSparkle(Projectile.Center, Vector2.Zero, Color.White, Color.White, 2f, 2, 0.1f, 3f, needed: true);
             BootlegSpawnParticle(particle2);
             Head = new GenericSparkle(base.Projectile.Center, Vector2.Zero, Color.White, Main.hslToRgb(Hue, 100f, 50f), 1.2f, 2, 0.06f, 3f, needed : true);     
         }
@@ -149,10 +149,16 @@ public class EonBolt : ModProjectile
         if (Particles != null)
         {
             Main.spriteBatch.EnterShaderRegion(BlendState.Additive);
+            foreach (GenericSparkle particle in Particles)
+            {
+                particle.Bloom = CalamityUtils.HsvToRgb(Main.GlobalTimeWrappedHourly, 1f, 1f);
+                particle.Color = CalamityUtils.HsvToRgb(Main.GlobalTimeWrappedHourly, 1f, 1f);
+            }
             foreach (Particle particle in Particles)
             {
                 particle.CustomDraw(Main.spriteBatch);
             }
+
             Main.spriteBatch.ExitShaderRegion();
         }
         rotation += 0.2f;

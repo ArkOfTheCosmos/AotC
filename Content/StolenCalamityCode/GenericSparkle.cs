@@ -15,7 +15,7 @@ public class GenericSparkle : Particle
 
     private float opacity;
 
-    private Color Bloom;
+    public Color Bloom;
 
     private float BloomScale;
 
