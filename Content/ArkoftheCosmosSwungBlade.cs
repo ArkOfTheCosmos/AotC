@@ -549,7 +549,7 @@ namespace AotC.Content
             Texture2D value3 = ModContent.Request<Texture2D>("AotC/Content/Particles/CircularSmearSmokey", (AssetRequestMode)2).Value;
             Main.spriteBatch.End();
             Main.spriteBatch.Begin((SpriteSortMode)1, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
-            Color val5 = CalamityUtils.HsvToRgb(Main.GlobalTimeWrappedHourly * 255 % 255, 1f, 1f) * (MathHelper.Clamp((float)Math.Sin((double)((ThrowRatio() - 0.2f) * (float)Math.PI)), 0f, 1f) * 0.7f);
+            Color val5 = CalamityUtils.HsvToRgb(Main.GlobalTimeWrappedHourly, 1f, 1f) * (MathHelper.Clamp((float)Math.Sin((double)((ThrowRatio() - 0.2f) * (float)Math.PI)), 0f, 1f) * 0.7f);
 
             Main.EntitySpriteDraw(value3, Projectile.Center - Main.screenPosition, null, val5, Projectile.rotation - (float)Math.PI * 7f / 8f, value3.Size() / 2f, Projectile.scale * 1.5f, 0, 0);
             Main.spriteBatch.End();

@@ -9,11 +9,15 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.Graphics.Renderers;
+using System.Collections.Generic;
 
 namespace AotC.Content;
 
 public class Beam : BaseLaserbeamProjectile
 {
+
+    public List<Particle> Particles;
 
     public override string Texture => "AotC/Assets/Textures/Beam";
 
@@ -116,6 +120,7 @@ public class Beam : BaseLaserbeamProjectile
     }
     public override bool PreDraw(ref Color lightColor)
     {
+        lightColor.A = 255;
         float scale = Projectile.scale;
         Rectangle val = LaserBeginTexture.Frame(1, Main.projFrames[base.Projectile.type], 0, 0);
         Rectangle val2 = LaserMiddleTexture.Frame(1, Main.projFrames[base.Projectile.type], 0, 0);
@@ -124,13 +129,30 @@ public class Beam : BaseLaserbeamProjectile
         float laserLength = LaserLength;
         laserLength -= (float)(val.Height / 2 + val3.Height) * scale;
         Vector2 center = base.Projectile.Center;
+
+
+
+        Particle particle3 = new BloomLineVFX(Projectile.Center, (Projectile.rotation + (float)Math.PI / 2f).ToRotationVector2() * 1000, Projectile.scale, CalamityUtils.HsvToRgb(Main.GlobalTimeWrappedHourly, 1f, 1f), 20, capped: true);
+        if (!Main.dedServ)
+        {
+            particle3.Type = GeneralParticleHandler.particleTypes[particle3.GetType()];
+        }
+        Main.spriteBatch.EnterShaderRegion(BlendState.Additive);
+        particle3.CustomDraw(Main.spriteBatch);
+        Main.spriteBatch.ExitShaderRegion();
+
+
+
         if (laserLength > 0f)
         {
             float num = (float)val2.Height * scale;
             float num2 = 0f;
             while (num2 + 1f < laserLength)
             {
-                Main.EntitySpriteDraw(LaserMiddleTexture, center - Main.screenPosition, val2, lightColor, base.Projectile.rotation, (float)LaserMiddleTexture.Width * 0.5f * Vector2.UnitX, scale, (SpriteEffects)0, 0);
+
+                Texture2D FinalTexture = CalamityUtils.ShiftHue(LaserMiddleTexture, -Main.GlobalTimeWrappedHourly * 5f % 1 + 1);
+                //Main.EntitySpriteDraw(LaserMiddleTexture, center - Main.screenPosition, val2, lightColor, base.Projectile.rotation, (float)LaserMiddleTexture.Width * 0.5f * Vector2.UnitX, scale, (SpriteEffects)0, 0);
+                Main.spriteBatch.Draw(FinalTexture, center - Main.screenPosition, val2, Color.White, base.Projectile.rotation, (float)LaserMiddleTexture.Width * 0.5f * Vector2.UnitX, scale, (SpriteEffects)0, 0);
                 num2 += num;
             }
         }
@@ -148,8 +170,12 @@ public class Beam : BaseLaserbeamProjectile
 
         bool flag = Projectile.direction < 0;
         Texture2D value = ModContent.Request<Texture2D>("AotC/Assets/Textures/BeamWave").Value;
-        Main.EntitySpriteDraw(value, center - Main.screenPosition, null, lightColor, Projectile.rotation, new Vector2(8,0 - ear % 14), Projectile.scale, 0, 0);
-        ear++;
+        Main.spriteBatch.Draw(value, center - Main.screenPosition, null, Color.White, Projectile.rotation, new Vector2(8,0 - ear % 14), Projectile.scale, 0, 0);
+        ear += 3;
+
+
+        
+
         return false;
     }
 }

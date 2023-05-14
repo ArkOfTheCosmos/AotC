@@ -3,7 +3,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
+using System.Collections.Generic;
 using Terraria;
+using Terraria.Graphics.Renderers;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -14,6 +16,8 @@ public class EonBolt : ModProjectile
 {
 
     Random rand = new Random();
+
+    public List<Particle> Particles;
 
     internal PrimitiveTrail TrailDrawer;
 
@@ -50,19 +54,34 @@ public class EonBolt : ModProjectile
         Projectile.scale = 1.3f;
     }
 
+    public void BootlegSpawnParticle(Particle particle)
+    {
+        if (!Main.dedServ)
+        {
+            Particles.Add(particle);
+            particle.Type = GeneralParticleHandler.particleTypes[particle.GetType()];
+        }
+    }
+
     public override void AI()
     {
+        if (Particles == null)
+        {
+            Particles = new List<Particle>();
+        }
         base.Projectile.rotation = base.Projectile.velocity.ToRotation() + (float)Math.PI / 2f;
         if (Head == null)
         {
-            //Head = new GenericSparkle(base.Projectile.Center, Vector2.Zero, Color.White, Main.hslToRgb(Hue, 100f, 50f), 1.2f, 2, 0.06f, 3f, needed: true);
-            //GeneralParticleHandler.SpawnParticle(Head);
+            Particle particle2 = new GenericSparkle(Projectile.Center, Vector2.Zero, Color.White, Color.Plum, 2f, 2, 0.06f, 3f, needed: true);
+            BootlegSpawnParticle(particle2);
+            Head = new GenericSparkle(base.Projectile.Center, Vector2.Zero, Color.White, Main.hslToRgb(Hue, 100f, 50f), 1.2f, 2, 0.06f, 3f, needed : true);     
         }
         else
         {
-            Head.Position = base.Projectile.Center + base.Projectile.velocity * 0.5f;
-            Head.Time = 0;
-            Head.Scale += (float)Math.Sin((double)(Main.GlobalTimeWrappedHourly * 6f)) * 0.02f * base.Projectile.scale;
+            //Head.Position = base.Projectile.Center + base.Projectile.velocity * 0.5f;
+            //Head.Time = 0;
+            //Head.Scale += (float)Math.Sin((double)(Main.GlobalTimeWrappedHourly * 6f)) * base.Projectile.scale;
+            Head.Update();        
         }
         if (target == null)
         {
@@ -81,7 +100,10 @@ public class EonBolt : ModProjectile
                 base.Projectile.velocity = f.ToRotationVector2() * Projectile.velocity.Length() * 0.995f;
             }
         }
-        Lighting.AddLight(base.Projectile.Center, 0.75f, 1f, 0.24f);  //fix this later
+        Color val = new(0.75f, 1f, 0.24f);
+        CalamityUtils.ColorToHSV(val, out float h, out float s, out float v);
+        val = CalamityUtils.HsvToRgb(h + Main.GlobalTimeWrappedHourly % 1, s, v);
+        Lighting.AddLight(base.Projectile.Center, val.R / 255f, val.G / 255f, val.B / 255f);
         /*if (Main.rand.Next(2) == 0)
 		{
 			GeneralParticleHandler.SpawnParticle(new HeavySmokeParticle(base.Projectile.Center, base.Projectile.velocity * 0.5f, Color.Lerp(Color.DodgerBlue, Color.MediumVioletRed, (float)Math.Sin((double)(Main.GlobalTimeWrappedHourly * 6f))), 20, Main.rand.NextFloat(0.6f, 1.2f) * base.Projectile.scale, 0.28f, 0f, glowing: false, 0f, required: true));
@@ -90,16 +112,23 @@ public class EonBolt : ModProjectile
 				GeneralParticleHandler.SpawnParticle(new HeavySmokeParticle(base.Projectile.Center, base.Projectile.velocity * 0.5f, Main.hslToRgb(Hue, 1f, 0.7f), 15, Main.rand.NextFloat(0.4f, 0.7f) * base.Projectile.scale, 0.8f, 0f, glowing: true, 0.05f, required: true));
 			}
 		}*/
+        foreach (Particle particle4 in Particles)
+        {
+            if (particle4 != null)
+            {
+                particle4.Position = Projectile.Center + Projectile.velocity;
+                particle4.Lifetime = Projectile.timeLeft;
+                particle4.Time = particle4.Lifetime / 2;
+                particle4.Update();
+            }
+        }
+        Particles.RemoveAll((Particle particle) => particle.Time >= particle.Lifetime && particle.SetLifetime);
+
     }
 
     internal Color ColorFunction(float completionRatio)
     {
-        float num = MathHelper.Lerp(0.65f, 1f, (float)Math.Cos((double)((0f - Main.GlobalTimeWrappedHourly) * 3f)) * 0.5f + 0.5f);
-        float num2 = Utils.GetLerpValue(1f, 0.64f, completionRatio, clamped: true) * base.Projectile.Opacity;
-        Color gay = CalamityUtils.HsvToRgb(Main.GlobalTimeWrappedHourly * 255 % 255, 1f, 1f);
-
-        //return Color.Lerp(Color.White, gay, num) * num2;
-        return gay;
+        return CalamityUtils.HsvToRgb(Main.GlobalTimeWrappedHourly, 1f, 1f); ;
     }
 
     internal float WidthFunction(float completionRatio)
@@ -110,15 +139,30 @@ public class EonBolt : ModProjectile
 
     public override bool PreDraw(ref Color lightColor)
     {
+        
         if (TrailDrawer == null)
         {
             TrailDrawer = new PrimitiveTrail(WidthFunction, ColorFunction, null, GameShaders.Misc["CalamityMod:TrailStreak"]);
         }
         GameShaders.Misc["CalamityMod:TrailStreak"].SetShaderTexture(ModContent.Request<Texture2D>("AotC/Content/ScarletDevilStreak", (AssetRequestMode)2));
         TrailDrawer.Draw(base.Projectile.oldPos, base.Projectile.Size * 0.5f - Main.screenPosition, 30);
-        Texture2D value = ModContent.Request<Texture2D>("AotC/Content/TestStar", (AssetRequestMode)2).Value;
-        Main.EntitySpriteDraw(value, base.Projectile.Center - Main.screenPosition, null, Color.Lerp(lightColor, Color.White, 0.5f), base.Projectile.rotation + rotation, value.Size() / 2f, base.Projectile.scale, 0, 0);
+        if (Particles != null)
+        {
+            Main.spriteBatch.EnterShaderRegion(BlendState.Additive);
+            foreach (Particle particle in Particles)
+            {
+                particle.CustomDraw(Main.spriteBatch);
+            }
+            Main.spriteBatch.ExitShaderRegion();
+        }
         rotation += 0.2f;
         return false;
+    }
+
+    public override void PostDraw(Color lightColor)
+    {
+        Texture2D value = ModContent.Request<Texture2D>("AotC/Content/TestStar", (AssetRequestMode)2).Value;
+        Main.EntitySpriteDraw(value, base.Projectile.Center - Main.screenPosition, null, Color.Lerp(lightColor, Color.White, 0.5f), base.Projectile.rotation + rotation, value.Size() / 2f, base.Projectile.scale, 0, 0);
+
     }
 }

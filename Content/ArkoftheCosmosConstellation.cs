@@ -125,10 +125,6 @@ namespace AotC.Content
             if (Particles == null)
             {
                 Particles = new List<Particle>();
-                foreach (Particle particle in Particles)
-                {
-                   //particle.Color = particle.Color + CalamityUtils.HsvToRgb(Main.GlobalTimeWrappedHourly * 255 % 255, 1f, 1f);
-                }
             }
             /*if (!Owner.channel && Projectile.timeLeft > 20)
             {

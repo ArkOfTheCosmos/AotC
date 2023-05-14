@@ -347,44 +347,129 @@ public static class CalamityUtils
 		projectionMatrix = Matrix.CreateOrthographicOffCenter(0f, (float)width * zoom.X, 0f, (float)height * zoom.Y, 0f, 1f) * val;
 	}
 
-	public static Color HsvToRgb(double h, double s, double v)
-	{
-		int hi = (int)Math.Floor(h / 60.0) % 6;
-		double f = (h / 60.0) - Math.Floor(h / 60.0);
 
-		double p = v * (1.0 - s);
-		double q = v * (1.0 - (f * s));
-		double t = v * (1.0 - ((1.0 - f) * s));
 
-		Color ret;
 
-		switch (hi)
-		{
-			case 0:
-				ret = GetRgb(v, t, p);
-				break;
-			case 1:
-				ret = GetRgb(q, v, p);
-				break;
-			case 2:
-				ret = GetRgb(p, v, t);
-				break;
-			case 3:
-				ret = GetRgb(p, q, v);
-				break;
-			case 4:
-				ret = GetRgb(t, p, v);
-				break;
-			case 5:
-				ret = GetRgb(v, p, q);
-				break;
-			default:
-				ret = new Color(1f, 0f, 0f, 0f);
-				break;
-		}
-		return ret;
-	}
-	public static Color GetRgb(double r, double g, double b)
+
+
+
+
+    public static Color HsvToRgb(float h, float s, float v)
+    {
+        int hi = (int)Math.Floor(h * 6);
+        float f = h * 6 - hi;
+        float p = v * (1 - s);
+        float q = v * (1 - f * s);
+        float t = v * (1 - (1 - f) * s);
+
+        switch (hi % 6)
+        {
+            case 0:
+                return new Color(v, t, p);
+            case 1:
+                return new Color(q, v, p);
+            case 2:
+                return new Color(p, v, t);
+            case 3:
+                return new Color(p, q, v);
+            case 4:
+                return new Color(t, p, v);
+            default:
+                return new Color(v, p, q);
+        }
+    }
+
+    public static void ColorToHSV(Color color, out float h, out float s, out float v)
+    {
+        float r = color.R / 255.0f;
+        float g = color.G / 255.0f;
+        float b = color.B / 255.0f;
+
+        float min = Math.Min(Math.Min(r, g), b);
+        float max = Math.Max(Math.Max(r, g), b);
+        float delta = max - min;
+
+        // Calculate the value
+        v = max;
+
+        // Calculate the saturation
+        if (max != 0)
+        {
+            s = delta / max;
+        }
+        else
+        {
+            s = 0;
+            h = -1;
+            return;
+        }
+
+        // Calculate the hue
+        if (delta == 0)
+        {
+            h = 0;
+        }
+        else if (r == max)
+        {
+            h = (g - b) / delta;
+        }
+        else if (g == max)
+        {
+            h = 2 + (b - r) / delta;
+        }
+        else
+        {
+            h = 4 + (r - g) / delta;
+        }
+
+        h /= 6;
+        if (h < 0)
+        {
+            h += 1;
+        }
+    }
+
+
+    public static Texture2D ShiftHue(Texture2D originalTexture, float hueShift)
+    {
+        int width = originalTexture.Width;
+        int height = originalTexture.Height;
+
+        Color[] originalColors = new Color[width * height];
+        originalTexture.GetData(originalColors);
+
+        Color[] shiftedColors = new Color[width * height];
+
+        for (int i = 0; i < originalColors.Length; i++)
+        {
+            Color originalColor = originalColors[i];
+
+            float h, s, v;
+            ColorToHSV(originalColor, out h, out s, out v);
+
+            // Shift the hue
+            h = (h + hueShift) % 1.0f;
+
+            Color shiftedColor = HsvToRgb(h, s, v);
+			shiftedColor.A = originalColor.A;
+            shiftedColors[i] = shiftedColor;
+        }
+
+        Texture2D shiftedTexture = new Texture2D(originalTexture.GraphicsDevice, width, height);
+        shiftedTexture.SetData(shiftedColors);
+
+        return shiftedTexture;
+    }
+
+
+
+
+
+
+
+
+
+    public static Color GetRgb(double r, double g, double b)
 	{
 		return new Color((byte)(r * 255.0), (byte)(g * 255.0), (byte)(b * 255.0), 255);
 	}
