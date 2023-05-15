@@ -280,7 +280,11 @@ namespace AotC.Content
                 {
                     Projectile.localNPCHitCooldown = (int)(Projectile.localNPCHitCooldown / 4f);
                     SoundEngine.PlaySound(in Sounds.AotCAudio.Slash, Projectile.position);
-                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, Projectile.velocity * 300, ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.chainDamageMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 4f).timeLeft = Projectile.timeLeft;
+                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, new Vector2(1f,1f).RotatedBy(Math.PI / 2.5f * 0f), ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.chainDamageMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 4f).timeLeft = Projectile.timeLeft - 15;
+                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, new Vector2(1f,1f).RotatedBy(Math.PI / 2.5f * 1f), ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.chainDamageMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 4f).timeLeft = Projectile.timeLeft - 15;
+                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, new Vector2(1f,1f).RotatedBy(Math.PI / 2.5f * 2f), ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.chainDamageMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 4f).timeLeft = Projectile.timeLeft - 15;
+                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, new Vector2(1f,1f).RotatedBy(Math.PI / 2.5f * 3f), ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.chainDamageMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 4f).timeLeft = Projectile.timeLeft - 15;
+                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, new Vector2(1f,1f).RotatedBy(Math.PI / 2.5f * 4f), ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.chainDamageMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 4f).timeLeft = Projectile.timeLeft - 15;
                 }
                 else if (SwingType == 3f)
                 {

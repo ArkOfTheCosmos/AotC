@@ -13,7 +13,11 @@ namespace AotC.Content
     {
         public List<Particle> Particles;
 
-        public float randRot = Main.rand.NextFloat(-MathHelper.Pi, MathHelper.Pi);
+        public int frick = 0;
+
+        public Vector2 idk = new Vector2(69,69);
+
+        public double randRot = Main.rand.NextFloat(0f, MathHelper.Pi / 2.5f);
 
         public override string Texture => "AotC/Content/InvisibleProj";
 
@@ -69,10 +73,9 @@ namespace AotC.Content
                 {
                     return Projectile.Center + Projectile.velocity * 1000f;
                 }
-                else if (AnchorType == 4f)
+                else if (AnchorType == 4f)      
                 {
-                    Main.NewText(Owner.Center + new Vector2(1, 1));
-                    return Owner.Center + new Vector2(1,1).RotatedBy(randRot, Owner.Center);
+                    return Owner.Center + idk.RotatedBy(randRot) * 300f;
                 }
                 else
                 {
@@ -91,11 +94,17 @@ namespace AotC.Content
                     Vector2 val2 = AnchorEnd - AnchorStart;
                     return val * MathHelper.Clamp(val2.Length(), 0f, ArkoftheCosmos.MaxThrowReach);
                 }
-                else if (AnchorType is 1f or 2f or 3f or 4f)
+                else if (AnchorType is 1f or 2f or 3f)
                 {
                     Vector2 val = (AnchorEnd - AnchorStart).SafeNormalize(Vector2.Zero);
                     Vector2 val2 = AnchorEnd - AnchorStart;
                     return val * MathHelper.Clamp(val2.Length(), 0f, ArkoftheCosmos.MaxThrowReach * 3f);
+                }
+                if (AnchorType == 4f)
+                {
+                    Vector2 val = (AnchorEnd - AnchorStart).SafeNormalize(Vector2.Zero);
+                    Vector2 val2 = AnchorEnd - AnchorStart;
+                    return val * MathHelper.Clamp(val2.Length(), 0f, ArkoftheCosmos.MaxThrowReach);
                 }
                 else
                 {
@@ -137,6 +146,11 @@ namespace AotC.Content
 
         public override void AI()
         {
+            if (idk == new Vector2 (69,69) && AnchorType == 4f)
+            {
+                idk = Projectile.velocity;
+                Projectile.velocity = Vector2.Zero;
+            }
             if (Particles == null)
             {
                 Particles = new List<Particle>();
@@ -152,16 +166,17 @@ namespace AotC.Content
             }
             if (AnchorType is 0f or 3f or 4f)
             {
-                if (!(AnchorType == 3f))
+                if (AnchorType != 3f)
                 {
                     Projectile.Center = Owner.Center;
                 }     
-                if (Timer % 10f == 0f)
+                if (Timer % 10f == 0f && frick < 3)
                 {
                     if (AnchorType == 4f)
                     {
-                        randRot = Main.rand.NextFloat(-MathHelper.Pi, MathHelper.Pi);
+                        frick++;
                     }
+                    randRot = Main.rand.NextFloat(0f, MathHelper.Pi / 2.5f);
                     Particles.Clear();
                     float num = Main.rand.NextFloat();
                     Color val = Main.hslToRgb(num, 1f, 0.5f);
@@ -251,7 +266,7 @@ namespace AotC.Content
 
 
             Vector2 val4 = Vector2.Zero;
-            if (Timer > Projectile.oldPos.Length)
+            if (Timer > Projectile.oldPos.Length || AnchorType == 4f)
             {
                 val4 = Projectile.position - Projectile.oldPos[0];
             }
