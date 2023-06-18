@@ -487,4 +487,27 @@ public static class CalamityUtils
 		spriteBatch.End();
 		spriteBatch.Begin((SpriteSortMode)0, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, (Effect)null, Main.GameViewMatrix.TransformationMatrix);
 	}
+
+	public static Texture2D FlipHorizontal(this Texture2D texture)
+	{
+		Texture2D flippedTexture = new Texture2D(texture.GraphicsDevice, texture.Width, texture.Height);
+		Color[] data = new Color[texture.Width * texture.Height];
+		texture.GetData(data);
+		flippedTexture.SetData(data);
+
+		for (int y = 0; y < texture.Height; y++)
+		{
+			for (int x = 0; x < texture.Width / 2; x++)
+			{
+				int leftIndex = y * texture.Width + x;
+				int rightIndex = y * texture.Width + (texture.Width - x - 1);
+				Color temp = data[leftIndex];
+				data[leftIndex] = data[rightIndex];
+				data[rightIndex] = temp;
+			}
+		}
+
+		flippedTexture.SetData(data);
+		return flippedTexture;
+	}
 }

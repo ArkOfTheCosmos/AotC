@@ -75,7 +75,7 @@ namespace AotC.Content
                 }
                 else if (AnchorType == 4f)      
                 {
-                    return Owner.Center + idk.RotatedBy(randRot) * 300f;
+                    return Owner.Center + idk.RotatedBy(randRot) * 100f;
                 }
                 else
                 {
