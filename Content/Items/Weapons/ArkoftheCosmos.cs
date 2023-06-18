@@ -150,7 +150,7 @@ namespace AotC.Content.Items.Weapons
                 if (timers.ArkThrowCooldown < 0)
                 {
                     Projectile.NewProjectile(source, player.Center, velocity, ModContent.ProjectileType<ArkoftheCosmosSwungBlade>(), damage * 4, knockback, player.whoAmI, 4f, charge);
-                    timers.ArkThrowCooldown = 340; //its normally 340
+                    timers.ArkThrowCooldown = 340; //split ark has 340 cooldown
                     PunchCameraModifier modifier = new(player.Center, (Main.rand.NextFloat() * ((float)Math.PI * 2f)).ToRotationVector2(), 50f, 6f, 20, 1000f, FullName);
                     Main.instance.CameraModifiers.Add(modifier);
                 } 
@@ -174,7 +174,14 @@ namespace AotC.Content.Items.Weapons
             if (num == 3f)
             {
                 float f = (player.Center - Main.screenPosition).AngleTo(Main.MouseScreen);
-                Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, Vector2.Zero, ModContent.ProjectileType<Beam>(), Item.damage, 1f, player.whoAmI, f);
+                if (charge == 0) 
+                {
+                    Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, Vector2.Zero, ModContent.ProjectileType<Beam>(), Item.damage, 1f, player.whoAmI, f, 0f);
+                }
+                else
+                {
+                    Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, Vector2.Zero, ModContent.ProjectileType<Beam>(), Item.damage, 1f, player.whoAmI, f, 1f);
+                }
             }
             return false;
 

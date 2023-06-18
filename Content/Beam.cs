@@ -31,13 +31,15 @@ public class Beam : BaseLaserbeamProjectile
 
     public bool PlayedSound;
 
+    public bool Wail => Projectile.ai[1] == 1f;
+
     public CalamityUtils.CurveSegment fat = new CalamityUtils.CurveSegment(CalamityUtils.EasingType.PolyOut, 0f, 0.15f, 1f, 4);
 
     public CalamityUtils.CurveSegment retract = new CalamityUtils.CurveSegment(CalamityUtils.EasingType.SineIn, 0.75f, 1f, -1f);
 
-    public override float Lifetime => 35f;
+    public override float Lifetime => Wail ? 70f : 35f;
 
-    public override float MaxScale => 3f;
+    public override float MaxScale => Wail ? 9f : 3f;
 
     public override float MaxLaserLength => 80f;
 
@@ -58,11 +60,10 @@ public class Beam : BaseLaserbeamProjectile
 
     public override void SetDefaults()
     {
-        Projectile.width = 6;
-        Projectile.height = 6;
+        Projectile.width = 1;
+        Projectile.height = 1;
         Projectile.friendly = true;
         Projectile.penetrate = -1;
-        Projectile.timeLeft = 35;
         Projectile.DamageType = DamageClass.Melee;
         Projectile.tileCollide = false;
         Projectile.hide = true;
@@ -76,7 +77,7 @@ public class Beam : BaseLaserbeamProjectile
     public override bool PreAI()
     {
 		if (!initialized)
-		{
+        {
 			initialized = true;
 			if (Projectile.owner == Main.myPlayer)
 			{
@@ -86,13 +87,23 @@ public class Beam : BaseLaserbeamProjectile
             }
 			Projectile.rotation = dir - (float)Math.PI/2;
 			Projectile.Center = dir.ToRotationVector2() * 370f + Owner.Center;
-		}
+            Projectile.timeLeft = Wail ? 70 : 35;
+        }
 		Owner.heldProj = Projectile.whoAmI;
 		Projectile.netUpdate = true;
 		if (!PlayedSound)
         {
-            SoundEngine.PlaySound(in Sounds.AotCAudio.ChaosBlasterFire, Projectile.position);
-		PlayedSound = true;
+            if (Wail)
+            {
+                SoundEngine.PlaySound(in Sounds.AotCAudio.KillerWail, Projectile.position);
+            }
+            else
+            {
+                SoundEngine.PlaySound(in Sounds.AotCAudio.KillerWail, Projectile.position);
+                SoundEngine.PlaySound(in Sounds.AotCAudio.ChaosBlasterFire, Projectile.position);
+            }
+
+            PlayedSound = true;
 		}
 		return true;
 	}
@@ -107,7 +118,7 @@ public class Beam : BaseLaserbeamProjectile
         //Projectile.scale = (float)Math.Sin((double)(Time / Lifetime * (float)Math.PI)) * ScaleExpandRate * MaxScale;
         try
         {
-            Projectile.scale = 2f * CalamityUtils.PiecewiseAnimation(Time / Lifetime, new CalamityUtils.CurveSegment[2] { fat, retract });
+            Projectile.scale = (Wail ? 6f : 2f) * CalamityUtils.PiecewiseAnimation(Time / Lifetime, new CalamityUtils.CurveSegment[2] { fat, retract });
             if (Projectile.scale > MaxScale)
             {
                 Projectile.scale = MaxScale;
@@ -115,7 +126,7 @@ public class Beam : BaseLaserbeamProjectile
         }
         catch
         {
-            Main.NewText("if you see this it means my code sucks");
+            Main.NewText("if you see this it means my code sucks - ArkoftheCosmos");
         }
     }
     public override bool PreDraw(ref Color lightColor)
@@ -150,9 +161,9 @@ public class Beam : BaseLaserbeamProjectile
             while (num2 + 1f < laserLength)
             {
 
-                Texture2D FinalTexture = CalamityUtils.ShiftHue(LaserMiddleTexture, -Main.GlobalTimeWrappedHourly * 5f % 1 + 1);
+                Texture2D FinalTexture = CalamityUtils.ShiftHue(LaserMiddleTexture, -Main.GlobalTimeWrappedHourly * (Wail ? 1.6f : 5f) % 1 + 1);
                 //Main.EntitySpriteDraw(LaserMiddleTexture, center - Main.screenPosition, val2, lightColor, base.Projectile.rotation, (float)LaserMiddleTexture.Width * 0.5f * Vector2.UnitX, scale, (SpriteEffects)0, 0);
-                Main.spriteBatch.Draw(FinalTexture, center - Main.screenPosition, val2, Color.White, base.Projectile.rotation, (float)LaserMiddleTexture.Width * 0.5f * Vector2.UnitX, scale, (SpriteEffects)0, 0);
+                Main.spriteBatch.Draw(FinalTexture, center - Main.screenPosition, val2, Color.White * (Wail ? 0.5f : 1f), base.Projectile.rotation, (float)LaserMiddleTexture.Width * 0.5f * Vector2.UnitX, scale, (SpriteEffects)0, 0);
                 num2 += num;
             }
         }
@@ -171,7 +182,7 @@ public class Beam : BaseLaserbeamProjectile
         bool flag = Projectile.direction < 0;
         Texture2D value = ModContent.Request<Texture2D>("AotC/Assets/Textures/BeamWave").Value;
         Main.spriteBatch.Draw(value, center - Main.screenPosition, null, Color.White, Projectile.rotation, new Vector2(8,0 - ear % 14), Projectile.scale, 0, 0);
-        ear += 3;
+        ear += Wail ? 1f : 3;
 
 
         

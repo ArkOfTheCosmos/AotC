@@ -225,7 +225,7 @@ public abstract class BaseLaserbeamProjectile : ModProjectile
 		Vector2 center = base.Projectile.Center;
 		Vector2 lineEnd = base.Projectile.Center + base.Projectile.ai[0].ToRotationVector2() * 908;
 		Vector2 size = base.Projectile.Size;
-		return Collision.CheckAABBvLineCollision(objectPosition, objectDimensions, center, lineEnd, base.Projectile.scale, ref collisionPoint);
+		return Collision.CheckAABBvLineCollision(objectPosition, objectDimensions * Projectile.scale / 3f, center, lineEnd, Projectile.scale, ref collisionPoint);
 	}
 
 	public override bool ShouldUpdatePosition()

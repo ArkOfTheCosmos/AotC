@@ -29,6 +29,12 @@ namespace AotC.Content
 
         public float rng2;
 
+        public float rng3;
+
+        public float rng4;
+
+        public float rng5;
+
         private bool initialized;
 
         private Vector2 direction = Vector2.Zero;
@@ -119,6 +125,8 @@ namespace AotC.Content
         public float SnapEndCompletion => (SnapEndTime - Projectile.timeLeft) / SnapEndTime;
 
         public ref float ChanceMissed => ref Projectile.localAI[1];
+
+        public bool LilliaCrit = false;
 
 
 
@@ -262,6 +270,9 @@ namespace AotC.Content
                 Projectile.timeLeft = Thrown ? (int)MaxThrowTime : ((int)MaxSwingTime);
                 rng = rand.Next(-2, 2);
                 rng2 = rand.Next(-2, 2);
+                rng3 = rand.Next(-1, 1);
+                rng4 = rand.Next(-1, 1);
+                rng5 = rand.Next(-1, 1);
                 direction = Projectile.velocity;
                 direction.Normalize();
                 Projectile.velocity = direction;
@@ -317,17 +328,36 @@ namespace AotC.Content
                     Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.Lerp(SwingWidth / 2f * SwingDirection, (0f - SwingWidth) / 2f * SwingDirection, SwingRatio());
                     if (SwingType != 3f)
                     {
-                        if (Owner.whoAmI == Main.myPlayer && (Projectile.timeLeft == 23 + (int)rng || Projectile.timeLeft == 19 + (int)rng2))
+                        if (Charge == 0f)
                         {
-                            float f = Projectile.rotation - (float)Math.PI * 23f / 80f * dir;
-                            if (SwingType == 1f)
+                            if (Owner.whoAmI == Main.myPlayer && (Projectile.timeLeft == 23 + (int)rng || Projectile.timeLeft == 19 + (int)rng2))
                             {
-                                Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center + f.ToRotationVector2() * 150f, f.ToRotationVector2() * 20f, ModContent.ProjectileType<EonBolt>(), (int)(ArkoftheCosmos.SwirlBoltDamageMultiplier / ArkoftheCosmos.SwirlBoltAmount * Projectile.damage), 0f, Owner.whoAmI, 0.65f, (float)Math.PI / 20f).timeLeft = 100;
+                                float f = Projectile.rotation - (float)Math.PI * 23f / 80f * dir;
+                                if (SwingType == 1f)
+                                {
+                                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center + f.ToRotationVector2() * 150f, f.ToRotationVector2() * 20f, ModContent.ProjectileType<EonBolt>(), (int)(ArkoftheCosmos.SwirlBoltDamageMultiplier / ArkoftheCosmos.SwirlBoltAmount * Projectile.damage), 0f, Owner.whoAmI, 0.65f, (float)Math.PI / 20f).timeLeft = 100;
+                                }
+                                else
+                                {
+                                    f = Projectile.rotation - (float)Math.PI * 23f / -80f * dir;
+                                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center + f.ToRotationVector2() * 150f, f.ToRotationVector2() * 20f, ModContent.ProjectileType<EonBolt>(), (int)(ArkoftheCosmos.SwirlBoltDamageMultiplier / ArkoftheCosmos.SwirlBoltAmount * Projectile.damage), 0f, Owner.whoAmI, 0.65f, (float)Math.PI / 20f).timeLeft = 100;
+                                }
                             }
-                            else
+                        }
+                        else
+                        {
+                            if (Owner.whoAmI == Main.myPlayer && (Projectile.timeLeft == 23 + (int)rng3 || Projectile.timeLeft == 21 + (int)rng4 || Projectile.timeLeft == 19 + (int)rng5))
                             {
-                                f = Projectile.rotation - (float)Math.PI * 23f / -80f * dir;
-                                Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center + f.ToRotationVector2() * 150f, f.ToRotationVector2() * 20f, ModContent.ProjectileType<EonBolt>(), (int)(ArkoftheCosmos.SwirlBoltDamageMultiplier / ArkoftheCosmos.SwirlBoltAmount * Projectile.damage), 0f, Owner.whoAmI, 0.65f, (float)Math.PI / 20f).timeLeft = 100;
+                                float f = Projectile.rotation - (float)Math.PI * 23f / 80f * dir;
+                                if (SwingType == 1f)
+                                {
+                                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center + f.ToRotationVector2() * 150f, f.ToRotationVector2() * 20f, ModContent.ProjectileType<EonBolt>(), (int)(ArkoftheCosmos.SwirlBoltDamageMultiplier / ArkoftheCosmos.SwirlBoltAmount * Projectile.damage), 0f, Owner.whoAmI, 0.65f, (float)Math.PI / 20f).timeLeft = 100;
+                                }
+                                else
+                                {
+                                    f = Projectile.rotation - (float)Math.PI * 23f / -80f * dir;
+                                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center + f.ToRotationVector2() * 150f, f.ToRotationVector2() * 20f, ModContent.ProjectileType<EonBolt>(), (int)(ArkoftheCosmos.SwirlBoltDamageMultiplier / ArkoftheCosmos.SwirlBoltAmount * Projectile.damage), 0f, Owner.whoAmI, 0.65f, (float)Math.PI / 20f).timeLeft = 100;
+                                }
                             }
                         }
                     }
@@ -338,14 +368,24 @@ namespace AotC.Content
                     float num2 = -7.4612827f * SwingDirection;
                     Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.Lerp(num, num2, SwirlRatio());
                     //DoParticleEffects(swirlSwing: true);
-                    if (Owner.whoAmI == Main.myPlayer && (Projectile.timeLeft - 1) % Math.Ceiling((double)(MaxSwingTime / ArkoftheCosmos.SwirlBoltAmount)) == 0.0)
+                    if (Charge == 0)
                     {
-                        float f = Projectile.rotation - (float)Math.PI * 23f / 80f * Owner.direction;
-                        Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center + f.ToRotationVector2() * 10f, f.ToRotationVector2() * 20f, ModContent.ProjectileType<EonBolt>(), (int)(ArkoftheCosmos.SwirlBoltDamageMultiplier / ArkoftheCosmos.SwirlBoltAmount * Projectile.damage), 0f, Owner.whoAmI, 0.55f, (float)Math.PI / 20f).timeLeft = 100;
+                        if (Owner.whoAmI == Main.myPlayer && (Projectile.timeLeft - 1) % Math.Ceiling((double)(MaxSwingTime / ArkoftheCosmos.SwirlBoltAmount)) == 0.0)
+                        {
+                            float f = Projectile.rotation - (float)Math.PI * 23f / 80f * Owner.direction;
+                            Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center + f.ToRotationVector2() * 10f, f.ToRotationVector2() * 20f, ModContent.ProjectileType<EonBolt>(), (int)(ArkoftheCosmos.SwirlBoltDamageMultiplier / ArkoftheCosmos.SwirlBoltAmount * Projectile.damage), 0f, Owner.whoAmI, 0.55f, (float)Math.PI / 20f).timeLeft = 100;
+                        }
                     }
-                    //DoParticleEffects(swirlSwing : true);
+                    else
+                    {
+                        if (Owner.whoAmI == Main.myPlayer && (Projectile.timeLeft - 1) % Math.Ceiling((double)(MaxSwingTime / ArkoftheCosmos.SwirlBoltAmount * 0.5f)) == 0.0)
+                        {
+                            float f = Projectile.rotation - (float)Math.PI * 23f / 80f * Owner.direction;
+                            Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center + f.ToRotationVector2() * 10f, f.ToRotationVector2() * 20f, ModContent.ProjectileType<EonBolt>(), (int)(ArkoftheCosmos.SwirlBoltDamageMultiplier / ArkoftheCosmos.SwirlBoltAmount * Projectile.damage), 0f, Owner.whoAmI, 0.55f, (float)Math.PI / 20f).timeLeft = 100;
+                        }
+                    }
                 }
-                Projectile.scale = (SwingType != 3f) ? 1.2f + (float)Math.Sin((double)(SwingRatio() * (float)Math.PI)) * 0.6f + Charge / 10f * 0.2f : 1.2f + (float)Math.Sin((double)(ThrowScaleRatio() * (float)Math.PI)) * 0.6f + Charge / 10f * 0.2f;
+                Projectile.scale = (SwingType != 3f) ? 1.2f + (float)Math.Sin((double)(SwingRatio() * (float)Math.PI)) * 0.6f : 1.2f + (float)Math.Sin((double)(ThrowScaleRatio() * (float)Math.PI)) * 0.6f;
             }
 
 
@@ -500,7 +540,7 @@ namespace AotC.Content
             {
                 for (int i = 1; i < Projectile.oldRot.Length; i++)
                 {
-                    Color val4 = Main.hslToRgb(i / (float)Projectile.oldRot.Length * 0.1f, 1f, 0.6f + ((Charge > 0f) ? 0.3f : 0f));
+                    Color val4 = Main.hslToRgb(i / (float)Projectile.oldRot.Length * 0.1f, 1f, 0.6f);
                     float num3 = Projectile.oldRot[i] + num2 + num;
                     Main.spriteBatch.Draw(value2, val3, null, val4 * 0.05f, num3, val2, Projectile.scale - 0.2f * (i / (float)Projectile.oldRot.Length), val, 0f);
                 }
@@ -586,7 +626,7 @@ namespace AotC.Content
 
             if (swirlSwing)
             {
-                Projectile.scale = 1.6f + (float)Math.Sin((double)(SwirlRatio() * (float)Math.PI)) * 1f + Charge / 10f * 0.05f;
+                Projectile.scale = 1.6f + (float)Math.Sin((double)(SwirlRatio() * (float)Math.PI)) * 1f;
                 Color val = Color.Purple * (MathHelper.Clamp((float)Math.Sin((double)((SwirlRatio() - 0.2f) * (float)Math.PI)), 0f, 1f) * 0.8f);
                 if (smear == null)
                 {
@@ -625,6 +665,15 @@ namespace AotC.Content
                     }
                 }
                 return;
+            }
+        }
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            if (LilliaCrit == false && SwirlSwing)
+            { 
+                SoundEngine.PlaySound(in Sounds.AotCAudio.BloomingBlowsCrit, Projectile.position);
+                LilliaCrit = true;
             }
         }
 
