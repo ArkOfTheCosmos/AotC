@@ -279,12 +279,12 @@ namespace AotC.Content
                 if (SwirlSwing)
                 {
                     Projectile.localNPCHitCooldown = (int)(Projectile.localNPCHitCooldown / 4f);
-                    SoundEngine.PlaySound(in Sounds.AotCAudio.Slash, Projectile.position);
-                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, new Vector2(1f,1f).RotatedBy(Math.PI / 2.5f * 0f), ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.chainDamageMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 4f).timeLeft = Projectile.timeLeft - 15;
-                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, new Vector2(1f,1f).RotatedBy(Math.PI / 2.5f * 1f), ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.chainDamageMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 4f).timeLeft = Projectile.timeLeft - 15;
-                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, new Vector2(1f,1f).RotatedBy(Math.PI / 2.5f * 2f), ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.chainDamageMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 4f).timeLeft = Projectile.timeLeft - 15;
-                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, new Vector2(1f,1f).RotatedBy(Math.PI / 2.5f * 3f), ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.chainDamageMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 4f).timeLeft = Projectile.timeLeft - 15;
-                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, new Vector2(1f,1f).RotatedBy(Math.PI / 2.5f * 4f), ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.chainDamageMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 4f).timeLeft = Projectile.timeLeft - 15;
+                    SoundEngine.PlaySound(in Sounds.AotCAudio.BloomingBlows, Projectile.position);
+                    //Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, new Vector2(1f,1f).RotatedBy(Math.PI / 2.5f * 0f), ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.chainDamageMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 4f).timeLeft = Projectile.timeLeft - 15;
+                    //Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, new Vector2(1f,1f).RotatedBy(Math.PI / 2.5f * 1f), ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.chainDamageMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 4f).timeLeft = Projectile.timeLeft - 15;
+                    //Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, new Vector2(1f,1f).RotatedBy(Math.PI / 2.5f * 2f), ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.chainDamageMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 4f).timeLeft = Projectile.timeLeft - 15;
+                    //Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, new Vector2(1f,1f).RotatedBy(Math.PI / 2.5f * 3f), ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.chainDamageMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 4f).timeLeft = Projectile.timeLeft - 15;
+                    //Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, new Vector2(1f,1f).RotatedBy(Math.PI / 2.5f * 4f), ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.chainDamageMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 4f).timeLeft = Projectile.timeLeft - 15;
                 }
                 else if (SwingType == 3f)
                 {
@@ -509,7 +509,7 @@ namespace AotC.Content
             Main.EntitySpriteDraw(value2, val3, null, Color.Lerp(lightColor, Color.White, 0.75f), rotation2, val2, Projectile.scale * 1.2f, val, 0);
             if (SwingCompletion > 0.5f && (SwingType == 1f || SwingType == 0f))
             {
-                Texture2D value3 = ModContent.Request<Texture2D>("AotC/Content/Particles/TrientCircularSmear", (AssetRequestMode)2).Value;
+                Texture2D value3 = ModContent.Request<Texture2D>("AotC/Assets/Textures/TrientCircularSmear", (AssetRequestMode)2).Value;
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin((SpriteSortMode)1, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
                 float num4 = (float)Math.Sin((double)(SwingCompletion * (float)Math.PI));
@@ -521,17 +521,22 @@ namespace AotC.Content
             }
             if (SwirlSwing)
             {
-                Texture2D value3 = ModContent.Request<Texture2D>("AotC/Content/Particles/CircularSmearSmokey", (AssetRequestMode)2).Value;
+                Texture2D value3 = ModContent.Request<Texture2D>("AotC/Assets/Textures/OpaqueLilliaQ", (AssetRequestMode)2).Value;
+                Texture2D value4 = ModContent.Request<Texture2D>("AotC/Assets/Textures/lillia_base_q_indicator", (AssetRequestMode)2).Value;
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin((SpriteSortMode)1, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
-                Color val5 = Color.Red * (MathHelper.Clamp((float)Math.Sin((double)((SwirlRatio() - 0.2f) * (float)Math.PI)), 0f, 1f) * 0.8f);
-                float rotationVal = Projectile.rotation + (float)Math.PI / 4f + ((Owner.direction < 0) ? ((float)Math.PI) : 0f);
+                Color val5 = lightColor * (MathHelper.Clamp((float)Math.Sin((double)((SwirlRatio() - 0.1f) * (float)Math.PI)), 0f, 1f));
+                float rotationVal = Projectile.rotation + (float)Math.PI / 4f + ((Owner.direction < 0) ? ((float)Math.PI / 2f) : 0f);
+                if (Owner.direction < 0)
+                {
+                    value3 = CalamityUtils.FlipHorizontal(value3);
+                }
 
 
-                Main.EntitySpriteDraw(value3, Owner.Center - Main.screenPosition, null, val5, rotationVal, value3.Size() / 2f, Projectile.scale * 2.3f, 0, 0);
+                Main.EntitySpriteDraw(value3, Owner.Center - Main.screenPosition, null, val5, rotationVal, value3.Size() / 2f, 2.4f, 0, 0);
+                Main.EntitySpriteDraw(value4, Owner.Center - Main.screenPosition, null, val5, direction.ToRotation(), value4.Size() / 2f, 1.3f, 0, 0); ;
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(0, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
-
             }
         }
 
@@ -551,7 +556,7 @@ namespace AotC.Content
 
 
 
-            Texture2D value3 = ModContent.Request<Texture2D>("AotC/Content/Particles/CircularSmearSmokey", (AssetRequestMode)2).Value;
+            Texture2D value3 = ModContent.Request<Texture2D>("AotC/Assets/Textures/CircularSmearSmokey", (AssetRequestMode)2).Value;
             Main.spriteBatch.End();
             Main.spriteBatch.Begin((SpriteSortMode)1, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
             Color val5 = CalamityUtils.HsvToRgb(Main.GlobalTimeWrappedHourly, 1f, 1f) * (MathHelper.Clamp((float)Math.Sin((double)((ThrowRatio() - 0.2f) * (float)Math.PI)), 0f, 1f) * 0.7f);
@@ -595,7 +600,7 @@ namespace AotC.Content
                     smear.Position = Owner.Center;
                     smear.Scale = MathHelper.Lerp(2.6f, 3.5f, (Projectile.scale - 1.6f) / 1f);
                     smear.Color = val;
-                }
+                } 
                 if (Main.rand.NextBool())
                 {
                     float num = Projectile.scale * 78f;

@@ -11,7 +11,7 @@ Mods: {
 		Items: {
 			ArkoftheCosmos: {
 				DisplayName: The Ark of the Cosmos
-				Tooltip: A blade forged with pure magic and imbued with Hope itself
+				Tooltip: '''"I'm what you get when the stars collide"'''
 			}
 		}
 	}

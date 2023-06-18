@@ -28,8 +28,6 @@ namespace AotC.Content.Items.Weapons
 
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("The Ark of the Cosmos");
-            // Tooltip.SetDefault("A blade forged with pure magic and imbued with Hope itself");
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
         public override void SetDefaults()
@@ -152,7 +150,7 @@ namespace AotC.Content.Items.Weapons
                 if (timers.ArkThrowCooldown < 0)
                 {
                     Projectile.NewProjectile(source, player.Center, velocity, ModContent.ProjectileType<ArkoftheCosmosSwungBlade>(), damage * 4, knockback, player.whoAmI, 4f, charge);
-                    timers.ArkThrowCooldown = 0; //its normally 340
+                    timers.ArkThrowCooldown = 340; //its normally 340
                     PunchCameraModifier modifier = new(player.Center, (Main.rand.NextFloat() * ((float)Math.PI * 2f)).ToRotationVector2(), 50f, 6f, 20, 1000f, FullName);
                     Main.instance.CameraModifiers.Add(modifier);
                 } 
