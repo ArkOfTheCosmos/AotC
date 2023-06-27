@@ -21,6 +21,131 @@ namespace AotC.Content
     internal class Timers : ModPlayer
     {
         public float ArkThrowCooldown;
+        public bool done;
+        public float maxDistance = 50f; // Maximum distance to consider the player "close enough"
+        public float moveSpeed = 100f; // Movement speed // this is normally 100f
+        public List<Vector2> SlashPoints;
+        public Projectile blade;
+        public void StartSlash()
+        {
+            done = false;
+            ArkoftheCosmos arkoftheCosmos = Player.HeldItem.ModItem as ArkoftheCosmos;
+            if (Vector2.Distance(Player.position, arkoftheCosmos.SlashPoints[0]) <= 500f)
+            {
+                blade = null;
+                if (arkoftheCosmos != null)
+                {
+                    SlashPoints = arkoftheCosmos.SlashPoints;
+                    Player.immune = true;
+                    Player.immuneTime = 3600;
+                }
+                SoundEngine.PlaySound(in Sounds.AotCAudio.MeatySlash, Player.position);
+            }
+            else
+            {
+                SoundEngine.PlaySound(in SoundID.Run);
+            }
+        }
+
+
+        public override void PreUpdate()
+        {
+            if (SlashPoints != null && SlashPoints.Count > 0)
+            {
+
+                // Get the current target point
+                Vector2 currentTargetPoint = SlashPoints[0];
+
+                // Get the direction the player is traveling
+                Vector2 direction = Vector2.Normalize(currentTargetPoint - Player.position);
+
+                // Calculate the distance to the current target point
+                float distance = Vector2.Distance(Player.position, currentTargetPoint);
+
+                if (distance <= maxDistance)
+                {
+                    ArkoftheCosmos arkoftheCosmos = Player.HeldItem.ModItem as ArkoftheCosmos;
+                    // Player has reached the current target point, move to the next point
+                    SoundEngine.PlaySound(in Sounds.AotCAudio.MeatySlash, Player.position);
+                    float rand = Main.rand.NextFloat() * (float)Math.PI / 2f;
+                    Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, rand.ToRotationVector2() * 20f, ModContent.ProjectileType<EonBolt>(), 5555, 0f, Player.whoAmI, 0.65f, (float)Math.PI / 2f).timeLeft = 100;
+                    Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, (rand + (float)Math.PI / 2f).ToRotationVector2() * 20f, ModContent.ProjectileType<EonBolt>(), 5555, 0f, Player.whoAmI, 0.65f, (float)Math.PI / 2f).timeLeft = 100;
+                    Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, (rand + (float)Math.PI).ToRotationVector2() * 20f, ModContent.ProjectileType<EonBolt>(), 5555, 0f, Player.whoAmI, 0.65f, (float)Math.PI / 2f).timeLeft = 100;
+                    Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, (rand + (float)Math.PI * 1.5f).ToRotationVector2() * 20f, ModContent.ProjectileType<EonBolt>(), 5555, 0f, Player.whoAmI, 0.65f, (float)Math.PI / 2f).timeLeft = 100;
+                    SlashPoints.RemoveAt(0);
+                    if (SlashPoints.Count == 0)
+                    {
+                        if (!done)
+                        {
+                            Player.immuneTime = 30;
+                            done = true;
+                        }
+                        arkoftheCosmos.SlashPoints.Clear();
+                        SlashPoints = null;
+                    }
+                    if (arkoftheCosmos != null)
+                    {
+                        if (SlashPoints != null)
+                        {
+                            if (arkoftheCosmos.SlashLines.Count - 1 > SlashPoints.Count)
+                            {
+                                if (arkoftheCosmos.SlashLines[0].ModProjectile is ArkoftheCosmosConstellation modProjectile)
+                                {
+                                    modProjectile.death = true;
+                                }
+                                arkoftheCosmos.SlashLines.RemoveAt(0);
+                            }
+                        }
+                        else
+                        {
+                            blade = null;
+                            if (arkoftheCosmos.SlashLines[0].ModProjectile is ArkoftheCosmosConstellation modProjectile)
+                            {
+                                modProjectile.death = true;
+                            }
+                            arkoftheCosmos.SlashLines.RemoveAt(0);
+                            if (arkoftheCosmos.SlashLines[0].ModProjectile is ArkoftheCosmosConstellation modProjectile2)
+                            {
+                                modProjectile2.death = true;
+                            }
+                            arkoftheCosmos.SlashLines.RemoveAt(0);
+                        }
+                    }
+                }
+                else
+                {
+                    // Calculate the desired movement vector
+                    Vector2 desiredMovement = direction * moveSpeed;
+
+                    // Move the player towards the desired movement vector
+                    Player.position += desiredMovement;
+                }
+                if (blade == null && SlashPoints != null)
+                {
+                    blade = Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.position, direction, ModContent.ProjectileType<ArkoftheCosmosSwungBlade>(), 26690, 10f, Player.whoAmI, 5f, 0f);
+                    blade.timeLeft = 10;
+                }
+                else
+                {
+                    if (blade != null)
+                    {
+                        blade.velocity = direction;
+                        if (blade.timeLeft < 5)
+                        {
+                            blade.timeLeft = 5;
+                        }
+                    }
+                }
+            }
+        }
+
+
+       
+
+
+
+
+
 
         public override void UpdateBadLifeRegen()
         {
@@ -51,18 +176,6 @@ namespace AotC.Content
                 Main.spriteBatch.Draw(value, val, val2 * num);
                 Main.spriteBatch.Draw(value2, val, (Rectangle?)value3, val2 * num * 0.8f);
             }
-
-
-
-            /*Texture2D value = ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GenericBarBack", (AssetRequestMode)2).get_Value();
-            Texture2D value2 = ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GenericBarFront", (AssetRequestMode)2).get_Value();
-            Vector2 val = Owner.Center - Main.screenPosition + new Vector2(0f, -36f) - value.Size() / 2f;
-            Rectangle value3 = default(Rectangle);
-            ((Rectangle)(ref value3))._002Ector(0, 0, (int)((Timer - ParryTime) / (340f - ParryTime) * (float)value2.get_Width()), value2.get_Height());
-            float num = ((Timer <= ParryTime + 25f) ? ((Timer - ParryTime) / 25f) : ((340f - Timer <= 8f) ? ((float)base.Projectile.timeLeft / 8f) : 1f));
-            Color val2 = Main.hslToRgb(Main.GlobalTimeWrappedHourly * 0.6f % 1f, 1f, 0.85f + (float)Math.Sin((double)(Main.GlobalTimeWrappedHourly * 3f)) * 0.1f);
-            Main.spriteBatch.Draw(value, val, val2 * num);
-            Main.spriteBatch.Draw(value2, val, (Rectangle?)value3, val2 * num * 0.8f);*/
         }
     }
 }

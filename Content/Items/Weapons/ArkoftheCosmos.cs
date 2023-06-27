@@ -1,14 +1,18 @@
-﻿using Terraria;
-using Terraria.ModLoader;
-using Terraria.ID;
-using Terraria.GameContent.Creative;
-using Terraria.DataStructures;
+﻿using AotC.Content.StolenCalamityCode;
 using Microsoft.Xna.Framework;
-using System;
-using System.Linq;
+using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Terraria;
+using Terraria.DataStructures;
+using Terraria.GameContent.Creative;
 using Terraria.Graphics.CameraModifiers;
+using Terraria.ID;
+using Terraria.ModLoader;
+using Terraria.Graphics.Shaders;
 
 
 namespace AotC.Content.Items.Weapons
@@ -25,6 +29,8 @@ namespace AotC.Content.Items.Weapons
         public static float SwirlBoltDamageMultiplier = 1.5f;
         public static float SnapBoltsDamageMultiplier = 0.2f;
         public static float chainDamageMultiplier = 0.1f;
+        public List<Vector2> SlashPoints = new();
+        public List<Projectile> SlashLines = new();
 
         public override void SetStaticDefaults()
         {
@@ -46,8 +52,8 @@ namespace AotC.Content.Items.Weapons
             Item.crit = 15;
             Item.useTurn = true;
 
-            Item.value = Item.buyPrice(2,6,6,9);
-            Item.rare = ItemRarityID.Purple;
+            Item.value = Item.buyPrice(2, 6, 6, 9);
+            Item.rare = ItemRarityID.Expert;
 
             Item.UseSound = null;
             Item.shoot = ProjectileID.PurificationPowder;
@@ -55,7 +61,80 @@ namespace AotC.Content.Items.Weapons
             Item.noMelee = true;
             Item.channel = true;
             Item.noUseGraphic = true;
-            
+
+        }
+
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            if (tooltips != null && Main.player[Main.myPlayer] != null)
+            {
+                TooltipLine tooltipLine = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip0" && x.Mod == "Terraria");
+                if (tooltipLine != null)
+                {
+                    tooltipLine.Text = "Use LMB to swing the sword out in front of you, firing out stars in the process";
+                    tooltipLine.OverrideColor = Color.Orange;
+                }
+                TooltipLine tooltipLine1 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip1" && x.Mod == "Terraria");
+                if (tooltipLine1 != null)
+                {
+                    tooltipLine1.Text = "Every fifth swing will swirl the sword around you with Blooming Blows, firing extra \nstars and dealing double damage";
+                    tooltipLine1.OverrideColor = Color.DodgerBlue;
+                }
+                TooltipLine tooltipLine2 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip2" && x.Mod == "Terraria");
+                if (tooltipLine2 != null)
+                {
+                    tooltipLine2.Text = "One of the first four attacks will stab in front of you, dealing triple damage and \nfiring out a beam";
+                    tooltipLine2.OverrideColor = Color.Yellow;
+                }
+                TooltipLine tooltipLine3 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip3" && x.Mod == "Terraria");
+                if (tooltipLine3 != null)
+                {
+                    tooltipLine3.Text = "Use RMB to throw the sword out, imploding with stars and following \nyour cursor with constellations";
+                    tooltipLine3.OverrideColor = Color.Magenta;
+                }
+                TooltipLine tooltipLine4 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip4" && x.Mod == "Terraria");
+                if (tooltipLine4 != null)
+                {
+                    tooltipLine4.Text = "Hitting an enemy with either a thrown attack, Blooming Blows, or the \nstars they create will generate charge";
+                    tooltipLine4.OverrideColor = Color.Cyan;
+                }
+                TooltipLine tooltipLine5 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip5" && x.Mod == "Terraria");
+                if (tooltipLine5 != null)
+                {
+                    tooltipLine5.Text = "Charge is consumed when attacking, causing swings to fire out three stars \ninstead of two, beams to be upgraded to bigger and \nlonger lasting Killer Wails, and Blooming Blows to fire twice as many stars";
+                    tooltipLine5.OverrideColor = Color.SpringGreen;
+                }
+                TooltipLine tooltipLine6 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip6" && x.Mod == "Terraria");
+                if (tooltipLine6 != null)
+                {
+                    tooltipLine6.Text = "Pressing W + RMB will create stars that will form constellations. Up to a \nmaximum of ten stars can be placed. Pressing W + LMB while \nclose to the start will cause you to dash and slash across them";
+                    tooltipLine6.OverrideColor = Color.Red;
+                }
+
+            }
+        }
+
+
+        public override bool PreDrawTooltipLine(DrawableTooltipLine line, ref int yOffset)
+        {
+            //IL_003f: Unknown result type (might be due to invalid IL or missing references)
+            //IL_005e: Unknown result type (might be due to invalid IL or missing references)
+            //IL_0068: Unknown result type (might be due to invalid IL or missing references)
+            //IL_0099: Unknown result type (might be due to invalid IL or missing references)
+            //IL_009e: Unknown result type (might be due to invalid IL or missing references)
+            //IL_00b3: Unknown result type (might be due to invalid IL or missing references)
+            //IL_00ce: Unknown result type (might be due to invalid IL or missing references)
+            if (line.Mod == "Terraria" && line.Name == "ItemName")
+            {
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin((SpriteSortMode)1, null, null, null, null, null, Main.UIScaleMatrix);
+                GameShaders.Misc["PulseUpwards"].UseColor(new Color(42, 42, 99)).UseSecondaryColor(Color.Green).Apply();
+                Utils.DrawBorderString(Main.spriteBatch, line.Text, new Vector2(line.X, line.Y), Color.White);
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(0, null, null, null, null, null, Main.UIScaleMatrix);
+                return false;
+            }
+            return true;
         }
 
         public override void AddRecipes()
@@ -109,6 +188,7 @@ namespace AotC.Content.Items.Weapons
 
 
         //idk if this does anything
+        //i think it syncs charge if you have multiple of the item
         public override ModItem Clone(Item item)
         {
             ModItem modItem = base.Clone(item);
@@ -144,18 +224,66 @@ namespace AotC.Content.Items.Weapons
         //this is where crud happens
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
+            if (charge < 0f)
+            {
+                charge = 0f;
+            }
             if (player.altFunctionUse == 2)
             {
-                Timers timers = player.GetModPlayer<Timers>();
-                if (timers.ArkThrowCooldown < 0)
+                if (player.controlUp)
                 {
-                    Projectile.NewProjectile(source, player.Center, velocity, ModContent.ProjectileType<ArkoftheCosmosSwungBlade>(), damage * 4, knockback, player.whoAmI, 4f, charge);
-                    timers.ArkThrowCooldown = 340; //split ark has 340 cooldown
-                    PunchCameraModifier modifier = new(player.Center, (Main.rand.NextFloat() * ((float)Math.PI * 2f)).ToRotationVector2(), 50f, 6f, 20, 1000f, FullName);
-                    Main.instance.CameraModifiers.Add(modifier);
-                } 
+                    if (charge >= 20f && SlashPoints.Count < 10)
+                    {
+                        charge -= 20f;
+                        SlashPoints.Add(Main.MouseWorld);
+                        Projectile projectile = Projectile.NewProjectileDirect(source, player.position, Vector2.Zero, ModContent.ProjectileType<ArkoftheCosmosConstellation>(), 0, 0f, player.whoAmI, 0f, 5f, SlashPoints.Count);
+                        projectile.timeLeft = -1;
+                        SlashLines.Add(projectile);
+                        if (SlashLines.Count > 1)
+                        {
+                            Projectile projectile2 = SlashLines[SlashLines.Count - 2];
+                            if (projectile2.ModProjectile is ArkoftheCosmosConstellation modProjectile)
+                            {
+                                modProjectile.balls = false;
+                            }
+                        }
+                    }
+                    return false;
+                }
+                else
+                {
+                    Timers timers = player.GetModPlayer<Timers>();
+                    if (timers.ArkThrowCooldown < 0)
+                    {
+                        Projectile.NewProjectile(source, player.Center, velocity, ModContent.ProjectileType<ArkoftheCosmosSwungBlade>(), damage * 4, knockback, player.whoAmI, 4f, charge);
+                        timers.ArkThrowCooldown = 340; //split ark has 340 cooldown
+                        PunchCameraModifier modifier = new(player.Center, (Main.rand.NextFloat() * ((float)Math.PI * 2f)).ToRotationVector2(), 50f, 6f, 20, 1000f, FullName);
+                        Main.instance.CameraModifiers.Add(modifier);
+                    }
+                    return false;
+                }
+            }
+
+
+
+
+
+            else if (player.controlUp)
+            {
+                //slash code
+                if (SlashPoints.Count > 1)
+                {
+                    player.GetModPlayer<Timers>().StartSlash();
+                }
+
                 return false;
             }
+
+
+
+
+
+
             // resets combo
             if (combo > 4f)
             {
@@ -174,7 +302,7 @@ namespace AotC.Content.Items.Weapons
             if (num == 3f)
             {
                 float f = (player.Center - Main.screenPosition).AngleTo(Main.MouseScreen);
-                if (charge == 0) 
+                if (charge < 10)
                 {
                     Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, Vector2.Zero, ModContent.ProjectileType<Beam>(), Item.damage, 1f, player.whoAmI, f, 0f);
                 }
@@ -183,8 +311,33 @@ namespace AotC.Content.Items.Weapons
                     Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, Vector2.Zero, ModContent.ProjectileType<Beam>(), Item.damage, 1f, player.whoAmI, f, 1f);
                 }
             }
+            if (charge > 10f)
+            {
+                charge -= 10f;
+            }
             return false;
+        }
 
+        public override bool AllowPrefix(int pre)
+        {
+            return false;
+        }
+
+
+        public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
+        {
+            if (!(charge <= 0f))
+            {
+                Texture2D value = ModContent.Request<Texture2D>("AotC/Assets/Textures/GenericBarBack", (AssetRequestMode)2).Value;
+                Texture2D value2 = ModContent.Request<Texture2D>("AotC/Assets/Textures/GenericBarFront", (AssetRequestMode)2).Value;
+                float num = 3f;
+                Vector2 origin2 = new(value.Width / 2f, value.Height / 2f);
+                Vector2 val = position + Vector2.UnitY * (frame.Height - 50f) * scale + Vector2.UnitX * (frame.Width - value.Width * num) * scale * 0.5f;
+                Rectangle value3 = new(0, 0, (int)(charge / 100f * value2.Width), value2.Height);
+                Color val2 = CalamityUtils.HsvToRgb(Main.GlobalTimeWrappedHourly, 1f, 1f);
+                spriteBatch.Draw(value, val, null, val2, 0f, origin2, scale * num, 0, 0f);
+                spriteBatch.Draw(value2, val, (Rectangle?)value3, val2 * 0.8f, 0f, origin2, scale * num, 0, 0f);
+            }
         }
     }
 }

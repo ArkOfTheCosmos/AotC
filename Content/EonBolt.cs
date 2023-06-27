@@ -1,3 +1,4 @@
+using AotC.Content.Items.Weapons;
 using AotC.Content.StolenCalamityCode;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -5,7 +6,6 @@ using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.Graphics.Renderers;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -27,30 +27,31 @@ public class EonBolt : ModProjectile
 
     public override string Texture => "AotC/Content/TestStar";
 
-    public Player Owner => Main.player[base.Projectile.owner];
+    public Player Owner => Main.player[Projectile.owner];
 
-    public ref float Hue => ref base.Projectile.ai[0];
+    public ref float Hue => ref Projectile.ai[0];
 
-    public ref float HomingStrenght => ref base.Projectile.ai[1];
+    public ref float HomingStrenght => ref Projectile.ai[1];
+
+    public ref float SourceType => ref Projectile.ai[2];
 
     public float rotation = 0;
 
     public override void SetStaticDefaults()
 
     {
-        // base.DisplayName.SetDefault("Eon Bolt");
-        ProjectileID.Sets.TrailCacheLength[base.Projectile.type] = 20;
-        ProjectileID.Sets.TrailingMode[base.Projectile.type] = 2;
+        ProjectileID.Sets.TrailCacheLength[Projectile.type] = 20;
+        ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
     }
 
     public override void SetDefaults()
     {
-        base.Projectile.width = (base.Projectile.height = 30);
-        base.Projectile.friendly = true;
-        base.Projectile.penetrate = 1;
-        base.Projectile.timeLeft = 160;
-        base.Projectile.DamageType = DamageClass.Melee;
-        base.Projectile.tileCollide = false;
+        Projectile.width = (Projectile.height = 30);
+        Projectile.friendly = true;
+        Projectile.penetrate = 1;
+        Projectile.timeLeft = 160;
+        Projectile.DamageType = DamageClass.Melee;
+        Projectile.tileCollide = false;
         Projectile.scale = 1.1f;
     }
 
@@ -69,23 +70,23 @@ public class EonBolt : ModProjectile
         {
             Particles = new List<Particle>();
         }
-        base.Projectile.rotation = base.Projectile.velocity.ToRotation() + (float)Math.PI / 2f;
+        Projectile.rotation = Projectile.velocity.ToRotation() + (float)Math.PI / 2f;
         if (Head == null)
         {
             Particle particle2 = new GenericSparkle(Projectile.Center, Vector2.Zero, Color.White, Color.White, 2f, 2, 0.1f, 3f, needed: true);
             BootlegSpawnParticle(particle2);
-            Head = new GenericSparkle(base.Projectile.Center, Vector2.Zero, Color.White, Main.hslToRgb(Hue, 100f, 50f), 1.2f, 2, 0.06f, 3f, needed : true);     
+            Head = new GenericSparkle(Projectile.Center, Vector2.Zero, Color.White, Main.hslToRgb(Hue, 100f, 50f), 1.2f, 2, 0.06f, 3f, needed: true);
         }
         else
         {
             //Head.Position = base.Projectile.Center + base.Projectile.velocity * 0.5f;
             //Head.Time = 0;
             //Head.Scale += (float)Math.Sin((double)(Main.GlobalTimeWrappedHourly * 6f)) * base.Projectile.scale;
-            Head.Update();        
+            Head.Update();
         }
         if (target == null)
         {
-            target = base.Projectile.Center.ClosestNPCAt(1000f);
+            target = Projectile.Center.ClosestNPCAt(1000f);
         }
         else
         {
@@ -93,17 +94,17 @@ public class EonBolt : ModProjectile
             {
                 Projectile.timeLeft++;
             }
-            if (base.Projectile.velocity.AngleBetween(target.Center - base.Projectile.Center) < (float)Math.PI)
+            if (Projectile.velocity.AngleBetween(target.Center - Projectile.Center) < (float)Math.PI)
             {
-                float targetAngle = base.Projectile.AngleTo(target.Center);
-                float f = base.Projectile.velocity.ToRotation().AngleTowards(targetAngle, HomingStrenght);
-                base.Projectile.velocity = f.ToRotationVector2() * Projectile.velocity.Length() * 0.995f;
+                float targetAngle = Projectile.AngleTo(target.Center);
+                float f = Projectile.velocity.ToRotation().AngleTowards(targetAngle, HomingStrenght);
+                Projectile.velocity = f.ToRotationVector2() * Projectile.velocity.Length() * 0.995f;
             }
         }
         Color val = new(0.75f, 1f, 0.24f);
         CalamityUtils.ColorToHSV(val, out float h, out float s, out float v);
         val = CalamityUtils.HsvToRgb(h + Main.GlobalTimeWrappedHourly % 1, s, v);
-        Lighting.AddLight(base.Projectile.Center, val.R / 255f, val.G / 255f, val.B / 255f);
+        Lighting.AddLight(Projectile.Center, val.R / 255f, val.G / 255f, val.B / 255f);
         /*if (Main.rand.Next(2) == 0)
 		{
 			GeneralParticleHandler.SpawnParticle(new HeavySmokeParticle(base.Projectile.Center, base.Projectile.velocity * 0.5f, Color.Lerp(Color.DodgerBlue, Color.MediumVioletRed, (float)Math.Sin((double)(Main.GlobalTimeWrappedHourly * 6f))), 20, Main.rand.NextFloat(0.6f, 1.2f) * base.Projectile.scale, 0.28f, 0f, glowing: false, 0f, required: true));
@@ -134,18 +135,18 @@ public class EonBolt : ModProjectile
     internal float WidthFunction(float completionRatio)
     {
         float num = (float)Math.Pow((double)(1f - completionRatio), 3.0);
-        return MathHelper.Lerp(0f, 22f * base.Projectile.scale * base.Projectile.Opacity, num);
+        return MathHelper.Lerp(0f, 22f * Projectile.scale * Projectile.Opacity, num);
     }
 
     public override bool PreDraw(ref Color lightColor)
     {
-        
+
         if (TrailDrawer == null)
         {
             TrailDrawer = new PrimitiveTrail(WidthFunction, ColorFunction, null, GameShaders.Misc["CalamityMod:TrailStreak"]);
         }
         GameShaders.Misc["CalamityMod:TrailStreak"].SetShaderTexture(ModContent.Request<Texture2D>("AotC/Content/ScarletDevilStreak", (AssetRequestMode)2));
-        TrailDrawer.Draw(base.Projectile.oldPos, base.Projectile.Size * 0.5f - Main.screenPosition, 30);
+        TrailDrawer.Draw(Projectile.oldPos, Projectile.Size * 0.5f - Main.screenPosition, 30);
         if (Particles != null)
         {
             Main.spriteBatch.EnterShaderRegion(BlendState.Additive);
@@ -168,7 +169,22 @@ public class EonBolt : ModProjectile
     public override void PostDraw(Color lightColor)
     {
         Texture2D value = ModContent.Request<Texture2D>("AotC/Content/TestStar", (AssetRequestMode)2).Value;
-        Main.EntitySpriteDraw(value, base.Projectile.Center - Main.screenPosition, null, Color.Lerp(lightColor, Color.White, 0.5f), base.Projectile.rotation + rotation, value.Size() / 2f, base.Projectile.scale, 0, 0);
+        Main.EntitySpriteDraw(value, Projectile.Center - Main.screenPosition, null, Color.Lerp(lightColor, Color.White, 0.5f), Projectile.rotation + rotation, value.Size() / 2f, Projectile.scale, 0, 0);
 
+    }
+
+
+
+    public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+    {
+        ArkoftheCosmos arkoftheCosmos = Owner.HeldItem.ModItem as ArkoftheCosmos;
+        if (arkoftheCosmos != null && SourceType == 1f)
+        {
+            arkoftheCosmos.charge += 1f;
+            if (arkoftheCosmos.charge > 100f)
+            {
+                arkoftheCosmos.charge = 100f;
+            }
+        }
     }
 }

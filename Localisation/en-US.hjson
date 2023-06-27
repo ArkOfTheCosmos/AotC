@@ -11,7 +11,17 @@ Mods: {
 		Items: {
 			ArkoftheCosmos: {
 				DisplayName: The Ark of the Cosmos
-				Tooltip: '''"I'm what you get when the stars collide"'''
+				Tooltip:
+					'''
+					uno
+					dos
+					tres
+					quadro
+					sink
+					solar express
+					dog
+					"I'm what you get when the stars collide"
+					'''
 			}
 		}
 	}

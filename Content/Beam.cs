@@ -3,14 +3,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
+using System.Collections.Generic;
 using Terraria;
-using Terraria.Graphics.Shaders;
-using Terraria.ID;
-using Terraria.ModLoader;
 using Terraria.Audio;
 using Terraria.DataStructures;
-using Terraria.Graphics.Renderers;
-using System.Collections.Generic;
+using Terraria.Graphics.CameraModifiers;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace AotC.Content;
 
@@ -25,7 +24,7 @@ public class Beam : BaseLaserbeamProjectile
 
     public Player Owner => Main.player[base.Projectile.owner];
 
-	public bool initialized = false;
+    public bool initialized = false;
 
     public float ear;
 
@@ -37,7 +36,7 @@ public class Beam : BaseLaserbeamProjectile
 
     public CalamityUtils.CurveSegment retract = new CalamityUtils.CurveSegment(CalamityUtils.EasingType.SineIn, 0.75f, 1f, -1f);
 
-    public override float Lifetime => Wail ? 70f : 35f;
+    public override float Lifetime => Wail ? 100f : 35f;
 
     public override float MaxScale => Wail ? 9f : 3f;
 
@@ -53,7 +52,6 @@ public class Beam : BaseLaserbeamProjectile
     public override void SetStaticDefaults()
 
     {
-        // base.DisplayName.SetDefault("Beam");
         ProjectileID.Sets.TrailCacheLength[Projectile.type] = 20;
         ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
     }
@@ -66,7 +64,7 @@ public class Beam : BaseLaserbeamProjectile
         Projectile.penetrate = -1;
         Projectile.DamageType = DamageClass.Melee;
         Projectile.tileCollide = false;
-        Projectile.hide = true;
+        //Projectile.hide = true;
     }
 
     public override void OnSpawn(IEntitySource source)
@@ -76,41 +74,47 @@ public class Beam : BaseLaserbeamProjectile
     }
     public override bool PreAI()
     {
-		if (!initialized)
+
+        if (!initialized)
         {
-			initialized = true;
-			if (Projectile.owner == Main.myPlayer)
-			{
-				Projectile.direction = ((Main.MouseWorld.X > Owner.Center.X) ? 1 : (-1));
-				Projectile.netUpdate = true;
+            initialized = true;
+            if (Projectile.owner == Main.myPlayer)
+            {
+                Projectile.direction = ((Main.MouseWorld.X > Owner.Center.X) ? 1 : (-1));
+                Projectile.netUpdate = true;
                 base.Projectile.direction = ((Main.MouseWorld.X > Owner.Center.X) ? 1 : (-1));
             }
-			Projectile.rotation = dir - (float)Math.PI/2;
-			Projectile.Center = dir.ToRotationVector2() * 370f + Owner.Center;
-            Projectile.timeLeft = Wail ? 70 : 35;
+            Projectile.rotation = dir - (float)Math.PI / 2;
+            Projectile.Center = dir.ToRotationVector2() * 370f + Owner.Center;
+            Projectile.timeLeft = Wail ? 100 : 35;
+            if (Wail)
+            {
+                PunchCameraModifier modifier = new(Owner.Center, (Main.rand.NextFloat() * ((float)Math.PI * 2f)).ToRotationVector2(), 5f, 6f, 20, 1000f, FullName);
+                Main.instance.CameraModifiers.Add(modifier);
+            }
         }
-		Owner.heldProj = Projectile.whoAmI;
-		Projectile.netUpdate = true;
-		if (!PlayedSound)
+        Owner.heldProj = Projectile.whoAmI;
+        Projectile.netUpdate = true;
+        if (!PlayedSound)
         {
             if (Wail)
             {
                 SoundEngine.PlaySound(in Sounds.AotCAudio.KillerWail, Projectile.position);
+                SoundEngine.PlaySound(in Sounds.AotCAudio.KillerWail, Projectile.position);
             }
             else
             {
-                SoundEngine.PlaySound(in Sounds.AotCAudio.KillerWail, Projectile.position);
                 SoundEngine.PlaySound(in Sounds.AotCAudio.ChaosBlasterFire, Projectile.position);
             }
 
             PlayedSound = true;
-		}
-		return true;
-	}
+        }
+        return true;
+    }
 
     public override void UpdateLaserMotion()
     {
-        
+
     }
 
     public override void DetermineScale()
@@ -143,7 +147,7 @@ public class Beam : BaseLaserbeamProjectile
 
 
 
-        Particle particle3 = new BloomLineVFX(Projectile.Center, (Projectile.rotation + (float)Math.PI / 2f).ToRotationVector2() * 1000, Projectile.scale, CalamityUtils.HsvToRgb(Main.GlobalTimeWrappedHourly, 1f, 1f), 20, capped: true);
+        Particle particle3 = new BloomLineVFX(Projectile.Center + Projectile.rotation.ToRotationVector2().RotatedBy(Math.PI / 2f) * 30f, (Projectile.rotation + (float)Math.PI / 2f).ToRotationVector2() * 1000, Projectile.scale, CalamityUtils.HsvToRgb(Main.GlobalTimeWrappedHourly, 1f, 1f), 20, capped: true);
         if (!Main.dedServ)
         {
             particle3.Type = GeneralParticleHandler.particleTypes[particle3.GetType()];
@@ -181,11 +185,11 @@ public class Beam : BaseLaserbeamProjectile
 
         bool flag = Projectile.direction < 0;
         Texture2D value = ModContent.Request<Texture2D>("AotC/Assets/Textures/BeamWave").Value;
-        Main.spriteBatch.Draw(value, center - Main.screenPosition, null, Color.White, Projectile.rotation, new Vector2(8,0 - ear % 14), Projectile.scale, 0, 0);
+        Main.spriteBatch.Draw(value, center - Main.screenPosition, null, Color.White, Projectile.rotation, new Vector2(8, 0 - ear % 14), Projectile.scale, 0, 0);
         ear += Wail ? 1f : 3;
 
 
-        
+
 
         return false;
     }

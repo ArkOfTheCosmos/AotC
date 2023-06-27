@@ -1,35 +1,34 @@
-using Terraria.ModLoader;
 using AotC.Content.StolenCalamityCode;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
-using Terraria.GameContent;
-using Terraria.GameContent.Dyes;
-using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
-using Terraria.ModLoader.Config;
+using Terraria.ModLoader;
 
 namespace AotC
 {
-	public class AotC : Mod
-	{
-		internal Mod Calamity;
+    public class AotC : Mod
+    {
+        internal Mod Calamity;
 
-		public const string ASSET_PATH = "AotC/Assets/";
+        public const string ASSET_PATH = "AotC/Assets/";
 
-		internal static AotC Instance;
+        internal static AotC Instance;
 
         public override void Load()
         {
-			Calamity = null;
-			ModLoader.TryGetMod("CalamityMod", out Calamity);
+            Ref<Effect> shader4 = new(Assets.Request<Effect>("Assets/Effects/TextShader", (AssetRequestMode)1).Value);
+            GameShaders.Misc["PulseUpwards"] = new MiscShaderData(shader4, "PulseUpwards");
+
+
+            Calamity = null;
+            ModLoader.TryGetMod("CalamityMod", out Calamity);
             Instance = this;
-			if (!Main.dedServ)
-			{
-				GeneralParticleHandler.Load();
-				CalamityShaders.LoadShaders();
-			}
+            if (!Main.dedServ)
+            {
+                GeneralParticleHandler.Load();
+                CalamityShaders.LoadShaders();
+            }
         }
     }
 }

@@ -15,7 +15,13 @@ namespace AotC.Content
 
         public int frick = 0;
 
-        public Vector2 idk = new Vector2(69,69);
+        public bool balls = false;
+
+        public bool death = false;
+
+        public Vector2 idk = new(69,69);
+
+        public Vector2 origPos;
 
         public double randRot = Main.rand.NextFloat(0f, MathHelper.Pi / 2.5f);
 
@@ -23,11 +29,15 @@ namespace AotC.Content
 
         public Player Owner => Main.player[Projectile.owner];
 
-        public float Timer => Projectile.ai[0] - Projectile.timeLeft;
+        public float Timer => AnchorType == 5f ? -2 : Projectile.ai[0] - Projectile.timeLeft;
 
         public float AnchorType => Projectile.ai[1];
 
-        private Vector2 AnchorStart
+        public float SlashLineNum => Projectile.ai[2];
+
+        private ArkoftheCosmos arkoftheCosmos => Owner.HeldItem.ModItem as ArkoftheCosmos;
+
+    private Vector2 AnchorStart
         {
             get
             {
@@ -46,6 +56,10 @@ namespace AotC.Content
                 else if (AnchorType == 3f)
                 {
                     return Projectile.Center;
+                }
+                else if (AnchorType == 5f)
+                {
+                    return arkoftheCosmos.SlashPoints[(int)SlashLineNum - 1];
                 }
                 else
                 {
@@ -77,6 +91,14 @@ namespace AotC.Content
                 {
                     return Owner.Center + idk.RotatedBy(randRot) * 100f;
                 }
+                else if (AnchorType == 5f)
+                {
+                    if (arkoftheCosmos.SlashPoints.Count > SlashLineNum)
+                    {
+                        return arkoftheCosmos.SlashPoints[(int)SlashLineNum];
+                    }
+                    return new();
+                }
                 else
                 {
                     return new();
@@ -105,6 +127,12 @@ namespace AotC.Content
                     Vector2 val = (AnchorEnd - AnchorStart).SafeNormalize(Vector2.Zero);
                     Vector2 val2 = AnchorEnd - AnchorStart;
                     return val * MathHelper.Clamp(val2.Length(), 0f, ArkoftheCosmos.MaxThrowReach);
+                }
+                else if (AnchorType == 5f)
+                {
+                    Vector2 val = (AnchorEnd - AnchorStart).SafeNormalize(Vector2.Zero);
+                    Vector2 val2 = AnchorEnd - AnchorStart;
+                    return val * val2.Length();
                 }
                 else
                 {
@@ -146,6 +174,11 @@ namespace AotC.Content
 
         public override void AI()
         {
+            if (!balls && AnchorType != 5f)
+            {
+                origPos = Projectile.Center;
+                balls = true;
+            }
             if (idk == new Vector2 (69,69) && AnchorType == 4f)
             {
                 idk = Projectile.velocity;
@@ -169,8 +202,8 @@ namespace AotC.Content
                 if (AnchorType != 3f)
                 {
                     Projectile.Center = Owner.Center;
-                }     
-                if (Timer % 10f == 0f && frick < 3)
+                }
+                if (Timer % 10f == 0f && frick < 3 || AnchorType == 3f && Timer % 5f == 0f)
                 {
                     if (AnchorType == 4f)
                     {
@@ -257,7 +290,63 @@ namespace AotC.Content
                 BootlegSpawnParticle(particle2);
                 particle3 = new BloomLineVFX(val2, Vector2.Lerp((AnchorStart + SizeVector).RotatedBy(AnchorType == 1f ? 0.5f : -0.5f, Owner.Center), Owner.Center, val5) - val2, 0.8f, val, 20, capped: true);
                 BootlegSpawnParticle(particle3);
-            } 
+            }
+
+            else if (AnchorType == 5f)
+            {
+                if (!death)
+                {
+                    Projectile.timeLeft = 20;
+                }
+                if (!balls)
+                {
+                    balls = true;
+                    if (SlashLineNum == arkoftheCosmos.SlashPoints.Count)
+                    {
+                        float num = Main.rand.NextFloat();
+                        Color val = Main.hslToRgb(num, 1f, 0.5f);
+                        Particle particle2 = new GenericSparkle(AnchorStart, Vector2.Zero, Color.White, val, Main.rand.NextFloat(1f, 1.5f), 20, 0f, 3f);
+                        BootlegSpawnParticle(particle2);
+                    }
+                    else
+                    {
+                        randRot = Main.rand.NextFloat(0f, MathHelper.Pi / 2.5f);
+                        Particles.Clear();
+                        float num = Main.rand.NextFloat();
+                        Color val = Main.hslToRgb(num, 1f, 0.5f);
+                        Vector2 val2 = AnchorStart;
+                        Particle particle2 = new GenericSparkle(val2, Vector2.Zero, Color.White, val, Main.rand.NextFloat(1f, 1.5f), 20, 0f, 3f);
+                        BootlegSpawnParticle(particle2);
+                        Particle particle3;
+                        for (float num2 = 0f + Main.rand.NextFloat(0.2f, 0.5f); num2 < 1f; num2 += Main.rand.NextFloat(0.2f, 0.5f))
+                        {
+                            num = (num + 0.16f) % 1f;
+                            val = Main.hslToRgb(num, 1f, 0.5f);
+                            Vector2 val3 = Main.rand.NextFloat(-50f, 50f) * SizeVector.RotatedBy(1.5707963705062866).SafeNormalize(Vector2.Zero);
+                            particle2 = new GenericSparkle(AnchorStart + SizeVector * num2 + val3, Vector2.Zero, Color.White, val, Main.rand.NextFloat(1f, 1.5f), 20, 0f, 3f);
+                            BootlegSpawnParticle(particle2);
+                            particle3 = new BloomLineVFX(val2, AnchorStart + SizeVector * num2 + val3 - val2, 0.8f, val, 20, capped: true, telegraph: true);
+                            BootlegSpawnParticle(particle3);
+                            if (Main.rand.NextBool())
+                            {
+                                num = (num + 0.16f) % 1f;
+                                val = Main.hslToRgb(num, 1f, 0.5f);
+                                val3 = Main.rand.NextFloat(-50f, 50f) * SizeVector.RotatedBy(1.5707963705062866).SafeNormalize(Vector2.Zero);
+                                particle2 = new GenericSparkle(AnchorStart + SizeVector * num2 + val3, Vector2.Zero, Color.White, val, Main.rand.NextFloat(1f, 1.5f), 20, 0f, 3f);
+                                BootlegSpawnParticle(particle2);
+                                particle3 = new BloomLineVFX(val2, AnchorStart + SizeVector * num2 + val3 - val2, 0.8f, val, 20, capped: true, telegraph: true);
+                                BootlegSpawnParticle(particle3);
+                            }
+                            val2 = AnchorStart + SizeVector * num2 + val3;
+                        }
+                        num = (num + 0.16f) % 1f;
+                        val = Main.hslToRgb(num, 1f, 0.5f);
+                        particle2 = new GenericSparkle(AnchorStart + SizeVector, Vector2.Zero, Color.White, val, Main.rand.NextFloat(1f, 1.5f), 20, 0f, 3f);
+                        particle3 = new BloomLineVFX(val2, AnchorStart + SizeVector - val2, 0.8f, val, 20, capped: true);
+                        BootlegSpawnParticle(particle3);
+                    }
+                }
+            }
 
 
 
@@ -278,12 +367,24 @@ namespace AotC.Content
                     particle4.Time++;
                     particle4.Update();
                     particle4.Color = Main.hslToRgb(Main.rgbToHsl(particle4.Color).X + 0.02f, Main.rgbToHsl(particle4.Color).Y, Main.rgbToHsl(particle4.Color).Z);
+                    if (AnchorType == 5f && particle4.LifetimeCompletion > 0.5f && !death)
+                    {
+                        particle4.Time--;
+                    }
+                    if (death)
+                    {
+                        particle4.Color *= 0.9f;
+                    }
                 }
             }
             Particles.RemoveAll((Particle particle) => particle.Time >= particle.Lifetime && particle.SetLifetime);
             if (!(AnchorType == 3f))
             {
                 Projectile.Center = Owner.Center;
+            }
+            else
+            {
+                Projectile.Center = origPos;
             }
         }
 

@@ -510,4 +510,14 @@ public static class CalamityUtils
 		flippedTexture.SetData(data);
 		return flippedTexture;
 	}
+
+	public static void DrawLine(Vector2 start, Vector2 end, float width, Color color)
+	{
+		Vector2 direction = end - start;
+		float angle = direction.ToRotation();
+		float length = direction.Length();
+
+		Texture2D pixelTexture = ModContent.Request<Texture2D>("AotC/Assets/Textures/Pixel").Value; // Replace with your desired texture
+		Main.spriteBatch.Draw(pixelTexture, start, null, color, angle, Vector2.Zero, new Vector2(length, width), SpriteEffects.None, 0f);
+	}
 }
