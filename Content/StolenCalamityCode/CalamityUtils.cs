@@ -69,7 +69,6 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 using Terraria.UI.Chat;
-using scuffed = System.Drawing.Color;
 
 namespace AotC.Content.StolenCalamityCode;
 

@@ -375,6 +375,11 @@ namespace AotC.Content
                     {
                         particle4.Color *= 0.9f;
                     }
+                    if (AnchorType == 5f && SlashLineNum == 1 && particle4 is GenericSparkle && particle4 == Particles[0])
+                    {
+                        particle4.Rotation+= 0.05f;
+                        particle4.Scale = 2f;
+                    }
                 }
             }
             Particles.RemoveAll((Particle particle) => particle.Time >= particle.Lifetime && particle.SetLifetime);

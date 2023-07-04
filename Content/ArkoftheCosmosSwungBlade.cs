@@ -56,6 +56,7 @@ namespace AotC.Content
         public ref float SwingType => ref Projectile.ai[0];
 
         public ref float Charge => ref Projectile.ai[1];
+
         public Player Owner => Main.player[Projectile.owner];
 
         public float MaxSwingTime => SwingType == 5f ? 10 : SwirlSwing ? 55 : 35;
@@ -305,7 +306,7 @@ namespace AotC.Content
                 else if (SwingType == 3f)
                 {
                     Projectile.damage *= 3;
-                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, Projectile.velocity, ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.chainDamageMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 3f).timeLeft = Projectile.timeLeft + 1;
+                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, Projectile.velocity, ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.chainDamageMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 3f).timeLeft = Charge >= 10f ? 100 : 35;
                 }
 
                 else if (SwingType is 0f or 1f)
@@ -494,7 +495,6 @@ namespace AotC.Content
 
 
 
-            Owner.heldProj = Projectile.whoAmI;
             Owner.direction = Math.Sign(Projectile.velocity.X);
             Owner.itemRotation = Projectile.rotation;
             if (Owner.direction != 1)
@@ -652,7 +652,7 @@ namespace AotC.Content
                     smear.Position = Owner.Center;
                     smear.Scale = MathHelper.Lerp(2.6f, 3.5f, (Projectile.scale - 1.6f) / 1f);
                     smear.Color = val;
-                } 
+                }
                 if (Main.rand.NextBool())
                 {
                     float num = Projectile.scale * 78f;
@@ -683,7 +683,7 @@ namespace AotC.Content
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (LilliaCrit == false && SwirlSwing)
-            { 
+            {
                 SoundEngine.PlaySound(in Sounds.AotCAudio.BloomingBlowsCrit, Projectile.position);
                 LilliaCrit = true;
             }
@@ -726,13 +726,13 @@ namespace AotC.Content
             ChanceMissed = reader.ReadSingle();
             ThrowReach = reader.ReadSingle();
         }
-       /* public override void PostDraw(Color lightColor)
-        {
-            float num = 290f;
-            Vector2 distanceFromPlayer = DistanceFromPlayer;
-            Vector2 val2 = distanceFromPlayer.Length() * Projectile.rotation.ToRotationVector2();
-            CalamityUtils.DrawLine(Owner.Center + val2 - Main.screenPosition, (Owner.Center + val2 + Projectile.rotation.ToRotationVector2() * num) - Main.screenPosition, 24f, Color.Red);
-        }*/
+        /* public override void PostDraw(Color lightColor)
+         {
+             float num = 290f;
+             Vector2 distanceFromPlayer = DistanceFromPlayer;
+             Vector2 val2 = distanceFromPlayer.Length() * Projectile.rotation.ToRotationVector2();
+             CalamityUtils.DrawLine(Owner.Center + val2 - Main.screenPosition, (Owner.Center + val2 + Projectile.rotation.ToRotationVector2() * num) - Main.screenPosition, 24f, Color.Red);
+         }*/
     }
 }
 

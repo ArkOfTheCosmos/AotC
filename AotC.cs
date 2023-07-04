@@ -19,7 +19,11 @@ namespace AotC
         {
             Ref<Effect> shader4 = new(Assets.Request<Effect>("Assets/Effects/TextShader", (AssetRequestMode)1).Value);
             GameShaders.Misc["PulseUpwards"] = new MiscShaderData(shader4, "PulseUpwards");
-
+            GameShaders.Misc["PulseDiagonal"] = new MiscShaderData(shader4, "PulseDiagonal");
+            GameShaders.Misc["PulseCircle"] = new MiscShaderData(shader4, "PulseCircle");
+            
+            Ref<Effect> shader1 = new(Assets.Request<Effect>("Assets/Effects/ConstellationShader", AssetRequestMode.ImmediateLoad).Value);
+            GameShaders.Misc["ImageShader"] = new MiscShaderData(shader1, "ImageShader");
 
             Calamity = null;
             ModLoader.TryGetMod("CalamityMod", out Calamity);

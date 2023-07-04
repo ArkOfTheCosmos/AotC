@@ -25,6 +25,10 @@ public class EonBolt : ModProjectile
 
     private Particle Head;
 
+    private bool initialized;
+
+    private float colorRand;
+
     public override string Texture => "AotC/Content/TestStar";
 
     public Player Owner => Main.player[Projectile.owner];
@@ -66,6 +70,11 @@ public class EonBolt : ModProjectile
 
     public override void AI()
     {
+        if (!initialized)
+        {
+            colorRand = Main.rand.NextFloat() / 5f;
+            initialized = true;
+        }
         if (Particles == null)
         {
             Particles = new List<Particle>();
@@ -103,7 +112,7 @@ public class EonBolt : ModProjectile
         }
         Color val = new(0.75f, 1f, 0.24f);
         CalamityUtils.ColorToHSV(val, out float h, out float s, out float v);
-        val = CalamityUtils.HsvToRgb(h + Main.GlobalTimeWrappedHourly % 1, s, v);
+        val = CalamityUtils.HsvToRgb(h + Main.GlobalTimeWrappedHourly % 1 + colorRand, s, v);
         Lighting.AddLight(Projectile.Center, val.R / 255f, val.G / 255f, val.B / 255f);
         /*if (Main.rand.Next(2) == 0)
 		{
@@ -129,7 +138,7 @@ public class EonBolt : ModProjectile
 
     internal Color ColorFunction(float completionRatio)
     {
-        return CalamityUtils.HsvToRgb(Main.GlobalTimeWrappedHourly, 1f, 1f); ;
+        return CalamityUtils.HsvToRgb(Main.GlobalTimeWrappedHourly + colorRand, 1f, 1f); ;
     }
 
     internal float WidthFunction(float completionRatio)
@@ -152,8 +161,8 @@ public class EonBolt : ModProjectile
             Main.spriteBatch.EnterShaderRegion(BlendState.Additive);
             foreach (GenericSparkle particle in Particles)
             {
-                particle.Bloom = CalamityUtils.HsvToRgb(Main.GlobalTimeWrappedHourly, 1f, 1f);
-                particle.Color = CalamityUtils.HsvToRgb(Main.GlobalTimeWrappedHourly, 1f, 1f);
+                particle.Bloom = CalamityUtils.HsvToRgb(Main.GlobalTimeWrappedHourly + colorRand, 1f, 1f);
+                particle.Color = CalamityUtils.HsvToRgb(Main.GlobalTimeWrappedHourly + colorRand, 1f, 1f);
             }
             foreach (Particle particle in Particles)
             {

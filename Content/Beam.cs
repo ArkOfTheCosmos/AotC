@@ -93,7 +93,6 @@ public class Beam : BaseLaserbeamProjectile
                 Main.instance.CameraModifiers.Add(modifier);
             }
         }
-        Owner.heldProj = Projectile.whoAmI;
         Projectile.netUpdate = true;
         if (!PlayedSound)
         {

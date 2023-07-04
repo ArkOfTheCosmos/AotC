@@ -14,7 +14,6 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Graphics.Shaders;
 
-
 namespace AotC.Content.Items.Weapons
 {
     internal class ArkoftheCosmos : ModItem
@@ -31,6 +30,8 @@ namespace AotC.Content.Items.Weapons
         public static float chainDamageMultiplier = 0.1f;
         public List<Vector2> SlashPoints = new();
         public List<Projectile> SlashLines = new();
+        public RenderTarget2D rendertarget;
+        public Texture2D nameTexture;
 
         public override void SetStaticDefaults()
         {
@@ -42,8 +43,8 @@ namespace AotC.Content.Items.Weapons
             Item.height = 102;
 
             Item.useStyle = ItemUseStyleID.Shoot;
-            Item.useTime = 15;
-            Item.useAnimation = 15;
+            Item.useTime = 1;
+            Item.useAnimation = 1;
             Item.autoReuse = true;
 
             Item.DamageType = DamageClass.Melee;
@@ -66,72 +67,94 @@ namespace AotC.Content.Items.Weapons
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
+
+
             if (tooltips != null && Main.player[Main.myPlayer] != null)
             {
-                TooltipLine tooltipLine = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip0" && x.Mod == "Terraria");
-                if (tooltipLine != null)
+                TooltipLine line = new(AotC.Instance, "AotCText", "\"I'm what you get when the stars collide\"")
                 {
-                    tooltipLine.Text = "Use LMB to swing the sword out in front of you, firing out stars in the process";
-                    tooltipLine.OverrideColor = Color.Orange;
-                }
-                TooltipLine tooltipLine1 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip1" && x.Mod == "Terraria");
-                if (tooltipLine1 != null)
+                    OverrideColor = Color.Black
+                };
+                tooltips.Insert(1, line); // Insert the line at the desired position in the tooltip
+
+                for (int i = 0; i < tooltips.Count; i++)
                 {
-                    tooltipLine1.Text = "Every fifth swing will swirl the sword around you with Blooming Blows, firing extra \nstars and dealing double damage";
-                    tooltipLine1.OverrideColor = Color.DodgerBlue;
-                }
-                TooltipLine tooltipLine2 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip2" && x.Mod == "Terraria");
-                if (tooltipLine2 != null)
-                {
-                    tooltipLine2.Text = "One of the first four attacks will stab in front of you, dealing triple damage and \nfiring out a beam";
-                    tooltipLine2.OverrideColor = Color.Yellow;
-                }
-                TooltipLine tooltipLine3 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip3" && x.Mod == "Terraria");
-                if (tooltipLine3 != null)
-                {
-                    tooltipLine3.Text = "Use RMB to throw the sword out, imploding with stars and following \nyour cursor with constellations";
-                    tooltipLine3.OverrideColor = Color.Magenta;
-                }
-                TooltipLine tooltipLine4 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip4" && x.Mod == "Terraria");
-                if (tooltipLine4 != null)
-                {
-                    tooltipLine4.Text = "Hitting an enemy with either a thrown attack, Blooming Blows, or the \nstars they create will generate charge";
-                    tooltipLine4.OverrideColor = Color.Cyan;
-                }
-                TooltipLine tooltipLine5 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip5" && x.Mod == "Terraria");
-                if (tooltipLine5 != null)
-                {
-                    tooltipLine5.Text = "Charge is consumed when attacking, causing swings to fire out three stars \ninstead of two, beams to be upgraded to bigger and \nlonger lasting Killer Wails, and Blooming Blows to fire twice as many stars";
-                    tooltipLine5.OverrideColor = Color.SpringGreen;
-                }
-                TooltipLine tooltipLine6 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip6" && x.Mod == "Terraria");
-                if (tooltipLine6 != null)
-                {
-                    tooltipLine6.Text = "Pressing W + RMB will create stars that will form constellations. Up to a \nmaximum of ten stars can be placed. Pressing W + LMB while \nclose to the start will cause you to dash and slash across them";
-                    tooltipLine6.OverrideColor = Color.Red;
+                    if (Item.favorited && tooltips[i].Name != "AotCText" && tooltips[i].Name != "ItemName")
+                    {
+                        // Remove specific tooltips (e.g., speed and damage)
+                        tooltips.RemoveAt(i);
+                        i--;
+                    }
                 }
 
+
+
+
+                if (!Item.favorited)
+                {
+                    TooltipLine tooltipLine0 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip0" && x.Mod == "Terraria");
+                    if (tooltipLine0 != null)
+                    {
+                        tooltipLine0.Text = "Use LMB to swing the sword out in front of you, firing out stars in the process";
+                        tooltipLine0.OverrideColor = Color.Orange;
+                    }
+                    TooltipLine tooltipLine1 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip1" && x.Mod == "Terraria");
+                    if (tooltipLine1 != null)
+                    {
+                        tooltipLine1.Text = "Every fifth swing will swirl the sword around you with Blooming Blows, firing extra \nstars and dealing double damage";
+                        tooltipLine1.OverrideColor = Color.DodgerBlue;
+                    }
+                    TooltipLine tooltipLine2 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip2" && x.Mod == "Terraria");
+                    if (tooltipLine2 != null)
+                    {
+                        tooltipLine2.Text = "One of the first four attacks will stab in front of you, dealing triple damage and \nfiring out a beam";
+                        tooltipLine2.OverrideColor = Color.Yellow;
+                    }
+                    TooltipLine tooltipLine3 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip3" && x.Mod == "Terraria");
+                    if (tooltipLine3 != null)
+                    {
+                        tooltipLine3.Text = "Use RMB to throw the sword out, imploding with stars and following \nyour cursor with constellations";
+                        tooltipLine3.OverrideColor = Color.Magenta;
+                    }
+                    TooltipLine tooltipLine4 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip4" && x.Mod == "Terraria");
+                    if (tooltipLine4 != null)
+                    {
+                        tooltipLine4.Text = "Hitting an enemy with either a thrown attack, Blooming Blows, or the \nstars they create will generate charge";
+                        tooltipLine4.OverrideColor = Color.Cyan;
+                    }
+                    TooltipLine tooltipLine5 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip5" && x.Mod == "Terraria");
+                    if (tooltipLine5 != null)
+                    {
+                        tooltipLine5.Text = "Charge is consumed when attacking, causing swings to fire out three stars \ninstead of two, beams to be upgraded to bigger and \nlonger lasting Killer Wails, and Blooming Blows to fire twice as many stars";
+                        tooltipLine5.OverrideColor = Color.SpringGreen;
+                    }
+                    TooltipLine tooltipLine6 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip6" && x.Mod == "Terraria");
+                    if (tooltipLine6 != null)
+                    {
+                        tooltipLine6.Text = "Pressing W + RMB will create stars that form constellations. Up \nto a maximum of ten stars can be placed. Pressing W + LMB while \nclose to the start will cause you to dash and slash across them";
+                        tooltipLine6.OverrideColor = Color.Red;
+                    }
+                }
             }
         }
-
-
         public override bool PreDrawTooltipLine(DrawableTooltipLine line, ref int yOffset)
         {
-            //IL_003f: Unknown result type (might be due to invalid IL or missing references)
-            //IL_005e: Unknown result type (might be due to invalid IL or missing references)
-            //IL_0068: Unknown result type (might be due to invalid IL or missing references)
-            //IL_0099: Unknown result type (might be due to invalid IL or missing references)
-            //IL_009e: Unknown result type (might be due to invalid IL or missing references)
-            //IL_00b3: Unknown result type (might be due to invalid IL or missing references)
-            //IL_00ce: Unknown result type (might be due to invalid IL or missing references)
-            if (line.Mod == "Terraria" && line.Name == "ItemName")
+            if ((line.Mod == "Terraria" && line.Name == "ItemName"))
             {
                 Main.spriteBatch.End();
-                Main.spriteBatch.Begin((SpriteSortMode)1, null, null, null, null, null, Main.UIScaleMatrix);
-                GameShaders.Misc["PulseUpwards"].UseColor(new Color(42, 42, 99)).UseSecondaryColor(Color.Green).Apply();
+                RenderTargetBinding[] oldTargets = Main.graphics.GraphicsDevice.GetRenderTargets();
+                rendertarget = new(Main.spriteBatch.GraphicsDevice, 1000, 1000);
+                Main.spriteBatch.GraphicsDevice.SetRenderTargets(rendertarget);
+                Main.spriteBatch.Begin();
+
                 Utils.DrawBorderString(Main.spriteBatch, line.Text, new Vector2(line.X, line.Y), Color.White);
+
                 Main.spriteBatch.End();
-                Main.spriteBatch.Begin(0, null, null, null, null, null, Main.UIScaleMatrix);
+                //Main.graphics.GraphicsDevice.SetRenderTargets(oldTargets); 
+                nameTexture = rendertarget;
+                Main.spriteBatch.Begin(0, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
+                //Main.spriteBatch.Draw(nameTexture, new Vector2(0, 0), Color.White);
+                rendertarget.Dispose();
                 return false;
             }
             return true;
@@ -142,7 +165,6 @@ namespace AotC.Content.Items.Weapons
             Mod Calamity = AotC.Instance.Calamity;
             if (AotC.Instance.Calamity != null)
             {
-                Main.NewText("a");
                 Recipe recipe = CreateRecipe();
                 recipe.AddIngredient(Calamity.Find<ModItem>("DormantBrimseeker"), 1);
                 recipe.AddIngredient(Calamity.Find<ModItem>("SearedPan"), 1);
@@ -224,6 +246,8 @@ namespace AotC.Content.Items.Weapons
         //this is where crud happens
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
+            Item.useTime = 1;
+            Item.useAnimation = 1;
             if (charge < 0f)
             {
                 charge = 0f;
@@ -257,7 +281,7 @@ namespace AotC.Content.Items.Weapons
                     {
                         Projectile.NewProjectile(source, player.Center, velocity, ModContent.ProjectileType<ArkoftheCosmosSwungBlade>(), damage * 4, knockback, player.whoAmI, 4f, charge);
                         timers.ArkThrowCooldown = 340; //split ark has 340 cooldown
-                        PunchCameraModifier modifier = new(player.Center, (Main.rand.NextFloat() * ((float)Math.PI * 2f)).ToRotationVector2(), 50f, 6f, 20, 1000f, FullName);
+                        PunchCameraModifier modifier = new(player.Center, player.DirectionTo(Main.MouseScreen), 100f, 4f, 20, 2669f, FullName);
                         Main.instance.CameraModifiers.Add(modifier);
                     }
                     return false;
@@ -273,12 +297,15 @@ namespace AotC.Content.Items.Weapons
                 //slash code
                 if (SlashPoints.Count > 1)
                 {
+                    Item.autoReuse = false;
                     player.GetModPlayer<Timers>().StartSlash();
                 }
 
                 return false;
             }
-
+            Item.autoReuse = true;
+            Item.useTime = 15;
+            Item.useAnimation = 15;
 
 
 
@@ -326,7 +353,7 @@ namespace AotC.Content.Items.Weapons
 
         public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
         {
-            if (!(charge <= 0f))
+            if (!(charge <= 10f))
             {
                 Texture2D value = ModContent.Request<Texture2D>("AotC/Assets/Textures/GenericBarBack", (AssetRequestMode)2).Value;
                 Texture2D value2 = ModContent.Request<Texture2D>("AotC/Assets/Textures/GenericBarFront", (AssetRequestMode)2).Value;
