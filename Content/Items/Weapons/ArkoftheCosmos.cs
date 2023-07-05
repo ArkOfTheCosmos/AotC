@@ -73,7 +73,7 @@ namespace AotC.Content.Items.Weapons
             {
                 TooltipLine line = new(AotC.Instance, "AotCText", "\"I'm what you get when the stars collide\"")
                 {
-                    OverrideColor = Color.Black
+                    //OverrideColor = Color.Black
                 };
                 tooltips.Insert(1, line); // Insert the line at the desired position in the tooltip
 
@@ -139,22 +139,19 @@ namespace AotC.Content.Items.Weapons
         }
         public override bool PreDrawTooltipLine(DrawableTooltipLine line, ref int yOffset)
         {
-            if ((line.Mod == "Terraria" && line.Name == "ItemName"))
+            if (line.Name is "ItemName" or "AotCText")    
             {
                 Main.spriteBatch.End();
-                RenderTargetBinding[] oldTargets = Main.graphics.GraphicsDevice.GetRenderTargets();
-                rendertarget = new(Main.spriteBatch.GraphicsDevice, 1000, 1000);
-                Main.spriteBatch.GraphicsDevice.SetRenderTargets(rendertarget);
-                Main.spriteBatch.Begin();
+
+                Main.spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Main.UIScaleMatrix);
+
+                GameShaders.Misc["ImageShader"].Apply();
+
 
                 Utils.DrawBorderString(Main.spriteBatch, line.Text, new Vector2(line.X, line.Y), Color.White);
 
                 Main.spriteBatch.End();
-                //Main.graphics.GraphicsDevice.SetRenderTargets(oldTargets); 
-                nameTexture = rendertarget;
-                Main.spriteBatch.Begin(0, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
-                //Main.spriteBatch.Draw(nameTexture, new Vector2(0, 0), Color.White);
-                rendertarget.Dispose();
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, Main.UIScaleMatrix);
                 return false;
             }
             return true;

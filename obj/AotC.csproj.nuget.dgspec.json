@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Green Blizzard\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\AotC.csproj": {}
+    "C:\\Users\\bendu\\OneDrive\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\AotC.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Green Blizzard\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\AotC.csproj": {
+    "C:\\Users\\bendu\\OneDrive\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\AotC.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Green Blizzard\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\AotC.csproj",
+        "projectUniqueName": "C:\\Users\\bendu\\OneDrive\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\AotC.csproj",
         "projectName": "AotC",
-        "projectPath": "C:\\Users\\Green Blizzard\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\AotC.csproj",
-        "packagesPath": "C:\\Users\\Green Blizzard\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Green Blizzard\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\obj\\",
+        "projectPath": "C:\\Users\\bendu\\OneDrive\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\AotC.csproj",
+        "packagesPath": "C:\\Users\\bendu\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\bendu\\OneDrive\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Green Blizzard\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\bendu\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -61,7 +61,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
         }
       }
     }
