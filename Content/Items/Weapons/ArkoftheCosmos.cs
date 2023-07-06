@@ -75,7 +75,7 @@ namespace AotC.Content.Items.Weapons
                 {
                     //OverrideColor = Color.Black
                 };
-                tooltips.Insert(1, line); // Insert the line at the desired position in the tooltip
+                tooltips.Insert(1, line); 
 
                 for (int i = 0; i < tooltips.Count; i++)
                 {
@@ -141,14 +141,30 @@ namespace AotC.Content.Items.Weapons
         {
             if (line.Name is "ItemName" or "AotCText")    
             {
+                Terraria.UI.Chat.ChatManager.DrawColorCodedStringShadow(Main.spriteBatch, line.Font, line.Text, new Vector2(line.X, line.Y),
+                    line.OverrideColor ?? line.Color
+                    //Color.Black
+                , line.Rotation, line.Origin, line.BaseScale, line.MaxWidth, line.Spread);
+
                 Main.spriteBatch.End();
 
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Main.UIScaleMatrix);
 
-                GameShaders.Misc["ImageShader"].Apply();
+                GameShaders.Misc["TooltipShader"].UseImage1(ModContent.Request<Texture2D>("AotC/Assets/Textures/idk"));
+                //GameShaders.Misc["TooltipShader"].UseColor(line.OverrideColor ?? line.Color);
 
 
-                Utils.DrawBorderString(Main.spriteBatch, line.Text, new Vector2(line.X, line.Y), Color.White);
+                //GameShaders.Misc["TooltipShader"].Shader.Parameters["uUIPosition"].SetValue(new Vector2(line.X, line.Y));
+                //GameShaders.Misc["TooltipShader"].Shader.Parameters["uDrawWithColor"].SetValue(Main.LocalPlayer.selectedItem is 7 or 8 or 9);
+                //GameShaders.Misc["TooltipShader"].Shader.Parameters["uDrawInTooptipCoords"].SetValue(Main.LocalPlayer.direction == 1);
+
+
+                GameShaders.Misc["TooltipShader"].Apply();
+
+
+                //Utils.DrawBorderString(Main.spriteBatch, line.Text, new Vector2(line.X, line.Y), Color.White);
+
+                Terraria.UI.Chat.ChatManager.DrawColorCodedString(Main.spriteBatch, line.Font, line.Text, new Vector2(line.X, line.Y), line.OverrideColor ?? line.Color, line.Rotation, line.Origin, line.BaseScale, line.MaxWidth); // no spread, spread is for shadow
 
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, Main.UIScaleMatrix);
@@ -335,7 +351,7 @@ namespace AotC.Content.Items.Weapons
                     Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, Vector2.Zero, ModContent.ProjectileType<Beam>(), Item.damage, 1f, player.whoAmI, f, 1f);
                 }
             }
-            if (charge > 10f)
+            if (charge >= 10f)
             {
                 charge -= 10f;
             }

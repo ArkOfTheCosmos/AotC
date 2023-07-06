@@ -18,14 +18,16 @@ namespace AotC
 
         public override void Load()
         {
-            Ref<Effect> shader4 = new(Assets.Request<Effect>("Assets/Effects/TextShader", (AssetRequestMode)1).Value);
+            Ref<Effect> shader4 = new(Assets.Request<Effect>("Effects/TextShader", (AssetRequestMode)1).Value);
             GameShaders.Misc["PulseUpwards"] = new MiscShaderData(shader4, "PulseUpwards");
             GameShaders.Misc["PulseDiagonal"] = new MiscShaderData(shader4, "PulseDiagonal");
             GameShaders.Misc["PulseCircle"] = new MiscShaderData(shader4, "PulseCircle");
 
-            Ref<Effect> shader1 = new(Assets.Request<Effect>("Assets/Effects/ConstellationShader", AssetRequestMode.ImmediateLoad).Value);
-            GameShaders.Misc["ImageShader"] = new MiscShaderData(shader1, "FilterMyShader");
-            GameShaders.Misc["ImageShader"].UseImage1(ModContent.Request<Texture2D>("AotC/Assets/Textures/jerma"));
+            Ref<Effect> FadedUVMapStreakShader = new(Assets.Request<Effect>("Effects/FadedUVMapStreak", (AssetRequestMode)1).Value);
+            GameShaders.Misc["CalamityMod:TrailStreak"] = new MiscShaderData(FadedUVMapStreakShader, "TrailPass");
+
+            var ExampleMiscEffect = new Ref<Effect>(Assets.Request<Effect>("Effects/ConstellationShader", AssetRequestMode.ImmediateLoad).Value);
+            GameShaders.Misc["TooltipShader"] = new MiscShaderData(ExampleMiscEffect, "ExampleCyclePass");
 
             Calamity = null;
             ModLoader.TryGetMod("CalamityMod", out Calamity);
@@ -33,7 +35,6 @@ namespace AotC
             if (!Main.dedServ)
             {
                 GeneralParticleHandler.Load();
-                CalamityShaders.LoadShaders();
             }
         }
     }
