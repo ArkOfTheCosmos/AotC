@@ -1,11 +1,15 @@
 Mods: {
 	AotC: {
 		Projectiles: {
-			ArkoftheCosmosSwungBlade.DisplayName: Ark of the Cosmos
-			Beam.DisplayName: Beam
-			EonBolt.DisplayName: Eon Bolt
-			ArkoftheCosmosConstellation.DisplayName: Arkofthe Cosmos Constellation
-			dont.DisplayName: dont
+			ArkoftheCosmosSwungBlade.DisplayName: Ark of the Cosmos Blade
+			KillerWail.DisplayName: Killer Wail
+			EonStar.DisplayName: Eon Star
+			ArkoftheCosmosConstellation.DisplayName: Ark Constellation
+			EonBeamLegacy.DisplayName: Beam
+			EonBeamLegacyV2.DisplayName: Beam
+			EonBeamLegacyV3.DisplayName: Beam
+			EonBeamLegacyV4.DisplayName: Beam
+			EonStarLegacy.DisplayName: Eon Star Legacy
 		}
 
 		Items: {
@@ -22,6 +26,64 @@ Mods: {
 					dog
 					Favorite this item to remove instructions
 					'''
+			}
+
+			HeartoftheMountain: {
+				DisplayName: Heart of the Mountain
+				Tooltip:
+					'''
+					This is what's at the center of all this?
+					It's so empty... and vast...
+					Yet it feels nostalgic somehow.
+					And peaceful.
+					'''
+			}
+
+			ArkoftheCosmosLegacy: {
+				DisplayName: Ark of the Cosmos (Legacy)
+				Tooltip:
+					'''
+					Fires different homing projectiles based on what biome you're in
+					Upon hitting an enemy you are granted a buff based on what biome you're in
+					Projectiles also change based on moon events
+					'''
+			}
+		}
+
+		Buffs: {
+			BrimstoneFlames: {
+				DisplayName: Brimstone Flames
+				Description: Mods.AotC.Buffs.BrimstoneFlames.Description
+			}
+
+			GlacialState: {
+				DisplayName: Glacial State
+				Description: Mods.AotC.Buffs.GlacialState.Description
+			}
+
+			HolyFlames: {
+				DisplayName: Holy Flames
+				Description: Mods.AotC.Buffs.HolyFlames.Description
+			}
+
+			Plague: {
+				DisplayName: Plague
+				Description: Mods.AotC.Buffs.Plague.Description
+			}
+
+			ArmorCrunch: {
+				DisplayName: Armor Crunch
+				Description: Mods.AotC.Buffs.ArmorCrunch.Description
+			}
+
+			CrushDepth: {
+				DisplayName: Crush Depth
+				Description: Mods.AotC.Buffs.CrushDepth.Description
+			}
+
+			TemporalSadness: {
+				DisplayName: Temporal Sadness
+				Description: Mods.AotC.Buffs.TemporalSadness.Description
 			}
 		}
 	}

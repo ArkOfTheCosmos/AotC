@@ -14,6 +14,7 @@
     <Folder Include="Assets\Sounds\" />
     <Folder Include="Assets\Music\" />
     <Folder Include="Assets\Textures\" />
+    <Folder Include="Content\Items\Weapons\Melee\" />
     <Folder Include="Localisation\" />
     <Folder Include="Common\" />
   </ItemGroup>

@@ -1,4 +1,6 @@
-The AotC Rework is awesome, don't get me wrong, but I prefer the look of the old one WAY more. Combine that with a few other things I'd change/add, I decided to make this mod.
-If you have Calamity installed, it's craftable with shadowspec bars and the most cursed recipe you will ever see.
+The AotC Rework is awesome, don't get me wrong, but I prefer the look of the old one WAY more. That as well as a few other things I'd change/add, caused me to make this mod.
+Scales in power depending on whether you have calamity installed (or it would if i had programmed that in yet)
+
+Also adds more random items that I just feel like making, maybe this will turn into a hybrid QoL Content mod who knows
 
 please send bug reports or suggestions n stuff to aotc2669 on discord ok yes thanks

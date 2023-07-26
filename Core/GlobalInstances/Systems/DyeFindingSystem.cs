@@ -1,0 +1,23 @@
+﻿using Terraria;
+using Terraria.ModLoader;
+
+namespace AotC.Core.GlobalInstances.Systems
+{
+    public class DyeFindingSystem : ModSystem
+    {
+        public delegate void FindDyeDelegate(Item armorItem, Item dyeItem);
+
+        public static event FindDyeDelegate FindDyeEvent;
+
+        public override void OnModLoad()
+        {
+            On_Player.UpdateItemDye += FindDyes;
+        }
+
+        private void FindDyes(On_Player.orig_UpdateItemDye orig, Player self, bool isNotInVanitySlot, bool isSetToHidden, Item armorItem, Item dyeItem)
+        {
+            orig(self, isNotInVanitySlot, isSetToHidden, armorItem, dyeItem);
+            FindDyeEvent?.Invoke(armorItem, dyeItem);
+        }
+    }
+}

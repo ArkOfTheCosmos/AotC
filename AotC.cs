@@ -1,33 +1,38 @@
-using AotC.Content.StolenCalamityCode;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
-using System.Drawing;
 using Terraria;
-using Terraria.Graphics.Shaders;
+using ReLogic.Content;
 using Terraria.ModLoader;
+using AotC.Content.Particles;
+using Terraria.Graphics.Shaders;
+using Microsoft.Xna.Framework.Graphics;
+using AotC.Core;
+using System.Collections.Generic;
+using System;
+using System.Linq;
+using Terraria.ID;
+using Terraria.Localization;
 
 namespace AotC
 {
     public class AotC : Mod
     {
         internal Mod Calamity;
-
-        public const string ASSET_PATH = "AotC/Assets/";
-
         internal static AotC Instance;
+        public const string ASSET_PATH = "AotC/Assets/";
+        private List<IOrderedLoadable> loadCache;
+        private static RecipeGroup JellyfishRecipeGroup;
+    
 
         public override void Load()
         {
-            Ref<Effect> shader4 = new(Assets.Request<Effect>("Effects/TextShader", (AssetRequestMode)1).Value);
-            GameShaders.Misc["PulseUpwards"] = new MiscShaderData(shader4, "PulseUpwards");
-            GameShaders.Misc["PulseDiagonal"] = new MiscShaderData(shader4, "PulseDiagonal");
-            GameShaders.Misc["PulseCircle"] = new MiscShaderData(shader4, "PulseCircle");
 
-            Ref<Effect> FadedUVMapStreakShader = new(Assets.Request<Effect>("Effects/FadedUVMapStreak", (AssetRequestMode)1).Value);
+            Ref<Effect> FadedUVMapStreakShader = new(Assets.Request<Effect>("Assets/Effects/FadedUVMapStreak", (AssetRequestMode)1).Value);
             GameShaders.Misc["CalamityMod:TrailStreak"] = new MiscShaderData(FadedUVMapStreakShader, "TrailPass");
-
-            var ExampleMiscEffect = new Ref<Effect>(Assets.Request<Effect>("Effects/ConstellationShader", AssetRequestMode.ImmediateLoad).Value);
-            GameShaders.Misc["TooltipShader"] = new MiscShaderData(ExampleMiscEffect, "ExampleCyclePass");
+            var TrailShader = new Ref<Effect>(Assets.Request<Effect>("Assets/Effects/CelesteTrailShader", AssetRequestMode.ImmediateLoad).Value);
+            GameShaders.Misc["CelesteTrailShader"] = new MiscShaderData(TrailShader, "ExampleCyclePass");
+            var ImageShader = new Ref<Effect>(Assets.Request<Effect>("Assets/Effects/ImageShader", AssetRequestMode.ImmediateLoad).Value);
+            GameShaders.Misc["ImageShader"] = new MiscShaderData(ImageShader, "ExampleCyclePass");
+            var StaticImageShader = new Ref<Effect>(Assets.Request<Effect>("Assets/Effects/StaticImageShader", AssetRequestMode.ImmediateLoad).Value);
+            GameShaders.Misc["StaticImageShader"] = new MiscShaderData(StaticImageShader, "ExampleCyclePass");
 
             Calamity = null;
             ModLoader.TryGetMod("CalamityMod", out Calamity);
@@ -36,6 +41,26 @@ namespace AotC
             {
                 GeneralParticleHandler.Load();
             }
+
+
+            loadCache = new List<IOrderedLoadable>();
+            foreach (Type type in Code.GetTypes())
+            {
+                if (!type.IsAbstract && type.GetInterfaces().Contains(typeof(IOrderedLoadable)))
+                {
+                    object instance = Activator.CreateInstance(type);
+                    loadCache.Add(instance as IOrderedLoadable);
+                }
+                loadCache.Sort((n, t) => n.Priority.CompareTo(t.Priority));
+            }
+
+            for (int k = 0; k < loadCache.Count; k++)
+                loadCache[k].Load();
+        }
+        public override void AddRecipeGroups()
+        {
+            JellyfishRecipeGroup = new RecipeGroup(() => "Any Jellyfish", ItemID.BlueJellyfish, ItemID.PinkJellyfish, ItemID.GreenJellyfish);
+            RecipeGroup.RegisterGroup("AotC:Jellyfish", JellyfishRecipeGroup);
         }
     }
 }
