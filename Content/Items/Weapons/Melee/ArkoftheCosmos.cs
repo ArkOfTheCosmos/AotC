@@ -76,6 +76,12 @@ namespace AotC.Content.Items.Weapons.Melee
                 }
                 if (!Item.favorited)
                 {
+                    TooltipLine damageLine = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Damage" && x.Mod == "Terraria");
+                    if (damageLine != null)
+                        damageLine.Text = "2669 damage";
+                    TooltipLine speedLine = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Speed" && x.Mod == "Terraria");
+                    if (speedLine != null)
+                        speedLine.Text = "Sonic speed";
                     TooltipLine tooltipLine0 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip0" && x.Mod == "Terraria");
                     if (tooltipLine0 != null)
                     {
@@ -85,37 +91,37 @@ namespace AotC.Content.Items.Weapons.Melee
                     TooltipLine tooltipLine1 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip1" && x.Mod == "Terraria");
                     if (tooltipLine1 != null)
                     {
-                        tooltipLine1.Text = "Every fifth swing will swirl the sword around you with Blooming Blows, firing extra \nstars and dealing double damage";
+                        tooltipLine1.Text = "Every fifth swing will swirl the sword around you with Blooming Blows, firing\nextra stars and dealing double damage";
                         tooltipLine1.OverrideColor = new(65, 100, 255);
                     }
                     TooltipLine tooltipLine2 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip2" && x.Mod == "Terraria");
                     if (tooltipLine2 != null)
                     {
-                        tooltipLine2.Text = "One of the first four attacks will stab in front of you, dealing triple damage and \nfiring out a beam";
+                        tooltipLine2.Text = "One of the first four attacks will stab in front of you, dealing triple\ndamage and firing out a beam";
                         tooltipLine2.OverrideColor = Color.Yellow;
                     }
                     TooltipLine tooltipLine3 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip3" && x.Mod == "Terraria");
                     if (tooltipLine3 != null)
                     {
-                        tooltipLine3.Text = "Use RMB to throw the sword out, imploding with stars and following \nyour cursor with constellations";
+                        tooltipLine3.Text = "Use RMB to throw the sword, causing it to implode with stars and follow\nyour cursor with constellations guiding it";
                         tooltipLine3.OverrideColor = new(130, 70, 255);
                     }
                     TooltipLine tooltipLine4 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip4" && x.Mod == "Terraria");
                     if (tooltipLine4 != null)
                     {
-                        tooltipLine4.Text = "Hitting an enemy with either a thrown attack, Blooming Blows, or the \nstars they create will generate charge";
+                        tooltipLine4.Text = "Hitting an enemy with either a thrown attack, Blooming Blows, or the\nstars they create will generate charge";
                         tooltipLine4.OverrideColor = Color.Cyan;
                     }
                     TooltipLine tooltipLine5 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip5" && x.Mod == "Terraria");
                     if (tooltipLine5 != null)
                     {
-                        tooltipLine5.Text = "Charge is consumed when attacking, causing swings to fire out three stars \ninstead of two, beams to be upgraded to bigger and \nlonger lasting Killer Wails, and Blooming Blows to fire twice as many stars";
+                        tooltipLine5.Text = "Charge is consumed when attacking, causing swings to fire out three stars\ninstead of two. Beams will be upgraded to bigger and longer lasting\nKiller Wails, and Blooming Blows will fire twice as many stars";
                         tooltipLine5.OverrideColor = Color.SpringGreen;
                     }
                     TooltipLine tooltipLine6 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip6" && x.Mod == "Terraria");
                     if (tooltipLine6 != null)
                     {
-                        tooltipLine6.Text = "Pressing W + RMB will create stars that form constellations. Up \nto a maximum of ten stars can be placed. Pressing W + LMB while \nclose to the start will cause you to dash and slash across them";
+                        tooltipLine6.Text = "Pressing W + RMB will consume charge to create stars that form constellations.\nUp to a maximum of ten stars can be placed. Pressing W + LMB while close\nto the first star placed will cause you to dash and slash across them";
                         tooltipLine6.OverrideColor = Color.Red;
                     }
                 }
@@ -143,21 +149,24 @@ namespace AotC.Content.Items.Weapons.Melee
             if (AotC.Instance.Calamity != null)
             {
                 CreateRecipe()
-                .AddIngredient(ItemID.Bone, 66)
-                .AddIngredient(ItemID.Fireplace, 1)
-                .AddIngredient(ItemID.LifeCrystal, 9)
-                .AddIngredient(ItemID.InfernoFork, 1)
-                .AddIngredient(ItemID.PiercingStarlight, 2)
-                .AddIngredient(Calamity.Find<ModItem>("ExoPrism"), 1)
-                .AddIngredient(Calamity.Find<ModItem>("SearedPan"), 1)
-                .AddIngredient(Calamity.Find<ModItem>("CounterScarf"), 1)
-                .AddIngredient(Calamity.Find<ModItem>("HyperiusBullet"), 92)
-                .AddIngredient(Calamity.Find<ModItem>("ShadowspecBar"), 5)
-                .AddIngredient(Calamity.Find<ModItem>("UndinesRetribution"), 1)
-                .AddIngredient(Calamity.Find<ModItem>("DormantBrimseeker"), 1)
-                .AddTile(Calamity.Find<ModTile>("DraedonsForge"))
-                .Register();
+                    .AddIngredient(Calamity.Find<ModItem>("DormantBrimseeker"), 1)
+                    .AddIngredient(Calamity.Find<ModItem>("SearedPan"), 1)
+                    .AddIngredient(ItemID.LifeCrystal, 9)
+                    .AddIngredient(ItemID.PiercingStarlight, 2)
+                    .AddIngredient(Calamity.Find<ModItem>("HyperiusBullet"), 92)
+                    .AddIngredient(ItemID.PapyrusScarab, 1)
+                    .AddIngredient(Calamity.Find<ModItem>("ExoPrism"), 1)
+                    .AddIngredient(Calamity.Find<ModItem>("UndinesRetribution"), 1)
+                    .AddIngredient(ItemID.Bone, 66)
+                    .AddIngredient(ItemID.Fireplace, 1)
+                    .AddIngredient(ItemID.InfernoFork, 1)
+                    .AddIngredient(Calamity.Find<ModItem>("ShadowspecBar"), 5)
+                    .AddTile(Calamity.Find<ModTile>("DraedonsForge"))
+                    .Register();
             }
+            CreateRecipe()
+                .AddCustomShimmerResult(ModContent.ItemType<ArkoftheCosmosLegacy>())
+                .Register();
         }
         //makes it so you can use weapon with rmb
         public override bool AltFunctionUse(Player player)

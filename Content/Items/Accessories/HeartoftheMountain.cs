@@ -31,16 +31,15 @@ namespace AotC.Content.Items.Accessories
         public override void AddRecipes()
         {
             CreateRecipe()
-            .AddIngredient(ItemID.ConveyorBeltRight, 1)
-            .AddIngredient(ItemID.Bubble, 1)
-            .AddIngredient(ItemID.BlackFairyDust, 1)
-            .AddIngredient(ItemID.CloudinaBottle, 1)
-            .AddIngredient(ItemID.MagicMirror, 1)
-            .AddIngredient(ItemID.CrystalShard, 1)
-            .AddIngredient(ItemID.GolfCupFlagRed, 1)
-            .AddIngredient(ItemID.LifeCrystal, 1)
-            .AddRecipeGroup("AotC:Jellyfish", 1)
-            .Register();
+                .AddIngredient(ItemID.ConveyorBeltRight, 1)
+                .AddIngredient(ItemID.Bubble, 1)
+                .AddIngredient(ItemID.BlackFairyDust, 1)
+                .AddIngredient(ItemID.CloudinaBottle, 1)
+                .AddIngredient(ItemID.MagicMirror, 1)
+                .AddIngredient(ItemID.CrystalShard, 1)
+                .AddIngredient(ItemID.GolfCupFlagRed, 1)
+                .AddIngredient(ItemID.LifeCrystal, 1)
+                .Register();
         }
 
         public override bool PreDrawTooltipLine(DrawableTooltipLine line, ref int yOffset)

@@ -5,6 +5,8 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using AotC.Content.Projectiles;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace AotC.Content.Items.Weapons.Melee;
 
@@ -31,6 +33,21 @@ public class ArkoftheCosmosLegacy : ModItem
         //Item.Calamity().customRarity = CalamityRarity.Violet;
     }
 
+    public override void ModifyTooltips(List<TooltipLine> tooltips)
+    {
+        if (tooltips != null && Main.player[Main.myPlayer] != null)
+        {
+            tooltips.Insert(1, new TooltipLine(AotC.Instance, "CopyrightInfringement", "You're as beautiful as the day I lost you"));
+            tooltips[1].OverrideColor = Color.Yellow;
+        }
+    }
+
+    public override void AddRecipes()
+    {
+        CreateRecipe()
+            .AddCustomShimmerResult(ModContent.ItemType<ArkoftheCosmos>())
+            .Register();
+    }
     public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
     {
         switch (Main.rand.Next(4))
@@ -49,8 +66,8 @@ public class ArkoftheCosmosLegacy : ModItem
                 break;
         }
         int projectile = Projectile.NewProjectile(source, position, velocity, type, damage, knockback, Main.myPlayer, 0f, 0f);
-        //Main.projectile[projectile].timeLeft = 160;
-        //Main.projectile[projectile].tileCollide = false;
+        Main.projectile[projectile].timeLeft = 160;
+        Main.projectile[projectile].tileCollide = false;
         float num109 = Main.rand.Next(22, 30);
         Vector2 vector2 = player.RotatedRelativePoint(player.MountedCenter, true);
         float num110 = Main.mouseX + Main.screenPosition.X + vector2.X;
