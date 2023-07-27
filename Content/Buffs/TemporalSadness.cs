@@ -8,8 +8,6 @@ public class TemporalSadness : ModBuff
 {
 	public override void SetStaticDefaults()
 	{
-		//DisplayName.SetDefault("Temporal Sadness");
-		//Description.SetDefault("You are crying");
 		Main.debuff[Type] = true;
 		Main.pvpBuff[Type] = true;
         Main.buffNoSave[Type] = true;

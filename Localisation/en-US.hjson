@@ -53,37 +53,37 @@ Mods: {
 		Buffs: {
 			BrimstoneFlames: {
 				DisplayName: Brimstone Flames
-				Description: Mods.AotC.Buffs.BrimstoneFlames.Description
+				Description: Rapid health loss
 			}
 
 			GlacialState: {
 				DisplayName: Glacial State
-				Description: Mods.AotC.Buffs.GlacialState.Description
+				Description: Cannot move and defense is shattered
 			}
 
 			HolyFlames: {
 				DisplayName: Holy Flames
-				Description: Mods.AotC.Buffs.HolyFlames.Description
+				Description: Dissolving from holy light
 			}
 
 			Plague: {
 				DisplayName: Plague
-				Description: Mods.AotC.Buffs.Plague.Description
+				Description: Rotting from the inside
 			}
 
 			ArmorCrunch: {
 				DisplayName: Armor Crunch
-				Description: Mods.AotC.Buffs.ArmorCrunch.Description
+				Description: Your armor is shredded
 			}
 
 			CrushDepth: {
 				DisplayName: Crush Depth
-				Description: Mods.AotC.Buffs.CrushDepth.Description
+				Description: Aquatic pressure
 			}
 
 			TemporalSadness: {
 				DisplayName: Temporal Sadness
-				Description: Mods.AotC.Buffs.TemporalSadness.Description
+				Description: You are crying
 			}
 		}
 	}

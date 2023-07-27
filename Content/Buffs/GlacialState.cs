@@ -10,8 +10,6 @@ public class GlacialState : ModBuff
 
 	public override void SetStaticDefaults()
 	{
-		//DisplayName.SetDefault("Glacial State");
-		//Description.SetDefault("Cannot move and defense is shattered");
 		Main.debuff[Type] = true;
 		Main.pvpBuff[Type] = true;
 		Main.buffNoSave[Type] = true;

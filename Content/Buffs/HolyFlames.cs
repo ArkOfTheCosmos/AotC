@@ -8,8 +8,6 @@ public class HolyFlames : ModBuff
 {
 	public override void SetStaticDefaults()
 	{
-        //DisplayName.SetDefault("Holy Flames");
-        //Description.SetDefault("Dissolving from holy light");
 		Main.debuff[Type] = true;
 		Main.pvpBuff[Type] = true;
 		Main.buffNoSave[Type] = true;
