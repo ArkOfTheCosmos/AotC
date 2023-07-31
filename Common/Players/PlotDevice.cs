@@ -18,16 +18,17 @@ namespace AotC.Common.Players
 {
     internal class PlotDevice : ModPlayer
     {
-        public bool done;
         public bool celesteTrail;
+        public bool done = true;
+        public float ArkDamage;
         public float moveSpeed = 100f;
         public float maxDistance = 50f;
         public float ArkThrowCooldown;
         public float celesteTrailDelay = 0f;
-        public Projectile blade;
-        public Texture2D playerTexture;
-        public List<Vector2> SlashPoints;
         public List<Particle> Afterimages = new();
+        public List<Vector2> SlashPoints;
+        public Texture2D playerTexture;
+        public Projectile blade;
 
         public override void Load()
         {
@@ -52,7 +53,7 @@ namespace AotC.Common.Players
                 //this is to draw the cooldown
                 if (p.ArkThrowCooldown >= 0)
                 {
-                    float Timer = 340 - p.ArkThrowCooldown;
+                    float Timer = 340 - p.ArkThrowCooldown; //normally 340
                     Vector2 val = p.Player.Center - Main.screenPosition + new Vector2(0f, 36f) - value.Size() / 2f;
                     Rectangle value3 = new(0, 0, (int)((Timer - ParryTime) / (340f - ParryTime) * value2.Width), value2.Height);
                     float num = (Timer <= ParryTime + 25f) ? ((Timer - ParryTime) / 25f) : ((340f - Timer <= 8f) ? (p.ArkThrowCooldown / 8f) : 1f);
@@ -74,19 +75,16 @@ namespace AotC.Common.Players
                 particle.Type = GeneralParticleHandler.particleTypes[particle.GetType()];
             }
         }
-        public void StartSlash()
+        public void StartSlash(int damage)
         {
-            done = false;
-            ArkoftheCosmos arkoftheCosmos = Player.HeldItem.ModItem as ArkoftheCosmos;
-            if (Vector2.Distance(Player.position, arkoftheCosmos.SlashPoints[0]) <= 500f)
+            if (Vector2.Distance(Player.position, ArkoftheCosmos.SlashPoints[0]) <= 500f)
             {
+                done = false;
+                ArkDamage = damage;
                 blade = null;
-                if (arkoftheCosmos != null)
-                {
-                    SlashPoints = arkoftheCosmos.SlashPoints;
-                    Player.immune = true;
-                    Player.immuneTime = 3600;
-                }
+                SlashPoints = ArkoftheCosmos.SlashPoints;
+                Player.immune = true;
+                Player.immuneTime = 3600;
                 SoundEngine.PlaySound(in AotCAudio.MeatySlash, Player.position);
             }
             else
@@ -101,20 +99,16 @@ namespace AotC.Common.Players
             if (SlashPoints != null && SlashPoints.Count > 0)
             {
                 Vector2 currentTargetPoint = SlashPoints[0];
-
                 Vector2 direction = Vector2.Normalize(currentTargetPoint - Player.position);
-
                 float distance = Vector2.Distance(Player.position, currentTargetPoint);
-
                 if (distance <= maxDistance)
                 {
-                    ArkoftheCosmos arkoftheCosmos = Player.HeldItem.ModItem as ArkoftheCosmos;
                     SoundEngine.PlaySound(in AotCAudio.MeatySlash, Player.position);
                     float rand = Main.rand.NextFloat() * (float)Math.PI / 2f;
-                    Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, rand.ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), 5555, 0f, Player.whoAmI, 0.65f, (float)Math.PI / 2f).timeLeft = 100;
-                    Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, (rand + (float)Math.PI / 2f).ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), 5555, 0f, Player.whoAmI, 0.65f, (float)Math.PI / 2f).timeLeft = 100;
-                    Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, (rand + (float)Math.PI).ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), 5555, 0f, Player.whoAmI, 0.65f, (float)Math.PI / 2f).timeLeft = 100;
-                    Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, (rand + (float)Math.PI * 1.5f).ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), 5555, 0f, Player.whoAmI, 0.65f, (float)Math.PI / 2f).timeLeft = 100;
+                    Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, rand.ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), (int)(ArkDamage * ArkoftheCosmos.DashStarMultiplier), 0f, Player.whoAmI, 0.65f, 0.15f).timeLeft = 100;
+                    Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, (rand + (float)Math.PI / 2f).ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), (int)(ArkDamage * ArkoftheCosmos.DashStarMultiplier), 0f, Player.whoAmI, 0.65f, 0.15f).timeLeft = 100;
+                    Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, (rand + (float)Math.PI).ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), (int)(ArkDamage * ArkoftheCosmos.DashStarMultiplier), 0f, Player.whoAmI, 0.65f, 0.15f).timeLeft = 100;
+                    Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, (rand + (float)Math.PI * 1.5f).ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), (int)(ArkDamage * ArkoftheCosmos.DashStarMultiplier), 0f, Player.whoAmI, 0.65f, 0.15f).timeLeft = 100;
                     SlashPoints.RemoveAt(0);
                     if (SlashPoints.Count == 0)
                     {
@@ -123,33 +117,28 @@ namespace AotC.Common.Players
                             Player.immuneTime = 30;
                             done = true;
                         }
-                        arkoftheCosmos.SlashPoints.Clear();
+                        ArkoftheCosmos.SlashPoints.Clear();
                         SlashPoints = null;
                     }
-                    if (arkoftheCosmos != null)
-                    {
                         if (SlashPoints != null)
                         {
-                            if (arkoftheCosmos.SlashLines.Count - 1 > SlashPoints.Count)
+                            if (ArkoftheCosmos.SlashLines.Count - 1 > SlashPoints.Count)
                             {
-                                if (arkoftheCosmos.SlashLines[0].ModProjectile is ArkoftheCosmosConstellation modProjectile)
-                                {
+                                if (ArkoftheCosmos.SlashLines[0].ModProjectile is ArkoftheCosmosConstellation modProjectile)
                                     modProjectile.death = true;
-                                }
-                                arkoftheCosmos.SlashLines.RemoveAt(0);
+                                ArkoftheCosmos.SlashLines.RemoveAt(0);
                             }
                         }
                         else
                         {
                             blade = null;
-                            if (arkoftheCosmos.SlashLines[0].ModProjectile is ArkoftheCosmosConstellation modProjectile)
+                            if (ArkoftheCosmos.SlashLines[0].ModProjectile is ArkoftheCosmosConstellation modProjectile)
                                 modProjectile.death = true;
-                            arkoftheCosmos.SlashLines.RemoveAt(0);
-                            if (arkoftheCosmos.SlashLines[0].ModProjectile is ArkoftheCosmosConstellation modProjectile2)
+                            ArkoftheCosmos.SlashLines.RemoveAt(0);
+                            if (ArkoftheCosmos.SlashLines[0].ModProjectile is ArkoftheCosmosConstellation modProjectile2)
                                 modProjectile2.death = true;
-                            arkoftheCosmos.SlashLines.RemoveAt(0);
+                            ArkoftheCosmos.SlashLines.RemoveAt(0);
                         }
-                    }
                 }
                 else
                 {
@@ -158,7 +147,7 @@ namespace AotC.Common.Players
                 }
                 if (blade == null && SlashPoints != null)
                 {
-                    blade = Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.position, direction, ModContent.ProjectileType<ArkoftheCosmosSwungBlade>(), 26690, 10f, Player.whoAmI, 5f, 0f);
+                    blade = Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.position, direction, ModContent.ProjectileType<ArkoftheCosmosSwungBlade>(), (int)(ArkDamage * ArkoftheCosmos.DashMultiplier), 10f, Player.whoAmI, 5f, 0f);
                     blade.timeLeft = 10;
                 }
                 else
@@ -178,6 +167,13 @@ namespace AotC.Common.Players
             celesteTrail = false;
         }
 
+        public override void PostUpdateRunSpeeds()
+        {
+            if (!done)
+            {
+                Player.gravity = 0f;
+            }
+        }
         public override void UpdateBadLifeRegen()
         {
             ArkThrowCooldown--;

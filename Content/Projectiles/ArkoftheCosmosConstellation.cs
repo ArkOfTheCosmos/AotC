@@ -15,6 +15,8 @@ namespace AotC.Content.Projectiles
 
         public int frick = 0;
 
+        public Vector2? cachedStart = null;
+
         public bool balls = false;
 
         public bool death = false;
@@ -59,7 +61,8 @@ namespace AotC.Content.Projectiles
                 }
                 else if (AnchorType == 5f)
                 {
-                    return arkoftheCosmos.SlashPoints[(int)SlashLineNum - 1];
+                    cachedStart??= ArkoftheCosmos.SlashPoints[(int)SlashLineNum - 1];
+                    return (Vector2)cachedStart;
                 }
                 else
                 {
@@ -93,9 +96,9 @@ namespace AotC.Content.Projectiles
                 }
                 else if (AnchorType == 5f)
                 {
-                    if (arkoftheCosmos.SlashPoints.Count > SlashLineNum)
+                    if (ArkoftheCosmos.SlashPoints.Count > SlashLineNum)
                     {
-                        return arkoftheCosmos.SlashPoints[(int)SlashLineNum];
+                        return ArkoftheCosmos.SlashPoints[(int)SlashLineNum];
                     }
                     return new();
                 }
@@ -298,7 +301,8 @@ namespace AotC.Content.Projectiles
                 if (!balls)
                 {
                     balls = true;
-                    if (SlashLineNum == arkoftheCosmos.SlashPoints.Count)
+                    //cachedStart = null;
+                    if (SlashLineNum == ArkoftheCosmos.SlashPoints.Count)
                     {
                         float num = Main.rand.NextFloat();
                         Color val = Main.hslToRgb(num, 1f, 0.5f);

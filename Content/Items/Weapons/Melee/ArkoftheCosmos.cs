@@ -19,17 +19,38 @@ namespace AotC.Content.Items.Weapons.Melee
 {
     internal class ArkoftheCosmos : ModItem
     {
+
+        // damage values yay
+        public static readonly float SwirlBoltAmount = 6f;
+        public static readonly float MaxThrowReach = 650f;
+
+        public static readonly float SwirlMultiplier = 2f;
+        public static readonly float StabMultiplier = 3f;
+        public static readonly float DashMultiplier = 5f;
+        public static readonly float BeamMultiplier = 0.3f;
+        public static readonly float SwirlStarMultiplier = 0.4f;
+        public static readonly float ThrownStarMultiplier = 0.2f;
+        public static readonly float DashStarMultiplier = 1f;
+        public static readonly float EonStarMultiplier = 0.5f;
+        public static readonly float ConstellationMultiplier = 0.1f;
+
+        public static float BalanceMultiplier
+        {
+            get
+            {
+                if (AotC.Instance.Calamity != null)
+                {
+                    return 10f;
+                }
+                return 1f;
+            }
+        }
         public int rnd;
         public bool stab;
-        public float charge;
-        public float combo = 69; // dont change to "public float combo;" i think it broke the first swings or sth
-        public static float SwirlBoltAmount = 6f;
-        public static float MaxThrowReach = 650f;
-        public static float chainDamageMultiplier = 0.1f;
-        public static float SwirlBoltDamageMultiplier = 1.5f;
-        public static float SnapBoltsDamageMultiplier = 0.2f;
-        public List<Projectile> SlashLines = new();
-        public List<Vector2> SlashPoints = new();
+        public float combo = 69;
+        public static float charge;
+        public static List<Vector2> SlashPoints = new();
+        public static List<Projectile> SlashLines = new();
         public override void SetStaticDefaults()
         {
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
@@ -40,7 +61,7 @@ namespace AotC.Content.Items.Weapons.Melee
             Item.width = 102;
             Item.height = 102;
             Item.useTime = 1;
-            Item.damage = 2669;
+            Item.damage = 666;
             Item.knockBack = 9.5f;
             Item.useAnimation = 1;
             Item.shootSpeed = 28f;
@@ -61,10 +82,7 @@ namespace AotC.Content.Items.Weapons.Melee
         {
             if (tooltips != null && Main.player[Main.myPlayer] != null)
             {
-                TooltipLine line = new(AotC.Instance, "FrontiersReferenceLmao", "\"I'm what you get when the stars collide\"")
-                {
-                    //OverrideColor = Color.Black      // fix this later ffs
-                };
+                TooltipLine line = new(AotC.Instance, "FrontiersReferenceLmao", "\"I'm what you get when the stars collide\"");
                 tooltips.Insert(1, line);
                 for (int i = 0; i < tooltips.Count; i++)
                 {
@@ -81,7 +99,7 @@ namespace AotC.Content.Items.Weapons.Melee
                         damageLine.Text = "2669 damage";
                     TooltipLine speedLine = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Speed" && x.Mod == "Terraria");
                     if (speedLine != null)
-                        speedLine.Text = "Sonic speed";
+                        speedLine.Text = "Supersonic speed";
                     TooltipLine tooltipLine0 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip0" && x.Mod == "Terraria");
                     if (tooltipLine0 != null)
                     {
@@ -187,20 +205,6 @@ namespace AotC.Content.Items.Weapons.Melee
         {
             charge = reader.ReadSingle();
         }
-        //idk if this does anything
-        //i think it syncs charge if you have multiple of the item
-        public override ModItem Clone(Item item)
-        {
-            ModItem modItem = base.Clone(item);
-            if (modItem is ArkoftheCosmos arkoftheCosmos)
-            {
-                if (item.ModItem is ArkoftheCosmos arkoftheCosmos2)
-                {
-                    arkoftheCosmos.charge = arkoftheCosmos2.charge;
-                }
-            }
-            return modItem;
-        }
         //this is where crud happens
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
@@ -220,7 +224,15 @@ namespace AotC.Content.Items.Weapons.Melee
                     if (charge >= 20f && SlashPoints.Count < 10)
                     {
                         charge -= 20f;
-                        SlashPoints.Add(Main.MouseWorld);
+                        if (SlashPoints.Count > 0)
+                        {
+                           if (Vector2.Distance(Main.MouseWorld, SlashPoints[^1]) < 666)
+                                SlashPoints.Add(SlashPoints[^1].DirectionTo(Main.MouseWorld + (Main.MouseWorld == SlashPoints[^1] ? new(Main.rand.NextFloat(-1,1), Main.rand.NextFloat(-1, 1)) : new())) * 666 + SlashPoints[^1]);
+                           else
+                                SlashPoints.Add(Main.MouseWorld);
+                        }
+                        else
+                            SlashPoints.Add(Main.MouseWorld);
                         Projectile projectile = Projectile.NewProjectileDirect(source, player.position, Vector2.Zero, ModContent.ProjectileType<ArkoftheCosmosConstellation>(), 0, 0f, player.whoAmI, 0f, 5f, SlashPoints.Count);
                         projectile.timeLeft = -1;
                         SlashLines.Add(projectile);
@@ -242,8 +254,8 @@ namespace AotC.Content.Items.Weapons.Melee
                     PlotDevice p = player.Glitchtale();
                     if (p.ArkThrowCooldown < 0)
                     {
-                        Projectile.NewProjectile(source, player.Center, velocity, ModContent.ProjectileType<ArkoftheCosmosSwungBlade>(), damage * 4, knockback, player.whoAmI, 4f, charge);
-                        p.ArkThrowCooldown = 340; //split ark has 340 cooldown
+                        Projectile.NewProjectile(source, player.Center, velocity, ModContent.ProjectileType<ArkoftheCosmosSwungBlade>(), (int)(damage * BalanceMultiplier), knockback, player.whoAmI, 4f, charge);
+                        p.ArkThrowCooldown = 340; // split ark has 340 cooldown
                         PunchCameraModifier modifier = new(player.Center, player.DirectionTo(Main.MouseScreen), 100f, 4f, 20, 2669f, FullName);
                         Main.instance.CameraModifiers.Add(modifier);
                     }
@@ -255,8 +267,8 @@ namespace AotC.Content.Items.Weapons.Melee
             {
                 if (SlashPoints.Count > 1)
                 {
-                    Item.autoReuse = false; //makes it so your ears dont break from trying to slash 20 times a second while out of range
-                    player.Glitchtale().StartSlash();
+                    Item.autoReuse = false; // makes it so your ears dont break from trying to slash 20 times a second while out of range
+                    player.Glitchtale().StartSlash((int)(damage * BalanceMultiplier));
                 }
                 return false;
             }
@@ -280,22 +292,22 @@ namespace AotC.Content.Items.Weapons.Melee
                 stab = false;
             }
             //summons the sword
-            Projectile.NewProjectile(source, player.Center, velocity, ModContent.ProjectileType<ArkoftheCosmosSwungBlade>(), damage, knockback, player.whoAmI, num, charge);
+            Projectile.NewProjectile(source, player.Center, velocity, ModContent.ProjectileType<ArkoftheCosmosSwungBlade>(), (int)(damage * BalanceMultiplier), knockback, player.whoAmI, num, charge);
             //summons beam/wail if its a stab
             if (num == 3f)
             {
                 float f = (player.Center - Main.screenPosition).AngleTo(Main.MouseScreen);
-                if (charge < 10)
+                if (charge < 20)
                 {
-                    Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, Vector2.Zero, ModContent.ProjectileType<KillerWail>(), Item.damage, 1f, player.whoAmI, f, 0f);
+                    Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, Vector2.Zero, ModContent.ProjectileType<KillerWail>(), (int)(damage * BeamMultiplier * BalanceMultiplier), 1f, player.whoAmI, f, 0f);
                 }
                 else
                 {
-                    Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, Vector2.Zero, ModContent.ProjectileType<KillerWail>(), Item.damage, 1f, player.whoAmI, f, 1f);
+                    Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, Vector2.Zero, ModContent.ProjectileType<KillerWail>(), (int)(damage * BeamMultiplier * BalanceMultiplier), 1f, player.whoAmI, f, 1f);
                 }
             }
             //decrease charge
-            if (charge >= 10f)
+            if (charge >= (num == 3f ? 20f :  10f))
             {
                 charge -= 10f;
             }

@@ -6,7 +6,6 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using AotC.Content.Projectiles;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace AotC.Content.Items.Weapons.Melee;
 
@@ -30,7 +29,6 @@ public class ArkoftheCosmosLegacy : ModItem
         Item.rare = ItemRarityID.Red;
         Item.shoot = ModContent.ProjectileType<EonBeamLegacy>();
         Item.shootSpeed = 28f;
-        //Item.Calamity().customRarity = CalamityRarity.Violet;
     }
 
     public override void ModifyTooltips(List<TooltipLine> tooltips)
@@ -39,6 +37,7 @@ public class ArkoftheCosmosLegacy : ModItem
         {
             tooltips.Insert(1, new TooltipLine(AotC.Instance, "CopyrightInfringement", "You're as beautiful as the day I lost you"));
             tooltips[1].OverrideColor = Color.Yellow;
+            tooltips[0].OverrideColor = new Color(108, 45, 199);
         }
     }
 
@@ -76,6 +75,7 @@ public class ArkoftheCosmosLegacy : ModItem
         {
             num111 = Main.screenPosition.Y + Main.screenHeight + Main.mouseY + vector2.Y;
         }
+        // DONT TRUST VS HERE OK
         float num112 = (float)Math.Sqrt(num110 * num110 + num111 * num111);
         if ((float.IsNaN(num110) && float.IsNaN(num111)) || (num110 == 0f && num111 == 0f))
         {

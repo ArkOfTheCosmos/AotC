@@ -36,7 +36,7 @@ public class EonStar : ModProjectile
 
     public ref float HomingStrenght => ref Projectile.ai[1];
 
-    public ref float SourceType => ref Projectile.ai[2];
+    public ref float ChargeGain => ref Projectile.ai[2];
 
     public float rotation = 0;
 
@@ -171,13 +171,10 @@ public class EonStar : ModProjectile
 
     public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
     {
-        if (Owner.HeldItem.ModItem is ArkoftheCosmos arkoftheCosmos && SourceType == 1f)
+        ArkoftheCosmos.charge += ChargeGain;
+        if (ArkoftheCosmos.charge > 100f)
         {
-            arkoftheCosmos.charge += 1f;
-            if (arkoftheCosmos.charge > 100f)
-            {
-                arkoftheCosmos.charge = 100f;
-            }
+            ArkoftheCosmos.charge = 100f;
         }
     }
 }

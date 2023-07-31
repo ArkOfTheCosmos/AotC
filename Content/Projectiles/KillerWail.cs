@@ -19,7 +19,7 @@ public class KillerWail : BaseLaserbeamProjectile
     public List<Particle> Particles;
     public override string Texture => "AotC/Content/Projectiles/Beam";
     public ref float Dir => ref Projectile.ai[0];
-    public Player Owner => Main.player[base.Projectile.owner];
+    public Player Owner => Main.player[Projectile.owner];
     public bool initialized = false;
     public float ear;
     public bool PlayedSound;
@@ -70,7 +70,7 @@ public class KillerWail : BaseLaserbeamProjectile
             {
                 Projectile.direction = ((Main.MouseWorld.X > Owner.Center.X) ? 1 : (-1));
                 Projectile.netUpdate = true;
-                base.Projectile.direction = ((Main.MouseWorld.X > Owner.Center.X) ? 1 : (-1));
+                Projectile.direction = ((Main.MouseWorld.X > Owner.Center.X) ? 1 : (-1));
             }
             Projectile.rotation = Dir - (float)Math.PI / 2;
             Projectile.Center = Dir.ToRotationVector2() * 370f + Owner.Center;
@@ -108,7 +108,7 @@ public class KillerWail : BaseLaserbeamProjectile
     {
         try
         {
-            Projectile.scale = (Wail ? 6f : 2f) * ModdedUtils.PiecewiseAnimation(Time / Lifetime, new ModdedUtils.CurveSegment[2] { balls, retract });
+            Projectile.scale = (Wail ? 6f : 2f) * ModdedUtils.PiecewiseAnimation(Time / Lifetime, new ModdedUtils.CurveSegment[2] {balls, retract});
             if (Projectile.scale > MaxScale)
             {
                 Projectile.scale = MaxScale;
@@ -123,13 +123,13 @@ public class KillerWail : BaseLaserbeamProjectile
     {
         lightColor.A = 255;
         float scale = Projectile.scale;
-        Rectangle val = LaserBeginTexture.Frame(1, Main.projFrames[base.Projectile.type], 0, 0);
-        Rectangle val2 = LaserMiddleTexture.Frame(1, Main.projFrames[base.Projectile.type], 0, 0);
-        Rectangle val3 = LaserEndTexture.Frame(1, Main.projFrames[base.Projectile.type], 0, 0);
-        Main.EntitySpriteDraw(LaserBeginTexture, base.Projectile.Center - Main.screenPosition, val, lightColor, base.Projectile.rotation, LaserBeginTexture.Size() / 2f, scale, 0, 0);
+        Rectangle val = LaserBeginTexture.Frame(1, Main.projFrames[Projectile.type], 0, 0);
+        Rectangle val2 = LaserMiddleTexture.Frame(1, Main.projFrames[Projectile.type], 0, 0);
+        Rectangle val3 = LaserEndTexture.Frame(1, Main.projFrames[Projectile.type], 0, 0);
+        Main.EntitySpriteDraw(LaserBeginTexture, Projectile.Center - Main.screenPosition, val, lightColor, Projectile.rotation, LaserBeginTexture.Size() / 2f, scale, 0, 0);
         float laserLength = LaserLength;
-        laserLength -= (float)(val.Height / 2 + val3.Height) * scale;
-        Vector2 center = base.Projectile.Center;
+        laserLength -= (val.Height / 2 + val3.Height) * scale;
+        Vector2 center = Projectile.Center;
 
 
 
@@ -146,21 +146,19 @@ public class KillerWail : BaseLaserbeamProjectile
 
         if (laserLength > 0f)
         {
-            float num = (float)val2.Height * scale;
+            float num = val2.Height * scale;
             float num2 = 0f;
             while (num2 + 1f < laserLength)
             {
 
-                Texture2D FinalTexture = ModdedUtils.ShiftHue(LaserMiddleTexture, -Main.GlobalTimeWrappedHourly * (Wail ? 1.6f : 5f) % 1 + 1);
-                //Main.EntitySpriteDraw(LaserMiddleTexture, center - Main.screenPosition, val2, lightColor, base.Projectile.rotation, (float)LaserMiddleTexture.Width * 0.5f * Vector2.UnitX, scale, (SpriteEffects)0, 0);
-                Main.spriteBatch.Draw(FinalTexture, center - Main.screenPosition, val2, Color.White * (Wail ? 0.5f : 1f), base.Projectile.rotation, (float)LaserMiddleTexture.Width * 0.5f * Vector2.UnitX, scale, (SpriteEffects)0, 0);
+                Texture2D FinalTexture = ModdedUtils.ShiftHue(LaserMiddleTexture, -Main.GlobalTimeWrappedHourly * (Wail ? 1.6f : 5f) % 1 + 1);                Main.spriteBatch.Draw(FinalTexture, center - Main.screenPosition, val2, Color.White * (Wail ? 0.5f : 1f), Projectile.rotation, (float)LaserMiddleTexture.Width * 0.5f * Vector2.UnitX, scale, (SpriteEffects)0, 0);
                 num2 += num;
             }
         }
         if (Math.Abs(LaserLength - DetermineLaserLength()) < 30f)
         {
             Vector2 position = center - Main.screenPosition;
-            Main.EntitySpriteDraw(LaserEndTexture, position, val3, lightColor, base.Projectile.rotation, LaserEndTexture.Frame().Top(), scale, (SpriteEffects)0, 0);
+            Main.EntitySpriteDraw(LaserEndTexture, position, val3, lightColor, Projectile.rotation, LaserEndTexture.Frame().Top(), scale, (SpriteEffects)0, 0);
         }
         Texture2D value = ModContent.Request<Texture2D>("AotC/Content/Projectiles/BeamWave").Value;
         Main.spriteBatch.Draw(value, center - Main.screenPosition, null, Color.White, Projectile.rotation, new Vector2(8, 0 - ear % 14), Projectile.scale, 0, 0);
