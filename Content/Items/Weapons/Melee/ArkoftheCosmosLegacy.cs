@@ -14,7 +14,7 @@ public class ArkoftheCosmosLegacy : ModItem
     public override void SetDefaults()
     {
         Item.width = 102;
-        Item.damage = 140;
+        Item.damage = 501;
         Item.DamageType = DamageClass.Melee;
         Item.useAnimation = 15;
         Item.useTime = 15;

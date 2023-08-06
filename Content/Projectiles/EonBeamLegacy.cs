@@ -20,7 +20,7 @@ public class EonBeamLegacy : ModProjectile
         Projectile.penetrate = 3;
         Projectile.timeLeft = 300;
         Projectile.usesLocalNPCImmunity = true;
-        Projectile.localNPCHitCooldown = 10;
+        Projectile.localNPCHitCooldown = 6;
     }
 
     public override void AI()
@@ -68,7 +68,7 @@ public class EonBeamLegacy : ModProjectile
         if (Projectile.ai[0] != 1f)
         {
             target.AddBuff(ModContent.BuffType<BrimstoneFlames>(), 120);
-            target.AddBuff(BuffID.Frostburn, 120);
+            target.AddBuff(ModContent.BuffType<GlacialState>(), 120);
             target.AddBuff(ModContent.BuffType<Plague>(), 120);
             target.AddBuff(ModContent.BuffType<HolyFlames>(), 120);
         }

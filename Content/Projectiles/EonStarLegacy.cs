@@ -30,7 +30,7 @@ public class EonStarLegacy : ModProjectile
         Projectile.penetrate = 2;
         Projectile.DamageType = DamageClass.Melee;
         Projectile.usesLocalNPCImmunity = true;
-        Projectile.localNPCHitCooldown = 10;
+        Projectile.localNPCHitCooldown = 1;
     }
 
     public override void AI()
