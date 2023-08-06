@@ -40,9 +40,7 @@ namespace AotC.Content.Items.Weapons.Melee
             get
             {
                 if (AotC.Instance.Calamity != null)
-                {
                     return 4f;
-                }
                 return 1f;
             }
         }
@@ -193,11 +191,13 @@ namespace AotC.Content.Items.Weapons.Melee
         //this is where crud happens
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
+
+            //make sure not slashing because buggy af code lmao i suck
+            if (player.GetPlot().done == false)
+                return false;
             //makes sure charge isnt negative
             if (charge < 0f)
-            {
                 charge = 0f;
-            }
             //temporarily set usetime and animation incase player drawing stars
             Item.useTime = 1;
             Item.useAnimation = 1;
@@ -228,9 +228,7 @@ namespace AotC.Content.Items.Weapons.Melee
                         {
                             Projectile projectile2 = SlashLines[^2];
                             if (projectile2.ModProjectile is Constellation modProjectile)
-                            {
                                 modProjectile.balls = false;
-                            }
                         }
                     }
                     return false;
@@ -285,19 +283,13 @@ namespace AotC.Content.Items.Weapons.Melee
             {
                 float f = (player.Center - Main.screenPosition).AngleTo(Main.MouseScreen);
                 if (charge < 20)
-                {
                     Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, Vector2.Zero, ModContent.ProjectileType<KillerWail>(), (int)(damage * BeamMultiplier * BalanceMultiplier), 1f, player.whoAmI, f, 0f);
-                }
                 else
-                {
                     Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, Vector2.Zero, ModContent.ProjectileType<KillerWail>(), (int)(damage * BeamMultiplier * BalanceMultiplier), 1f, player.whoAmI, f, 1f);
-                }
             }
             //decrease charge
             if (charge >= (num == 3f ? 20f :  10f))
-            {
                 charge -= 10f;
-            }
             return false;
         }
         //no reforges for you bucko

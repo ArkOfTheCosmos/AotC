@@ -454,7 +454,7 @@ namespace AotC.Content.Projectiles
                 float num4 = (float)Math.Sin((double)(SwingCompletion * (float)Math.PI));
                 float num5 = (-(float)Math.PI / 8f + (float)Math.PI / 8f * SwingCompletion + ((SwingType == 2f) ? ((float)Math.PI / 4f) : 0f)) * SwingDirection;
                 Color val5 = Main.hslToRgb((SwingType == 0f) ? 0.15f : 0.3f, 1f, 0.6f);
-                Main.EntitySpriteDraw(value3, Owner.Center - Main.screenPosition, null, val5 * 0.5f * num4, Projectile.velocity.ToRotation() + (float)Math.PI + num5, value3.Size() / 2f, Projectile.scale * 3.4f, 0, 0);
+                Main.EntitySpriteDraw(value3, Owner.Center - Main.screenPosition, null, val5 * 0.8f * num4, Projectile.velocity.ToRotation() + (float)Math.PI + num5, value3.Size() / 2f, Projectile.scale * 3.4f, 0, 0);
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(0, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
             }

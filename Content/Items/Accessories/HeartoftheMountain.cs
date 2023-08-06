@@ -31,14 +31,15 @@ namespace AotC.Content.Items.Accessories
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(ItemID.ConveyorBeltRight, 1)
-                .AddIngredient(ItemID.Bubble, 1)
-                .AddIngredient(ItemID.BlackFairyDust, 1)
-                .AddIngredient(ItemID.CloudinaBottle, 1)
-                .AddIngredient(ItemID.MagicMirror, 1)
-                .AddIngredient(ItemID.CrystalShard, 1)
-                .AddIngredient(ItemID.GolfCupFlagRed, 1)
-                .AddIngredient(ItemID.LifeCrystal, 1)
+                .AddIngredient(ItemID.ConveyorBeltLeft)
+                .AddIngredient(ItemID.Bubble)
+                .AddIngredient(ItemID.BlackFairyDust)
+                .AddIngredient(ItemID.CloudinaBottle)
+                .AddIngredient(ItemID.MagicMirror)
+                .AddIngredient(ItemID.CrystalShard)
+                .AddIngredient(ItemID.GolfCupFlagRed)
+                .AddIngredient(ItemID.LifeCrystal)
+                .AddRecipeGroup(RecipeGroup.recipeGroupIDs["AotC:Jellyfish"])
                 .Register();
         }
 

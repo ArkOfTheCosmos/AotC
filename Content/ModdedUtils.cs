@@ -471,6 +471,6 @@ public static class ModdedUtils
     }
     internal static Vector2 RandomVector2(float magnitude = 1)
     {
-        return Main.rand.NextFloat((float)-Math.PI/2, (float)Math.PI/2).ToRotationVector2() * magnitude;
+        return Main.rand.NextFloat((float)-Math.PI, (float)Math.PI).ToRotationVector2() * magnitude;
     }
 }

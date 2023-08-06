@@ -13,7 +13,6 @@ using System.Collections.Generic;
 using AotC.Content.CustomHooks;
 using Microsoft.Xna.Framework.Graphics;
 using AotC.Content.Items.Weapons.Melee;
-using Terraria.UI;
 
 namespace AotC.Common.Players
 {
@@ -55,7 +54,7 @@ namespace AotC.Common.Players
                 blade = null;
                 SlashPoints = ArkoftheCosmos.SlashPoints;
                 Player.immune = true;
-                Player.immuneTime = 3600;
+                Player.immuneTime = 300;
                 SoundEngine.PlaySound(in AotCAudio.MeatySlash, Player.position);
             }
             else if (Vector2.Distance(Player.position, ArkoftheCosmos.SlashPoints[^1]) <= 600f)
@@ -66,7 +65,7 @@ namespace AotC.Common.Players
                 ArkoftheCosmos.SlashPoints.Reverse();
                 SlashPoints = ArkoftheCosmos.SlashPoints;
                 Player.immune = true;
-                Player.immuneTime = 3600;
+                Player.immuneTime = 300;
                 SoundEngine.PlaySound(in AotCAudio.MeatySlash, Player.position);
             }
             else
@@ -78,17 +77,19 @@ namespace AotC.Common.Players
         {
             if (SlashPoints != null && SlashPoints.Count > 0)
             {
+                if (Player.itemAnimation == 0)
+                    Player.itemAnimation++;
                 Vector2 currentTargetPoint = SlashPoints[0];
                 Vector2 direction = Vector2.Normalize(currentTargetPoint - Player.position);
                 float distance = Vector2.Distance(Player.position, currentTargetPoint);
-                if (distance <= maxDistance)
+                if (distance <= maxDistance || Player.immuneTime <= 0)
                 {
                     SoundEngine.PlaySound(in AotCAudio.MeatySlash, Player.position);
                     float rand = Main.rand.NextFloat() * (float)Math.PI / 2f;
-                    Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, rand.ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), (int)(ArkDamage * ArkoftheCosmos.DashStarMultiplier), 0f, Player.whoAmI, 0.65f, 0.15f).timeLeft = 100;
-                    Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, (rand + (float)Math.PI / 2f).ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), (int)(ArkDamage * ArkoftheCosmos.DashStarMultiplier), 0f, Player.whoAmI, 0.65f, 0.15f).timeLeft = 100;
-                    Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, (rand + (float)Math.PI).ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), (int)(ArkDamage * ArkoftheCosmos.DashStarMultiplier), 0f, Player.whoAmI, 0.65f, 0.15f).timeLeft = 100;
-                    Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, (rand + (float)Math.PI * 1.5f).ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), (int)(ArkDamage * ArkoftheCosmos.DashStarMultiplier), 0f, Player.whoAmI, 0.65f, 0.15f).timeLeft = 100;
+                    Projectile.NewProjectileDirect(Player.GetSource_FromThis(), SlashPoints[0], rand.ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), (int)(ArkDamage * ArkoftheCosmos.DashStarMultiplier), 0f, Player.whoAmI, 0.65f, 0.15f).timeLeft = 100;
+                    Projectile.NewProjectileDirect(Player.GetSource_FromThis(), SlashPoints[0], (rand + (float)Math.PI / 2f).ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), (int)(ArkDamage * ArkoftheCosmos.DashStarMultiplier), 0f, Player.whoAmI, 0.65f, 0.15f).timeLeft = 100;
+                    Projectile.NewProjectileDirect(Player.GetSource_FromThis(), SlashPoints[0], (rand + (float)Math.PI).ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), (int)(ArkDamage * ArkoftheCosmos.DashStarMultiplier), 0f, Player.whoAmI, 0.65f, 0.15f).timeLeft = 100;
+                    Projectile.NewProjectileDirect(Player.GetSource_FromThis(), SlashPoints[0], (rand + (float)Math.PI * 1.5f).ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), (int)(ArkDamage * ArkoftheCosmos.DashStarMultiplier), 0f, Player.whoAmI, 0.65f, 0.15f).timeLeft = 100;
                     SlashPoints.RemoveAt(0);
                     if (SlashPoints.Count == 0)
                     {
@@ -141,7 +142,6 @@ namespace AotC.Common.Players
                 }
             }
         }
-
         public override void ResetEffects()
         {
             celesteTrail = false;

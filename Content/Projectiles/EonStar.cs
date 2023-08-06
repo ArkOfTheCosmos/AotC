@@ -119,7 +119,7 @@ public class EonStar : ModProjectile
         }
         Particles.RemoveAll((Particle particle) => particle.Time >= particle.Lifetime && particle.SetLifetime);
 
-            Vector2 random = Vector2.UnitX.RotatedByRandom(Math.PI);
+            Vector2 random = Vector2.UnitX.RotatedByRandom(2 * Math.PI);
             int dustIndex = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.FireworksRGB, Projectile.velocity.X * 0.5f, Projectile.velocity.Y * 0.5f, 150, ModdedUtils.HsvToRgb(Main.GlobalTimeWrappedHourly % 1, 0.7f, 1), 0.6f);
             Main.dust[dustIndex].velocity = random;
             Main.dust[dustIndex].noGravity = true;

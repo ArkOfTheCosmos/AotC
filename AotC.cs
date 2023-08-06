@@ -8,7 +8,6 @@ using AotC.Core;
 using System.Collections.Generic;
 using System;
 using System.Linq;
-using Terraria.ID;
 
 namespace AotC
 {
@@ -18,7 +17,6 @@ namespace AotC
         internal static AotC Instance;
         public const string ASSET_PATH = "AotC/Assets/";
         private List<IOrderedLoadable> loadCache;
-        private static RecipeGroup JellyfishRecipeGroup;
     
         public override void Load()
         {
@@ -53,13 +51,6 @@ namespace AotC
 
             for (int k = 0; k < loadCache.Count; k++)
                 loadCache[k].Load();
-        }
-
-        [Obsolete]
-        public override void AddRecipeGroups()/* tModPorter Note: Removed. Use ModSystem.AddRecipeGroups */
-        {
-            JellyfishRecipeGroup = new RecipeGroup(() => "Any Jellyfish", ItemID.BlueJellyfish, ItemID.PinkJellyfish, ItemID.GreenJellyfish);
-            RecipeGroup.RegisterGroup("AotC:Jellyfish", JellyfishRecipeGroup);
         }
     }
 }
