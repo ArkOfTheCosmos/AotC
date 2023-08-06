@@ -8,6 +8,7 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="AngleSharp" Version="1.0.4" />
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
   </ItemGroup>
   <ItemGroup>
@@ -16,6 +17,5 @@
     <Folder Include="Assets\Textures\" />
     <Folder Include="Content\Items\Weapons\Melee\" />
     <Folder Include="Localisation\" />
-    <Folder Include="Common\" />
   </ItemGroup>
 </Project>

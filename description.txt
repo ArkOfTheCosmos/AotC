@@ -1,6 +1,6 @@
 The AotC Rework is awesome, don't get me wrong, but I prefer the look of the old one WAY more. That as well as a few other things I'd change/add, caused me to make this mod.
-Scales in power depending on whether you have calamity installed (or it would if i had programmed that in yet)
-You can get the old ark by throwing the new one into shimmer (except calamity hasn't ported yet so just throw the custom one in, which you can't get without calamity...)
+Scales in power depending on whether you have Calamity installed 
+You can get the old ark by throwing the new one into shimmer.
 
 Also adds more random items that I just feel like making, maybe this will turn into a hybrid QoL/Content mod who knows
 

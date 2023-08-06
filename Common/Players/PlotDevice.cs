@@ -13,12 +13,14 @@ using System.Collections.Generic;
 using AotC.Content.CustomHooks;
 using Microsoft.Xna.Framework.Graphics;
 using AotC.Content.Items.Weapons.Melee;
+using Terraria.UI;
 
 namespace AotC.Common.Players
 {
     internal class PlotDevice : ModPlayer
     {
         public bool celesteTrail;
+        public int killStars;
         public bool done = true;
         public float ArkDamage;
         public float moveSpeed = 100f;
@@ -35,37 +37,6 @@ namespace AotC.Common.Players
             On_Main.DrawProjectiles += On_Main_DrawProjectiles;
         }
 
-        private void On_Main_DrawProjectiles(On_Main.orig_DrawProjectiles orig, Main self)
-        { 
-            orig(self);
-            Texture2D value = ModContent.Request<Texture2D>("AotC/Assets/Textures/GenericBarBack", AssetRequestMode.ImmediateLoad).Value;
-            Texture2D value2 = ModContent.Request<Texture2D>("AotC/Assets/Textures/GenericBarFront", AssetRequestMode.ImmediateLoad).Value;
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);    
-            Color val2 = ModdedUtils.HsvToRgb(Main.GlobalTimeWrappedHourly, 1f, 1f);
-            float ParryTime = 0;
-            foreach (Player player in Main.player)
-            {
-                if (!player.active)
-                {
-                    continue;
-                }
-                var p = player.Glitchtale();
-                //this is to draw the cooldown
-                if (p.ArkThrowCooldown >= 0)
-                {
-                    float Timer = 340 - p.ArkThrowCooldown; //normally 340
-                    Vector2 val = p.Player.Center - Main.screenPosition + new Vector2(0f, 36f) - value.Size() / 2f;
-                    Rectangle value3 = new(0, 0, (int)((Timer - ParryTime) / (340f - ParryTime) * value2.Width), value2.Height);
-                    float num = (Timer <= ParryTime + 25f) ? ((Timer - ParryTime) / 25f) : ((340f - Timer <= 8f) ? (p.ArkThrowCooldown / 8f) : 1f);
-                    Main.spriteBatch.Draw(value, val, val2 * num);
-                    Main.spriteBatch.Draw(value2, val, (Rectangle?)value3, val2 * num * 0.8f);
-                }
-                foreach (Particle particle in p.Afterimages)
-                    particle?.CustomDraw(Main.spriteBatch);
-                p.Afterimages.RemoveAll((Particle particle) => particle.Time >= particle.Lifetime || !p.celesteTrail);
-            }
-            Main.spriteBatch.End();
-        }
 
         public void BootlegSpawnParticle(Particle particle)
         {
@@ -77,7 +48,7 @@ namespace AotC.Common.Players
         }
         public void StartSlash(int damage)
         {
-            if (Vector2.Distance(Player.position, ArkoftheCosmos.SlashPoints[0]) <= 500f)
+            if (Vector2.Distance(Player.position, ArkoftheCosmos.SlashPoints[0]) <= 600f)
             {
                 done = false;
                 ArkDamage = damage;
@@ -87,10 +58,19 @@ namespace AotC.Common.Players
                 Player.immuneTime = 3600;
                 SoundEngine.PlaySound(in AotCAudio.MeatySlash, Player.position);
             }
-            else
+            else if (Vector2.Distance(Player.position, ArkoftheCosmos.SlashPoints[^1]) <= 600f)
             {
-                SoundEngine.PlaySound(in SoundID.Run);
+                done = false;
+                ArkDamage = damage;
+                blade = null;
+                ArkoftheCosmos.SlashPoints.Reverse();
+                SlashPoints = ArkoftheCosmos.SlashPoints;
+                Player.immune = true;
+                Player.immuneTime = 3600;
+                SoundEngine.PlaySound(in AotCAudio.MeatySlash, Player.position);
             }
+            else
+                SoundEngine.PlaySound(in SoundID.Run);
         }
 
 
@@ -124,7 +104,7 @@ namespace AotC.Common.Players
                         {
                             if (ArkoftheCosmos.SlashLines.Count - 1 > SlashPoints.Count)
                             {
-                                if (ArkoftheCosmos.SlashLines[0].ModProjectile is ArkoftheCosmosConstellation modProjectile)
+                                if (ArkoftheCosmos.SlashLines[0].ModProjectile is Constellation modProjectile)
                                     modProjectile.death = true;
                                 ArkoftheCosmos.SlashLines.RemoveAt(0);
                             }
@@ -132,10 +112,10 @@ namespace AotC.Common.Players
                         else
                         {
                             blade = null;
-                            if (ArkoftheCosmos.SlashLines[0].ModProjectile is ArkoftheCosmosConstellation modProjectile)
+                            if (ArkoftheCosmos.SlashLines[0].ModProjectile is Constellation modProjectile)
                                 modProjectile.death = true;
                             ArkoftheCosmos.SlashLines.RemoveAt(0);
-                            if (ArkoftheCosmos.SlashLines[0].ModProjectile is ArkoftheCosmosConstellation modProjectile2)
+                            if (ArkoftheCosmos.SlashLines[0].ModProjectile is Constellation modProjectile2)
                                 modProjectile2.death = true;
                             ArkoftheCosmos.SlashLines.RemoveAt(0);
                         }
@@ -183,7 +163,18 @@ namespace AotC.Common.Players
                 style.Volume = SoundID.Item35.Volume * 2f;
                 SoundEngine.PlaySound(in AotCAudio.Bell);
             }
-
+            if (Player.controlDown && Player.controlUp)
+                killStars++;
+            else
+                killStars = 0;
+            if (killStars > 60)
+            {
+                foreach (Projectile projectile in ArkoftheCosmos.SlashLines)
+                    if (projectile.ModProjectile is Constellation asd)
+                        asd.death = true;
+                ArkoftheCosmos.SlashLines.Clear();
+                ArkoftheCosmos.SlashPoints.Clear();
+            }
             // trans rights
             celesteTrailDelay--;
             if (celesteTrail)
@@ -207,6 +198,37 @@ namespace AotC.Common.Players
                 foreach (Particle particle in Afterimages)
                     particle?.Update();
             }
+        }
+        private void On_Main_DrawProjectiles(On_Main.orig_DrawProjectiles orig, Main self)
+        { 
+            orig(self);
+            Texture2D value = ModContent.Request<Texture2D>("AotC/Assets/Textures/GenericBarBack", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D value2 = ModContent.Request<Texture2D>("AotC/Assets/Textures/GenericBarFront", AssetRequestMode.ImmediateLoad).Value;
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);    
+            Color val2 = ModdedUtils.HsvToRgb(Main.GlobalTimeWrappedHourly, 1f, 1f);
+            float ParryTime = 0;
+            foreach (Player player in Main.player)
+            {
+                if (!player.active)
+                {
+                    continue;
+                }
+                var p = player.GetPlot();
+                //this is to draw the cooldown
+                if (p.ArkThrowCooldown >= 0)
+                {
+                    float Timer = 340 - p.ArkThrowCooldown; //normally 340
+                    Vector2 val = p.Player.Center - Main.screenPosition + new Vector2(0f, 36f) - value.Size() / 2f;
+                    Rectangle value3 = new(0, 0, (int)((Timer - ParryTime) / (340f - ParryTime) * value2.Width), value2.Height);
+                    float num = (Timer <= ParryTime + 25f) ? ((Timer - ParryTime) / 25f) : ((340f - Timer <= 8f) ? (p.ArkThrowCooldown / 8f) : 1f);
+                    Main.spriteBatch.Draw(value, val, val2 * num);
+                    Main.spriteBatch.Draw(value2, val, (Rectangle?)value3, val2 * num * 0.8f);
+                }
+                foreach (Particle particle in p.Afterimages)
+                    particle?.CustomDraw(Main.spriteBatch);
+                p.Afterimages.RemoveAll((Particle particle) => particle.Time >= particle.Lifetime || !p.celesteTrail);
+            }
+            Main.spriteBatch.End();
         }
     }
 }

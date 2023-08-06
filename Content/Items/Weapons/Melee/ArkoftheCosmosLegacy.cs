@@ -14,7 +14,7 @@ public class ArkoftheCosmosLegacy : ModItem
     public override void SetDefaults()
     {
         Item.width = 102;
-        Item.damage = 501;
+        Item.damage = 140;
         Item.DamageType = DamageClass.Melee;
         Item.useAnimation = 15;
         Item.useTime = 15;
@@ -29,6 +29,12 @@ public class ArkoftheCosmosLegacy : ModItem
         Item.rare = ItemRarityID.Red;
         Item.shoot = ModContent.ProjectileType<EonBeamLegacy>();
         Item.shootSpeed = 28f;
+        Mod calamity = AotC.Instance.Calamity;
+        if (calamity != null)
+        {
+            ItemID.Sets.ShimmerTransformToItem[Type] = calamity.Find<ModItem>("ArkoftheCosmos").Type;
+            ItemID.Sets.ShimmerTransformToItem[calamity.Find<ModItem>("ArkoftheCosmos").Type] = Type;
+        }
     }
 
     public override void ModifyTooltips(List<TooltipLine> tooltips)
@@ -41,12 +47,7 @@ public class ArkoftheCosmosLegacy : ModItem
         }
     }
 
-    public override void AddRecipes()
-    {
-        CreateRecipe()
-            .AddCustomShimmerResult(ModContent.ItemType<ArkoftheCosmos>())
-            .Register();
-    }
+
     public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
     {
         switch (Main.rand.Next(4))

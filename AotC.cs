@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using Terraria.ID;
-using Terraria.Localization;
 
 namespace AotC
 {
@@ -21,7 +20,6 @@ namespace AotC
         private List<IOrderedLoadable> loadCache;
         private static RecipeGroup JellyfishRecipeGroup;
     
-
         public override void Load()
         {
 
@@ -38,9 +36,8 @@ namespace AotC
             ModLoader.TryGetMod("CalamityMod", out Calamity);
             Instance = this;
             if (!Main.dedServ)
-            {
                 GeneralParticleHandler.Load();
-            }
+            
 
 
             loadCache = new List<IOrderedLoadable>();
@@ -57,7 +54,9 @@ namespace AotC
             for (int k = 0; k < loadCache.Count; k++)
                 loadCache[k].Load();
         }
-        public override void AddRecipeGroups()
+
+        [Obsolete]
+        public override void AddRecipeGroups()/* tModPorter Note: Removed. Use ModSystem.AddRecipeGroups */
         {
             JellyfishRecipeGroup = new RecipeGroup(() => "Any Jellyfish", ItemID.BlueJellyfish, ItemID.PinkJellyfish, ItemID.GreenJellyfish);
             RecipeGroup.RegisterGroup("AotC:Jellyfish", JellyfishRecipeGroup);

@@ -40,6 +40,10 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "AngleSharp": {
+              "target": "Package",
+              "version": "[1.0.4, )"
+            },
             "tModLoader.CodeAssist": {
               "target": "Package",
               "version": "[0.1.*, )"

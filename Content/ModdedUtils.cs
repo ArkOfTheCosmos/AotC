@@ -453,7 +453,7 @@ public static class ModdedUtils
 
         return outputTexture;
     }
-    internal static PlotDevice Glitchtale(this Player player)
+    internal static PlotDevice GetPlot(this Player player)
 	{
 		return player.GetModPlayer<PlotDevice>();
 	}

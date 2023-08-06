@@ -73,11 +73,11 @@ namespace AotC.Content.Items.Accessories
         }
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.Glitchtale().celesteTrail = true;
+            player.GetPlot().celesteTrail = true;
         }
         public override void UpdateVanity(Player player)
         {
-            player.Glitchtale().celesteTrail = true;
+            player.GetPlot().celesteTrail = true;
         }
     }
 }

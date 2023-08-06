@@ -255,13 +255,13 @@ namespace AotC.Content.Projectiles
                 else if (SwingType == 3f)
                 {
                     Projectile.damage *= 3;
-                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, Projectile.velocity, ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.ConstellationMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 3f).timeLeft = Charge >= 10f ? 100 : 35;
+                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, Projectile.velocity, ModContent.ProjectileType<Constellation>(), (int)(Projectile.damage * ArkoftheCosmos.ConstellationMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 3f).timeLeft = Charge >= 10f ? 100 : 35;
                 }
 
                 else if (SwingType is 0f or 1f)
                 {
                     SoundEngine.PlaySound(in SoundID.DD2_MonkStaffSwing, Projectile.position);
-                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, Projectile.velocity * 300, ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.ConstellationMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), SwingType == 0f ? 1f : 2f).timeLeft = (int)(Projectile.timeLeft / 2f);
+                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, Projectile.velocity * 300, ModContent.ProjectileType<Constellation>(), (int)(Projectile.damage * ArkoftheCosmos.ConstellationMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), SwingType == 0f ? 1f : 2f).timeLeft = (int)(Projectile.timeLeft / 2f);
                 }
                 else if (SwingType != 5f)
                 {
@@ -337,7 +337,7 @@ namespace AotC.Content.Projectiles
                         if (Owner.whoAmI == Main.myPlayer && (Projectile.timeLeft - 1) % Math.Ceiling((double)(MaxSwingTime / ArkoftheCosmos.SwirlBoltAmount * 0.5f)) == 0.0)
                         {
                             float f = Projectile.rotation - (float)Math.PI * 23f / 80f * dir;
-                            Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center + f.ToRotationVector2() * 10f, f.ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), (int)(ArkoftheCosmos.SwirlStarMultiplier * Projectile.damage), 0f, Owner.whoAmI, 0.55f, 0.15f, 2f).timeLeft = 100;
+                            Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center + f.ToRotationVector2() * 10f, f.ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), (int)(ArkoftheCosmos.SwirlStarMultiplier * Projectile.damage), 0f, Owner.whoAmI, 0.55f, 0.15f, 1f).timeLeft = 100;
                         }
                     }
                     else
@@ -345,7 +345,7 @@ namespace AotC.Content.Projectiles
                         if (Owner.whoAmI == Main.myPlayer && (Projectile.timeLeft - 1) % Math.Ceiling((double)(MaxSwingTime / ArkoftheCosmos.SwirlBoltAmount)) == 0.0)
                         {
                             float f = Projectile.rotation - (float)Math.PI * 23f / 80f * dir;
-                            Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center + f.ToRotationVector2() * 10f, f.ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), (int)(ArkoftheCosmos.SwirlStarMultiplier * Projectile.damage), 0f, Owner.whoAmI, 0.55f, 0.15f, 2f).timeLeft = 100;
+                            Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center + f.ToRotationVector2() * 10f, f.ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), (int)(ArkoftheCosmos.SwirlStarMultiplier * Projectile.damage), 0f, Owner.whoAmI, 0.55f, 0.15f, 1f).timeLeft = 100;
                         }
                     }
                 }
@@ -369,7 +369,7 @@ namespace AotC.Content.Projectiles
                 }
                 if (Math.Abs(ThrowCompletion - 0.2f + 0.1f) <= 0.005f && ChanceMissed == 0f && Main.myPlayer == Owner.whoAmI)
                 {
-                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, Vector2.Zero, ModContent.ProjectileType<ArkoftheCosmosConstellation>(), (int)(Projectile.damage * ArkoftheCosmos.ConstellationMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 0f).timeLeft = (int)(Projectile.timeLeft / 2f);
+                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, Vector2.Zero, ModContent.ProjectileType<Constellation>(), (int)(Projectile.damage * ArkoftheCosmos.ConstellationMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 0f).timeLeft = (int)(Projectile.timeLeft / 2f);
                 }
                 Projectile.Center = Projectile.Center.MoveTowards(Main.MouseWorld, 40f * ThrowRatio());
                 Vector2 val = Projectile.Center - Owner.Center;

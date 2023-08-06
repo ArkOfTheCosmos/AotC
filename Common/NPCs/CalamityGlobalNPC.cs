@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
-using Terraria.WorldBuilding;
 
 namespace AotC.Common.NPCs
 {
@@ -21,7 +20,7 @@ namespace AotC.Common.NPCs
 
         public override void UpdateLifeRegen(NPC npc, ref int damage)
         {
-            if (this.tSad > 0)
+            if (tSad > 0)
             {
                 npc.velocity /= 2f;
             }

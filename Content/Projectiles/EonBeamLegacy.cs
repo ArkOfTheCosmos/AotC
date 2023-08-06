@@ -14,13 +14,13 @@ public class EonBeamLegacy : ModProjectile
         AIType = 173;
         Projectile.width = 20;
         Projectile.height = 20;
-        Projectile.aiStyle = 27;
+        //Projectile.aiStyle = 27;
         Projectile.friendly = true;
         Projectile.DamageType = DamageClass.Melee;
         Projectile.penetrate = 3;
         Projectile.timeLeft = 300;
         Projectile.usesLocalNPCImmunity = true;
-        Projectile.localNPCHitCooldown = 6;
+        Projectile.localNPCHitCooldown = 10;
     }
 
     public override void AI()
@@ -68,7 +68,7 @@ public class EonBeamLegacy : ModProjectile
         if (Projectile.ai[0] != 1f)
         {
             target.AddBuff(ModContent.BuffType<BrimstoneFlames>(), 120);
-            target.AddBuff(ModContent.BuffType<GlacialState>(), 120);
+            target.AddBuff(BuffID.Frostburn, 120);
             target.AddBuff(ModContent.BuffType<Plague>(), 120);
             target.AddBuff(ModContent.BuffType<HolyFlames>(), 120);
         }

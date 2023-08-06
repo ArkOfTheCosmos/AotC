@@ -10,6 +10,7 @@ Mods: {
 			EonBeamLegacyV3.DisplayName: Beam
 			EonBeamLegacyV4.DisplayName: Beam
 			EonStarLegacy.DisplayName: Eon Star Legacy
+			Constellation.DisplayName: Constellation
 		}
 
 		Items: {

@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using System;
 
 namespace AotC.Content.Projectiles
 {
-    public class ArkoftheCosmosConstellation : ModProjectile
+    public class Constellation : ModProjectile
     {
         public List<Particle> Particles;
 
@@ -36,8 +37,6 @@ namespace AotC.Content.Projectiles
         public float AnchorType => Projectile.ai[1];
 
         public float SlashLineNum => Projectile.ai[2];
-
-        private ArkoftheCosmos arkoftheCosmos => Owner.HeldItem.ModItem as ArkoftheCosmos;
 
     private Vector2 AnchorStart
         {
@@ -221,7 +220,7 @@ namespace AotC.Content.Projectiles
                     {
                         num = (num + 0.16f) % 1f;
                         val = Main.hslToRgb(num, 1f, 0.5f);
-                        Vector2 val3 = Main.rand.NextFloat(-50f, 50f) * SizeVector.RotatedBy(1.5707963705062866).SafeNormalize(Vector2.Zero);
+                        Vector2 val3 = Main.rand.NextFloat(-50f, 50f) * SizeVector.RotatedBy(Math.PI / 2f).SafeNormalize(Vector2.Zero);
                         particle2 = new GenericSparkle(AnchorStart + SizeVector * num2 + val3, Vector2.Zero, Color.White, val, Main.rand.NextFloat(1f, 1.5f), 20, 0f, 3f);
                         BootlegSpawnParticle(particle2);
                         particle3 = new BloomLineVFX(val2, AnchorStart + SizeVector * num2 + val3 - val2, 0.8f, val, 20, capped: true, telegraph: true);
@@ -230,7 +229,7 @@ namespace AotC.Content.Projectiles
                         {
                             num = (num + 0.16f) % 1f;
                             val = Main.hslToRgb(num, 1f, 0.5f);
-                            val3 = Main.rand.NextFloat(-50f, 50f) * SizeVector.RotatedBy(1.5707963705062866).SafeNormalize(Vector2.Zero);
+                            val3 = Main.rand.NextFloat(-50f, 50f) * SizeVector.RotatedBy(Math.PI / 2f).SafeNormalize(Vector2.Zero);
                             particle2 = new GenericSparkle(AnchorStart + SizeVector * num2 + val3, Vector2.Zero, Color.White, val, Main.rand.NextFloat(1f, 1.5f), 20, 0f, 3f);
                             BootlegSpawnParticle(particle2);
                             particle3 = new BloomLineVFX(val2, AnchorStart + SizeVector * num2 + val3 - val2, 0.8f, val, 20, capped: true, telegraph: true);
@@ -266,7 +265,7 @@ namespace AotC.Content.Projectiles
                 {
                     num = (num + 0.16f) % 1f;
                     val = Main.hslToRgb(num, 1f, 0.5f);
-                    Vector2 val3 = Main.rand.NextFloat(-100f, 100f) * SizeVector.RotatedBy(1.5707963705062866).SafeNormalize(Vector2.Zero);
+                    Vector2 val3 = Main.rand.NextFloat(-100f, 100f) * SizeVector.RotatedBy(Math.PI / 2f).SafeNormalize(Vector2.Zero);
                     particle2 = new GenericSparkle(AnchorStart + SizeVector * num2 + val3, Vector2.Zero, Color.White, val, Main.rand.NextFloat(1f, 1.5f), 20, 0f, 3f);
                     BootlegSpawnParticle(particle2);
                     particle3 = new BloomLineVFX(val2, AnchorStart + SizeVector * num2 + val3 - val2, 0.8f, val, 20, capped: true, telegraph: true);
@@ -275,7 +274,7 @@ namespace AotC.Content.Projectiles
                     {
                         num = (num + 0.16f) % 1f;
                         val = Main.hslToRgb(num, 1f, 0.5f);
-                        val3 = Main.rand.NextFloat(-100f, 100f) * SizeVector.RotatedBy(1.5707963705062866).SafeNormalize(Vector2.Zero);
+                        val3 = Main.rand.NextFloat(-100f, 100f) * SizeVector.RotatedBy(Math.PI / 2f).SafeNormalize(Vector2.Zero);
                         particle2 = new GenericSparkle(AnchorStart + SizeVector * num2 + val3, Vector2.Zero, Color.White, val, Main.rand.NextFloat(1f, 1.5f), 20, 0f, 3f);
                         BootlegSpawnParticle(particle2);
                         particle3 = new BloomLineVFX(val2, AnchorStart + SizeVector * num2 + val3 - val2, 0.8f, val, 20, capped: true, telegraph: true);
@@ -301,12 +300,11 @@ namespace AotC.Content.Projectiles
                 if (!balls)
                 {
                     balls = true;
-                    //cachedStart = null;
                     if (SlashLineNum == ArkoftheCosmos.SlashPoints.Count)
                     {
                         float num = Main.rand.NextFloat();
                         Color val = Main.hslToRgb(num, 1f, 0.5f);
-                        Particle particle2 = new GenericSparkle(AnchorStart, Vector2.Zero, Color.White, val, Main.rand.NextFloat(1f, 1.5f), 20, 0f, 3f);
+                        Particle particle2 = new GenericSparkle(AnchorStart, Vector2.Zero, Color.White, val, SlashLineNum == 1 ? 2.01f : 2f, 20, 0f, 3f);
                         BootlegSpawnParticle(particle2);
                     }
                     else
@@ -316,14 +314,14 @@ namespace AotC.Content.Projectiles
                         float num = Main.rand.NextFloat();
                         Color val = Main.hslToRgb(num, 1f, 0.5f);
                         Vector2 val2 = AnchorStart;
-                        Particle particle2 = new GenericSparkle(val2, Vector2.Zero, Color.White, val, Main.rand.NextFloat(1f, 1.5f), 20, 0f, 3f);
+                        Particle particle2 = new GenericSparkle(val2, Vector2.Zero, Color.White, val, SlashLineNum == 1 ? 2.01f : Main.rand.NextFloat(1f, 1.5f), 20, 0f, 3f);
                         BootlegSpawnParticle(particle2);
                         Particle particle3;
                         for (float num2 = 0f + Main.rand.NextFloat(0.2f, 0.5f); num2 < 1f; num2 += Main.rand.NextFloat(0.2f, 0.5f))
                         {
                             num = (num + 0.16f) % 1f;
                             val = Main.hslToRgb(num, 1f, 0.5f);
-                            Vector2 val3 = Main.rand.NextFloat(-50f, 50f) * SizeVector.RotatedBy(1.5707963705062866).SafeNormalize(Vector2.Zero);
+                            Vector2 val3 = Main.rand.NextFloat(-50f, 50f) * SizeVector.RotatedBy(Math.PI / 2f).SafeNormalize(Vector2.Zero);
                             particle2 = new GenericSparkle(AnchorStart + SizeVector * num2 + val3, Vector2.Zero, Color.White, val, Main.rand.NextFloat(1f, 1.5f), 20, 0f, 3f);
                             BootlegSpawnParticle(particle2);
                             particle3 = new BloomLineVFX(val2, AnchorStart + SizeVector * num2 + val3 - val2, 0.8f, val, 20, capped: true, telegraph: true);
@@ -332,7 +330,7 @@ namespace AotC.Content.Projectiles
                             {
                                 num = (num + 0.16f) % 1f;
                                 val = Main.hslToRgb(num, 1f, 0.5f);
-                                val3 = Main.rand.NextFloat(-50f, 50f) * SizeVector.RotatedBy(1.5707963705062866).SafeNormalize(Vector2.Zero);
+                                val3 = Main.rand.NextFloat(-50f, 50f) * SizeVector.RotatedBy(Math.PI / 2f).SafeNormalize(Vector2.Zero);
                                 particle2 = new GenericSparkle(AnchorStart + SizeVector * num2 + val3, Vector2.Zero, Color.White, val, Main.rand.NextFloat(1f, 1.5f), 20, 0f, 3f);
                                 BootlegSpawnParticle(particle2);
                                 particle3 = new BloomLineVFX(val2, AnchorStart + SizeVector * num2 + val3 - val2, 0.8f, val, 20, capped: true, telegraph: true);
@@ -376,10 +374,9 @@ namespace AotC.Content.Projectiles
                     {
                         particle4.Color *= 0.9f;
                     }
-                    if (AnchorType == 5f && SlashLineNum == 1 && particle4 is GenericSparkle && particle4 == Particles[0])
+                    if (AnchorType == 5f && particle4 is GenericSparkle && particle4.Scale is 2f or 2.01f)
                     {
-                        particle4.Rotation+= 0.05f;
-                        particle4.Scale = 2f;
+                        particle4.Rotation += particle4.Scale == 2f ? 0.05f : -0.05f;
                     }
                 }
             }

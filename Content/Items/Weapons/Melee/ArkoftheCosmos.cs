@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using Terraria.GameContent.Creative;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.Graphics.CameraModifiers;
+using rail;
 
 namespace AotC.Content.Items.Weapons.Melee
 {
@@ -27,11 +28,11 @@ namespace AotC.Content.Items.Weapons.Melee
         public static readonly float SwirlMultiplier = 2f;
         public static readonly float StabMultiplier = 3f;
         public static readonly float DashMultiplier = 5f;
-        public static readonly float BeamMultiplier = 0.3f;
-        public static readonly float SwirlStarMultiplier = 0.4f;
-        public static readonly float ThrownStarMultiplier = 0.2f;
+        public static readonly float BeamMultiplier = 0.2f;
+        public static readonly float EonStarMultiplier = 0.25f;
+        public static readonly float SwirlStarMultiplier = 0.2f;
+        public static readonly float ThrownStarMultiplier = 0.15f;
         public static readonly float DashStarMultiplier = 1f;
-        public static readonly float EonStarMultiplier = 0.5f;
         public static readonly float ConstellationMultiplier = 0.1f;
 
         public static float BalanceMultiplier
@@ -40,7 +41,7 @@ namespace AotC.Content.Items.Weapons.Melee
             {
                 if (AotC.Instance.Calamity != null)
                 {
-                    return 10f;
+                    return 4f;
                 }
                 return 1f;
             }
@@ -61,13 +62,12 @@ namespace AotC.Content.Items.Weapons.Melee
             Item.width = 102;
             Item.height = 102;
             Item.useTime = 1;
-            Item.damage = 666;
+            Item.damage = 333;
             Item.knockBack = 9.5f;
             Item.useAnimation = 1;
             Item.shootSpeed = 28f;
             Item.ResearchUnlockCount = 1;
             Item.UseSound = null;
-            Item.useTurn = true;
             Item.channel = true;
             Item.noMelee = true;
             Item.autoReuse = true;
@@ -139,7 +139,7 @@ namespace AotC.Content.Items.Weapons.Melee
                     TooltipLine tooltipLine6 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip6" && x.Mod == "Terraria");
                     if (tooltipLine6 != null)
                     {
-                        tooltipLine6.Text = "Pressing W + RMB will consume charge to create stars that form constellations.\nUp to a maximum of ten stars can be placed. Pressing W + LMB while close\nto the first star placed will cause you to dash and slash across them";
+                        tooltipLine6.Text = "Pressing W + RMB will consume charge to create stars that form constellations.\nUp to a maximum of ten stars can be placed. Pressing W + LMB while close\nto the first star placed will cause you to dash and slash across them. Hold \ndown S and W to remove stars";
                         tooltipLine6.OverrideColor = Color.Red;
                     }
                 }
@@ -163,27 +163,12 @@ namespace AotC.Content.Items.Weapons.Melee
         }
         public override void AddRecipes()
         {
-            Mod Calamity = AotC.Instance.Calamity;
-            if (AotC.Instance.Calamity != null)
-            {
-                CreateRecipe()
-                    .AddIngredient(Calamity.Find<ModItem>("DormantBrimseeker"), 1)
-                    .AddIngredient(Calamity.Find<ModItem>("SearedPan"), 1)
-                    .AddIngredient(ItemID.LifeCrystal, 9)
-                    .AddIngredient(ItemID.PiercingStarlight, 2)
-                    .AddIngredient(Calamity.Find<ModItem>("HyperiusBullet"), 92)
-                    .AddIngredient(ItemID.PapyrusScarab, 1)
-                    .AddIngredient(Calamity.Find<ModItem>("ExoPrism"), 1)
-                    .AddIngredient(Calamity.Find<ModItem>("UndinesRetribution"), 1)
-                    .AddIngredient(ItemID.Bone, 66)
-                    .AddIngredient(ItemID.Fireplace, 1)
-                    .AddIngredient(ItemID.InfernoFork, 1)
-                    .AddIngredient(Calamity.Find<ModItem>("ShadowspecBar"), 5)
-                    .AddTile(Calamity.Find<ModTile>("DraedonsForge"))
-                    .Register();
-            }
             CreateRecipe()
-                .AddCustomShimmerResult(ModContent.ItemType<ArkoftheCosmosLegacy>())
+                .AddIngredient(ItemID.StylistKilLaKillScissorsIWish)
+                .AddIngredient(ItemID.GenderChangePotion)
+                .AddIngredient(ItemID.IntenseGreenFlameDye)
+                .AddIngredient(ItemID.LunarBar, 5)
+                .AddTile(TileID.LunarCraftingStation)
                 .Register();
         }
         //makes it so you can use weapon with rmb
@@ -219,6 +204,8 @@ namespace AotC.Content.Items.Weapons.Melee
             //if the player is drawing stars
             if (player.altFunctionUse == 2)
             {
+                if (player.controlDown)
+                    return false;
                 if (player.controlUp)
                 {
                     if (charge >= 20f && SlashPoints.Count < 10)
@@ -233,14 +220,14 @@ namespace AotC.Content.Items.Weapons.Melee
                         }
                         else
                             SlashPoints.Add(Main.MouseWorld);
-                        Projectile projectile = Projectile.NewProjectileDirect(source, player.position, Vector2.Zero, ModContent.ProjectileType<ArkoftheCosmosConstellation>(), 0, 0f, player.whoAmI, 0f, 5f, SlashPoints.Count);
+                        Projectile projectile = Projectile.NewProjectileDirect(source, player.position, Vector2.Zero, ModContent.ProjectileType<Constellation>(), 0, 0f, player.whoAmI, 0f, 5f, SlashPoints.Count);
                         projectile.timeLeft = -1;
                         SlashLines.Add(projectile);
                         //redraws star if its no longer the end
                         if (SlashLines.Count > 1)
                         {
                             Projectile projectile2 = SlashLines[^2];
-                            if (projectile2.ModProjectile is ArkoftheCosmosConstellation modProjectile)
+                            if (projectile2.ModProjectile is Constellation modProjectile)
                             {
                                 modProjectile.balls = false;
                             }
@@ -251,7 +238,7 @@ namespace AotC.Content.Items.Weapons.Melee
                 //if sword is being thrown
                 else
                 {
-                    PlotDevice p = player.Glitchtale();
+                    PlotDevice p = player.GetPlot();
                     if (p.ArkThrowCooldown < 0)
                     {
                         Projectile.NewProjectile(source, player.Center, velocity, ModContent.ProjectileType<ArkoftheCosmosSwungBlade>(), (int)(damage * BalanceMultiplier), knockback, player.whoAmI, 4f, charge);
@@ -268,7 +255,7 @@ namespace AotC.Content.Items.Weapons.Melee
                 if (SlashPoints.Count > 1)
                 {
                     Item.autoReuse = false; // makes it so your ears dont break from trying to slash 20 times a second while out of range
-                    player.Glitchtale().StartSlash((int)(damage * BalanceMultiplier));
+                    player.GetPlot().StartSlash((int)(damage * BalanceMultiplier));
                 }
                 return false;
             }
