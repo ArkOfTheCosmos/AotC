@@ -276,7 +276,6 @@ namespace AotC.Content.Items.Weapons.Melee
                 num = 3f;
                 stab = false;
             }
-            num = 3f;
             //summons the sword
             Projectile.NewProjectile(source, player.Center, velocity, ModContent.ProjectileType<ArkoftheCosmosSwungBlade>(), (int)(damage * BalanceMultiplier), knockback, player.whoAmI, num, charge);
             //summons beam/wail if its a stab
