@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.Graphics.CameraModifiers;
+using AotC.Content.Dusts;
 
 namespace AotC.Content.Projectiles;
 
@@ -136,15 +137,21 @@ public class KillerWail : BaseLaserbeamProjectile
             float num2 = 0f;
             while (num2 + 1f < laserLength)
             {
-                Texture2D FinalTexture = ModdedUtils.ShiftHue(LaserMiddleTexture, -Main.GlobalTimeWrappedHourly * (Wail ? 1.6f : 5f) % 1 + 1);                Main.spriteBatch.Draw(FinalTexture, center - Main.screenPosition, val2, Color.White * (Wail ? 0.5f : 1f), Projectile.rotation, (float)LaserMiddleTexture.Width * 0.5f * Vector2.UnitX, scale, (SpriteEffects)0, 0);
+                Texture2D FinalTexture = ModdedUtils.ShiftHue(LaserMiddleTexture, -Main.GlobalTimeWrappedHourly * (Wail ? 1.6f : 5f) % 1 + 1);                
+                Main.spriteBatch.Draw(FinalTexture, center - Main.screenPosition, val2, Color.White * (Wail ? 0.5f : 1f), Projectile.rotation, LaserMiddleTexture.Width * 0.5f * Vector2.UnitX, scale, 0, 0);
                 num2 += num;
             }
         }
         Texture2D value = ModContent.Request<Texture2D>("AotC/Content/Projectiles/BeamWave").Value;
         Main.spriteBatch.Draw(value, center - Main.screenPosition, null, Color.White, Projectile.rotation, new Vector2(8, 0 - ear % 14), Projectile.scale, 0, 0);
         Vector2 vector = ModdedUtils.RandomVector2(Main.rand.NextFloat(0,30));
-        int dust = Dust.NewDust(center + Dir.ToRotationVector2() * Main.rand.NextFloat(-10f, 250f), 1, 1, DustID.FireworksRGB, vector.X, vector.Y, newColor: ModdedUtils.HsvToRgb(Main.rand.NextFloat(0, 255f), 0.7f, 1f), Scale: 1.5f);
-        Main.dust[dust].noGravity = true;
+        int dust;
+        for (int i = 0; i  < 7;  i++)
+        {
+            dust = Dust.NewDust(center + Dir.ToRotationVector2() * Main.rand.NextFloat(i * 100, (i+1) * 100), 1, 1, ModContent.DustType<TeleporterDustRGB>(), vector.X, vector.Y, newColor: ModdedUtils.HsvToRgb(Main.rand.NextFloat(0, 255f), 1f, 1f), Scale: 2f);
+            Main.dust[dust].noGravity = true;
+            Main.dust[dust].fadeIn = 1f;
+        }   
         ear += Wail ? 1f : 3;
         return false;
     }

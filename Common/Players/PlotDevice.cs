@@ -179,10 +179,10 @@ namespace AotC.Common.Players
             celesteTrailDelay--;
             if (celesteTrail)
             {
-                if (ModdedUtils.GetSpeed(Player) >= 30f && celesteTrailDelay <= 0f)
+                if ((ModdedUtils.GetSpeed(Player) >= 30f || Player.dashDelay == -1)&& celesteTrailDelay <= 0f)
                 {
                     RenderTarget2D renderTarget = PlayerTarget.Target;
-                    celesteTrailDelay = 10;
+                    celesteTrailDelay = 7f;
                     if (PlayerTarget.canUseTarget)
                     {
                         Color[] data = new Color[renderTarget.Width * renderTarget.Height];

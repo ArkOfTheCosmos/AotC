@@ -255,7 +255,7 @@ namespace AotC.Content.Projectiles
                 else if (SwingType == 3f)
                 {
                     Projectile.damage *= 3;
-                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, Projectile.velocity, ModContent.ProjectileType<Constellation>(), (int)(Projectile.damage * ArkoftheCosmos.ConstellationMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 3f).timeLeft = Charge >= 10f ? 100 : 35;
+                    Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, Projectile.velocity, ModContent.ProjectileType<Constellation>(), (int)(Projectile.damage * ArkoftheCosmos.ConstellationMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 3f).timeLeft = Charge >= 20f ? 100 : 35;
                 }
 
                 else if (SwingType is 0f or 1f)
