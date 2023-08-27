@@ -14,7 +14,6 @@ using System.Collections.Generic;
 using Terraria.GameContent.Creative;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.Graphics.CameraModifiers;
-using rail;
 
 namespace AotC.Content.Items.Weapons.Melee
 {
@@ -137,7 +136,7 @@ namespace AotC.Content.Items.Weapons.Melee
                     TooltipLine tooltipLine6 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip6" && x.Mod == "Terraria");
                     if (tooltipLine6 != null)
                     {
-                        tooltipLine6.Text = "Pressing W + RMB will consume charge to create stars that form constellations.\nUp to a maximum of ten stars can be placed. Pressing W + LMB while close\nto the first star placed will cause you to dash and slash across them. Hold \ndown S and W to remove stars";
+                        tooltipLine6.Text = "Pressing UP + RMB will consume charge to create stars that form constellations.\nUp to a maximum of ten stars can be placed. Pressing UP + LMB while close\nto the first star placed will cause you to dash and slash across them. Hold \ndown UP and DOWN to remove the stars";
                         tooltipLine6.OverrideColor = Color.Red;
                     }
                 }
@@ -248,14 +247,14 @@ namespace AotC.Content.Items.Weapons.Melee
                 }
             }
             //if player goes SHING SHING SHING
-            else if (player.controlUp)
+            else if (player.controlUp && Main.mouseLeftRelease)
             {
                 if (SlashPoints.Count > 1)
                 {
                     Item.autoReuse = false; // makes it so your ears dont break from trying to slash 20 times a second while out of range
                     player.GetPlot().StartSlash((int)(damage * BalanceMultiplier));
+                    return false;
                 }
-                return false;
             }
             //player isnt drawing stars so fix usetime and stuff so players arm doesnt have a seizure
             Item.autoReuse = true;
@@ -270,7 +269,7 @@ namespace AotC.Content.Items.Weapons.Melee
             }
             combo += 1f; //progresses swing cycle
             float num = (combo == 5f) ? 2f : (combo % 2f); //decide what type of swing your on
-                                                           //decides whether to stab or not
+            //decides whether to stab or not
             if (combo == rnd && stab == true)
             {
                 num = 3f;

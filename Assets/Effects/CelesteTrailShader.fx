@@ -25,11 +25,14 @@ float3 uLightSource;
 float2 uImageSize0;
 float4 uLegacyArmorSourceRect;
 float2 uLegacyArmorSheetSize;
+bool red;
 
 float4 TrailShaderFunction(float2 coords : TEXCOORD0) : COLOR0
 {   
     float4 color = tex2D(uImage0, coords);
     
+    if (red)
+        return float4(228.0 / 255.0, 95.0 / 255.0, 228.0 / 205.0, 1) * color.a * uOpacity;
     return float4(95.0 / 255.0, 205.0 / 255.0, 228.0 / 255.0, 1) * color.a * uOpacity;
 }
 

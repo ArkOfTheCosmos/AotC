@@ -1,14 +1,13 @@
-using AotC.Common.Players;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
 using Terraria;
-using Terraria.DataStructures;
-using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.DataStructures;
+using Microsoft.Xna.Framework;
+using Terraria.Graphics.Shaders;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
+using AotC.Core.GlobalInstances.Systems;
+using AotC.Content.Items.Weapons.Melee;
 
 namespace AotC.Content.Items.Accessories
 {
@@ -31,15 +30,12 @@ namespace AotC.Content.Items.Accessories
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(ItemID.ConveyorBeltLeft)
-                .AddIngredient(ItemID.Bubble)
-                .AddIngredient(ItemID.BlackFairyDust)
-                .AddIngredient(ItemID.CloudinaBottle)
-                .AddIngredient(ItemID.MagicMirror)
-                .AddIngredient(ItemID.CrystalShard)
+                .AddIngredient(ModContent.ItemType<GoldenFeather>())
                 .AddIngredient(ItemID.GolfCupFlagRed)
                 .AddIngredient(ItemID.LifeCrystal)
                 .AddRecipeGroup(RecipeGroup.recipeGroupIDs["AotC:Jellyfish"])
+                .AddIngredient(ItemID.LunarBar, 5)
+                .AddTile(TileID.LunarCraftingStation)
                 .Register();
         }
 
@@ -64,17 +60,19 @@ namespace AotC.Content.Items.Accessories
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            if (Item.social) 
+            if (Item.social)
             {
                 tooltips.RemoveAt(1);
-                tooltips[1] = new(AotC.Instance, "SocialDesc", Tooltip.ToString());
+                tooltips[1] = new(AotC.Instance, "SocialDesc", "This is what's at the center of all this?\nIt's so empty... and vast...\nYet it feels nostalgic somehow.\nAnd peaceful.");
             }
-            else
-                tooltips.Insert(2, new TooltipLine(AotC.Instance, "HeartoftheMountainInfo", "Gain the trail of a certain mountain climber\nWorks with most non-base dyes"));
+            else if (AotCSystem.CelesteDash.GetAssignedKeys().Count == 0)
+                tooltips.Insert(3, new(AotC.Instance, "CelesteDashNotBound", "Bind a key to dash in controls"));
         }
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.GetPlot().celesteTrail = true;
+            if (!hideVisual)
+                player.GetPlot().celesteTrail = true;
+            player.GetPlot().maxDashes = 2;
         }
         public override void UpdateVanity(Player player)
         {

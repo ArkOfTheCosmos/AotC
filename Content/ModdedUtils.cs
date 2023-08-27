@@ -21,6 +21,19 @@ public static class ModdedUtils
         UImageFieldMisc.SetValue(shader, texture);
         return shader;
     }
+    public enum Direction
+    {
+        None,
+        Up,
+        Down,
+        Left,
+        Right,
+        UpLeft,
+        UpRight,
+        DownLeft,
+        DownRight
+    }
+
     public enum EasingType
     {
         Linear,
@@ -472,5 +485,26 @@ public static class ModdedUtils
     internal static Vector2 RandomVector2(float magnitude = 1)
     {
         return Main.rand.NextFloat((float)-Math.PI, (float)Math.PI).ToRotationVector2() * magnitude;
+    }
+
+
+    public static Direction GetDirection(Player player)
+    {
+        bool up = player.controlUp;
+        bool down = player.controlDown;
+        bool left = player.controlLeft;
+        bool right = player.controlRight;
+            
+        if (up && left) return Direction.UpLeft;
+        if (up && right) return Direction.UpRight;
+        if (down && left) return Direction.DownLeft;
+        if (down && right) return Direction.DownRight;
+
+        if (up) return Direction.Up;
+        if (down) return Direction.Down;
+        if (left) return Direction.Left;
+        if (right) return Direction.Right;
+
+        return Direction.None;
     }
 }

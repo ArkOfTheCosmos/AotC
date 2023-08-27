@@ -29,10 +29,31 @@ Mods: {
 					'''
 			}
 
+			GoldenFeather: {
+				DisplayName: Golden Feather
+				Tooltip:
+					'''
+					Gives you the dash of a certain mountain climber
+					Works with (most) non-base vanilla dyes
+					Turn off visibility to only show afterimages while dashing
+					Put in social slot to only show afterimages
+					Close your eyes.
+					Picture a feather floating infront of you.
+					See it? 
+					Okay.
+					Your breathing keeps that feather floating.
+					Just breathe slow and steady, in and out.
+					'''
+			}
+
 			HeartoftheMountain: {
 				DisplayName: Heart of the Mountain
 				Tooltip:
 					'''
+					Gives you the dashes of a certain mountain climber and her other self
+					Works with (most) non-base vanilla dyes
+					Turn off visibility to only show afterimages while dashing
+					Put in social slot to only show afterimages
 					This is what's at the center of all this?
 					It's so empty... and vast...
 					Yet it feels nostalgic somehow.
@@ -86,6 +107,11 @@ Mods: {
 				DisplayName: Temporal Sadness
 				Description: You are crying
 			}
+		}
+
+		Keybinds: {
+			"Heart of the Mountain Dash (Works with Helpful Hotkeys Mod).DisplayName": Heart of the  Mountain  Dash ( Works with  Helpful  Hotkeys  Mod)
+			"Heart of the Mountain Dash.DisplayName": Heart of the  Mountain  Dash
 		}
 	}
 }
