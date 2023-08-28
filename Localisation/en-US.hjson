@@ -113,5 +113,24 @@ Mods: {
 			"Heart of the Mountain Dash (Works with Helpful Hotkeys Mod).DisplayName": Heart of the  Mountain  Dash ( Works with  Helpful  Hotkeys  Mod)
 			"Heart of the Mountain Dash.DisplayName": Heart of the  Mountain  Dash
 		}
+
+		UI.ExampleResource: Mods.AotC.UI.ExampleResource
+
+		Configs: {
+			AotCConfig: {
+				DisplayName: Config
+				Headers.HUD: HUD
+
+				DashIndicatorX: {
+					Label: Dash Indicator X Position
+					Tooltip: ""
+				}
+
+				DashIndicatorY: {
+					Label: Dash Indicator Y Position
+					Tooltip: ""
+				}
+			}
+		}
 	}
 }

@@ -11,11 +11,15 @@ using AotC.Content.Projectiles;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using AotC.Content.CustomHooks;
+using static AotC.Content.ModdedUtils;
 using Microsoft.Xna.Framework.Graphics;
 using AotC.Content.Items.Weapons.Melee;
 using AotC.Core.GlobalInstances.Systems;
-using static AotC.Content.ModdedUtils;
 using Terraria.DataStructures;
+using static Terraria.ModLoader.PlayerDrawLayer;
+using System.Runtime.CompilerServices;
+using System.Reflection.Metadata;
+using Terraria.Graphics.Shaders;
 
 namespace AotC.Common.Players
 {
@@ -23,6 +27,7 @@ namespace AotC.Common.Players
     {
         public bool celesteTrail;
         public int flash = 0;
+        public int UIFlash = 0;
         public int celesteDashTimer;
         public int dashCount;
         public int killStars;
@@ -43,6 +48,7 @@ namespace AotC.Common.Players
         public override void Load()
         {
             On_Main.DrawProjectiles += On_Main_DrawProjectiles;
+            On_Main.DrawDust += On_Main_DrawDust;
         }
 
 
@@ -88,6 +94,7 @@ namespace AotC.Common.Players
             if (AotCSystem.CelesteDash.JustPressed && celesteDashTimer == 0 && dashCount > 0)
             {
                 flash = 200;
+                UIFlash = 200;
                 dashCount--;
                 Player.dashDelay = 30;
                 celesteDashTimer = 15;
@@ -99,15 +106,24 @@ namespace AotC.Common.Players
             {
                 if (Player.controlJump && celesteDashTimer > 0)
                 {
-                    if (celesteDashTimer < 8)
+                    if (celesteDashTimer < 8 && dashCount < maxDashes)
+                    {
+                        UIFlash = 200;
                         dashCount = maxDashes;
+                    }
                     celesteDashTimer = -1;
                 }
-                else if (celesteDashTimer == 0)
+                else if (celesteDashTimer == 0 && dashCount < maxDashes)
+                {
+                    UIFlash = 200;
                     dashCount = maxDashes;
+                }
             }
-            if (Player.grapCount > 0)
+            if (Player.grapCount > 0 && dashCount < maxDashes)
+            {
+                UIFlash = 200;
                 dashCount = maxDashes;
+            }
             if (celesteDashTimer == -2)
                 celesteDashTimer = 0;
             if (SlashPoints != null && SlashPoints.Count > 0)
@@ -360,9 +376,19 @@ namespace AotC.Common.Players
         {
             if (flash > 0)
             {
-                a = flash;
                 flash -= 10;
+                RenderTarget2D renderTarget = PlayerTarget.Target;
+                if (PlayerTarget.canUseTarget)
+                {
+                    Color[] data = new Color[renderTarget.Width * renderTarget.Height];
+                    renderTarget.GetData(data);
+                    playerTexture = new Texture2D(Main.graphics.GraphicsDevice, renderTarget.Width, renderTarget.Height);
+                    playerTexture.SetData(data);
+                    playerTexture = MakeSilhouette(playerTexture, 50, Color.White);
+                }
             }
+            if (UIFlash > 0)
+                UIFlash -= 10;
         }
         private void On_Main_DrawProjectiles(On_Main.orig_DrawProjectiles orig, Main self)
         { 
@@ -390,6 +416,31 @@ namespace AotC.Common.Players
                 foreach (Particle particle in p.Afterimages)
                     particle?.CustomDraw(Main.spriteBatch);
                 p.Afterimages.RemoveAll((Particle particle) => particle.Time >= particle.Lifetime);
+            }
+            Main.spriteBatch.End();
+        }
+        private void On_Main_DrawDust(On_Main.orig_DrawDust orig, Main self)
+        {
+            orig(self);
+            Main.spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            foreach (Player player in Main.player)
+            {
+                if (!player.active)
+                    continue;
+                var p = player.GetPlot();
+                if (p.flash > 0)
+                {
+                    if (PlayerTarget.CelesteTrailShader != null)
+                    {
+                        PlayerTarget.CelesteTrailShader.Apply(null, new(p.playerTexture, Vector2.Zero, Color.White));
+                    }
+                    else
+                    {
+                        GameShaders.Misc["CelesteTrailShader"].UseOpacity(p.flash / 170f);
+                        GameShaders.Misc["CelesteTrailShader"].Apply();
+                    }
+                    Main.spriteBatch.Draw(p.playerTexture, PlayerTarget.GetPlayerTargetPosition(player.whoAmI), PlayerTarget.GetPlayerTargetSourceRectangle(player.whoAmI), Color.White * (p.flash / 255f), 0, new(), 1f, 0, 0f);
+                }
             }
             Main.spriteBatch.End();
         }

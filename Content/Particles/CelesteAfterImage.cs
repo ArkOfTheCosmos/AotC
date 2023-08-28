@@ -21,7 +21,6 @@ public class CelesteAfterImage : Particle
     {
         Position = position;
         Lifetime = 60;
-        Color = Color.White;
         playerTexture = PlayerTexture;
         sourceRectangle = SourceRectangle;
     }
@@ -41,7 +40,7 @@ public class CelesteAfterImage : Particle
             GameShaders.Misc["CelesteTrailShader"].UseOpacity(opacity);
             GameShaders.Misc["CelesteTrailShader"].Apply();
         }
-        spriteBatch.Draw(playerTexture, Position - Main.screenPosition, sourceRectangle, Color * opacity, Rotation, new(), 1f, 0, 0f);
+        spriteBatch.Draw(playerTexture, Position - Main.screenPosition, sourceRectangle, Color.White * opacity, Rotation, new(), 1f, 0, 0f);
         spriteBatch.ExitShaderRegion();
     }
 }

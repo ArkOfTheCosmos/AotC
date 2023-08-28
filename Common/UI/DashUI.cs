@@ -1,13 +1,13 @@
-﻿using AotC.Content;
+﻿using AotC.Common.Configs;
+using AotC.Content;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SteelSeries.GameSense;
+using System.Collections.Generic;
 using Terraria;
-using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
 using Terraria.UI;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace AotC.Common.UI
 {
@@ -30,7 +30,7 @@ namespace AotC.Common.UI
         public override void Draw(SpriteBatch spriteBatch)
         {
             // no draw unless has dash :thumbsup:
-            if (Main.LocalPlayer.GetPlot().maxDashes == 0)
+            if (Main.LocalPlayer.GetPlot().maxDashes == 0 || Main.playerInventory)
                 return;
 
             base.Draw(spriteBatch);
@@ -38,16 +38,18 @@ namespace AotC.Common.UI
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
-            Main.NewText("asasd");
+            int x = ModContent.GetInstance<AotCConfig>().DashIndicatorX;
+            int y = ModContent.GetInstance<AotCConfig>().DashIndicatorY;
             Player player = Main.LocalPlayer;
             if (player.GetPlot().maxDashes == 1)
             {
-                spriteBatch.Draw(player.GetPlot().dashCount == 1 ? ModContent.Request<Texture2D>("AotC/Assets/Textures/FeatherOneDash", AssetRequestMode.ImmediateLoad).Value : ModContent.Request<Texture2D>("AotC/Assets/Textures/FeatherNoDash", AssetRequestMode.ImmediateLoad).Value, new Vector2(500,500), Color.White);
-                Main.NewText("asd");
+                spriteBatch.Draw(player.GetPlot().dashCount == 1 ? ModContent.Request<Texture2D>("AotC/Assets/Textures/FeatherOneDash", AssetRequestMode.ImmediateLoad).Value : ModContent.Request<Texture2D>("AotC/Assets/Textures/FeatherNoDash", AssetRequestMode.ImmediateLoad).Value, new Vector2(x, y), Color.White);
+                spriteBatch.Draw(ModContent.Request<Texture2D>("AotC/Assets/Textures/FeatherFlash", AssetRequestMode.ImmediateLoad).Value, new Vector2(x, y), Color.White * (player.GetPlot().UIFlash / 127f));
             }
             else
             {
-
+                spriteBatch.Draw(player.GetPlot().dashCount == 2 ? ModContent.Request<Texture2D>("AotC/Assets/Textures/HeartTwoDash", AssetRequestMode.ImmediateLoad).Value : player.GetPlot().dashCount == 1 ? ModContent.Request<Texture2D>("AotC/Assets/Textures/HeartOneDash", AssetRequestMode.ImmediateLoad).Value : ModContent.Request<Texture2D>("AotC/Assets/Textures/HeartNoDash", AssetRequestMode.ImmediateLoad).Value, new Vector2(x, y), Color.White);
+                spriteBatch.Draw(ModContent.Request<Texture2D>("AotC/Assets/Textures/HeartFlash", AssetRequestMode.ImmediateLoad).Value, new Vector2(x, y), Color.White * (player.GetPlot().UIFlash / 127f));
             }
         }
         public override void Update(GameTime gameTime)
@@ -56,6 +58,46 @@ namespace AotC.Common.UI
                 return;
 
                 base.Update(gameTime);
+        }
+
+
+
+        [Autoload(Side = ModSide.Client)]
+        internal class DashUISystem : ModSystem
+        {
+            private UserInterface DashUIUserInterface;
+
+            internal DashUI DashUI;
+
+
+            public override void Load()
+            {
+                DashUI = new();
+                DashUIUserInterface = new();
+                DashUIUserInterface.SetState(DashUI);
+
+            }
+
+            public override void UpdateUI(GameTime gameTime)
+            {
+                DashUIUserInterface?.Update(gameTime);
+            }
+
+            public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
+            {
+                int resourceBarIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Resource Bars"));
+                if (resourceBarIndex != -1)
+                {
+                    layers.Insert(resourceBarIndex, new LegacyGameInterfaceLayer(
+                        "ExampleMod: Example Resource Bar",
+                        delegate {
+                            DashUIUserInterface.Draw(Main.spriteBatch, new GameTime());
+                            return true;
+                        },
+                        InterfaceScaleType.UI)
+                    );
+                }
+            }
         }
     }
 }
