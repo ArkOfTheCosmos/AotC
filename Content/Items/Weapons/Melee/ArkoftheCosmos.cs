@@ -81,6 +81,11 @@ namespace AotC.Content.Items.Weapons.Melee
             {
                 TooltipLine line = new(AotC.Instance, "FrontiersReferenceLmao", "\"I'm what you get when the stars collide\"");
                 tooltips.Insert(1, line);
+                if (AotC.Instance.Calamity != null)
+                {
+                    line = new(AotC.Instance, "AotC:CalamityScaleNotifier", "You currently have Calamity enabled, this weapon will\nbe harder to craft, but become 3 times stronger");
+                    tooltips.Add(line);
+                }
                 for (int i = 0; i < tooltips.Count; i++)
                 {
                     if (Item.favorited && tooltips[i].Name != "FrontiersReferenceLmao" && tooltips[i].Name != "ItemName")
@@ -164,7 +169,7 @@ namespace AotC.Content.Items.Weapons.Melee
                 .AddIngredient(ItemID.StylistKilLaKillScissorsIWish)
                 .AddIngredient(ItemID.GenderChangePotion)
                 .AddIngredient(ItemID.IntenseGreenFlameDye)
-                .AddIngredient(ItemID.LunarBar, 5)
+                .AddIngredient(AotC.Instance.Calamity == null ? ItemID.LunarBar : AotC.Instance.Calamity.Find<ModItem>("AuricBar").Type, 5)
                 .AddTile(TileID.LunarCraftingStation)
                 .Register();
         }

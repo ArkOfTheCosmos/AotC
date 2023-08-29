@@ -84,13 +84,9 @@ namespace AotC.Content.Particles
                 particle.Type = particleTypes[particle.GetType()];
             }
         }
-
+            
         public static void Update()
         {
-            //IL_001a: Unknown result type (might be due to invalid IL or missing references)
-            //IL_0020: Unknown result type (might be due to invalid IL or missing references)
-            //IL_0025: Unknown result type (might be due to invalid IL or missing references)
-            //IL_002a: Unknown result type (might be due to invalid IL or missing references)
             foreach (Particle particle in particles)
             {
                 if (particle != null)
@@ -113,8 +109,6 @@ namespace AotC.Content.Particles
         {
             foreach (Particle particle in particles)
             {
-                Main.NewText(particle);
-                Main.NewText("a");
                 if (particle != null)
                 {
                     if (particle.UseAdditiveBlend)
@@ -143,7 +137,6 @@ namespace AotC.Content.Particles
                     }
                     Rectangle val = particleTextures[batchedAlphaBlendParticle.Type].Frame(1, batchedAlphaBlendParticle.FrameVariants, 0, batchedAlphaBlendParticle.Variant);
                     sb.Draw(particleTextures[batchedAlphaBlendParticle.Type], batchedAlphaBlendParticle.Position - Main.screenPosition, (Rectangle?)val, batchedAlphaBlendParticle.Color, batchedAlphaBlendParticle.Rotation, val.Size() * 0.5f, batchedAlphaBlendParticle.Scale, 0, 0f);
-                    Main.NewText(particleTextures[batchedAlphaBlendParticle.Type]);
                 }
                 sb.End();
             }

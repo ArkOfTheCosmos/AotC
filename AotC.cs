@@ -21,7 +21,7 @@ namespace AotC
         public override void Load()
         {
 
-            Ref<Effect> FadedUVMapStreakShader = new(Assets.Request<Effect>("Assets/Effects/FadedUVMapStreak", (AssetRequestMode)1).Value);
+            var FadedUVMapStreakShader = new Ref<Effect>(Assets.Request<Effect>("Assets/Effects/FadedUVMapStreak", AssetRequestMode.ImmediateLoad).Value);
             GameShaders.Misc["CalamityMod:TrailStreak"] = new MiscShaderData(FadedUVMapStreakShader, "TrailPass");
             var TrailShader = new Ref<Effect>(Assets.Request<Effect>("Assets/Effects/CelesteTrailShader", AssetRequestMode.ImmediateLoad).Value);
             GameShaders.Misc["CelesteTrailShader"] = new MiscShaderData(TrailShader, "ExampleCyclePass");
@@ -29,6 +29,8 @@ namespace AotC
             GameShaders.Misc["ImageShader"] = new MiscShaderData(ImageShader, "ExampleCyclePass");
             var StaticImageShader = new Ref<Effect>(Assets.Request<Effect>("Assets/Effects/StaticImageShader", AssetRequestMode.ImmediateLoad).Value);
             GameShaders.Misc["StaticImageShader"] = new MiscShaderData(StaticImageShader, "ExampleCyclePass");
+            var HueShiftShader = new Ref<Effect>(Assets.Request<Effect>("Assets/Effects/HueShiftShader", AssetRequestMode.ImmediateLoad).Value);
+            GameShaders.Misc["HueShiftShader"] = new MiscShaderData(HueShiftShader, "HueShiftPass");
 
             Calamity = null;
             ModLoader.TryGetMod("CalamityMod", out Calamity);

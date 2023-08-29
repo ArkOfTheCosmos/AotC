@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Graphics.Shaders;
-using AotC.Content.CustomHooks;
+using AotC.Core.GlobalInstances.Systems;
 
 namespace AotC.Content.Particles;
 
@@ -16,6 +16,9 @@ public class CelesteAfterImage : Particle
 
     public Rectangle sourceRectangle;
 
+    public override bool UseCustomDraw => true;
+
+    public override bool SetLifetime => true;
 
     public CelesteAfterImage(Vector2 position, Texture2D PlayerTexture, Rectangle SourceRectangle)
     {
@@ -28,13 +31,12 @@ public class CelesteAfterImage : Particle
     public override void Update()
     {
         opacity =  1f - LifetimeCompletion;
-        Time++;
     }
     public override void CustomDraw(SpriteBatch spriteBatch)
     {
         spriteBatch.EnterShaderRegion(BlendState.Additive);
-        if (PlayerTarget.CelesteTrailShader != null)
-            PlayerTarget.CelesteTrailShader.Apply(null, new(playerTexture, Vector2.Zero, Color.White));
+        if (AotCSystem.CelesteTrailShader != null)
+            AotCSystem.CelesteTrailShader.Apply(null, new(playerTexture, Vector2.Zero, Color.White));
         else
         {
             GameShaders.Misc["CelesteTrailShader"].UseOpacity(opacity);

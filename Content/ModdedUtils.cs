@@ -343,39 +343,6 @@ public static class ModdedUtils
             h += 1;
         }
     }
-    public static Texture2D ShiftHue(Texture2D originalTexture, float hueShift)
-    {
-        int width = originalTexture.Width;
-        int height = originalTexture.Height;
-
-        Color[] originalColors = new Color[width * height];
-        originalTexture.GetData(originalColors);
-
-        Color[] shiftedColors = new Color[width * height];
-
-        for (int i = 0; i < originalColors.Length; i++)
-        {
-            Color originalColor = originalColors[i];
-
-            ColorToHSV(originalColor, out float h, out float s, out float v);
-
-            // Shift the hue
-            h = (h + hueShift) % 1.0f;
-
-            Color shiftedColor = HsvToRgb(h, s, v);
-            shiftedColor.A = originalColor.A;
-            shiftedColors[i] = shiftedColor;
-        }
-
-        Texture2D shiftedTexture = new(originalTexture.GraphicsDevice, width, height);
-        shiftedTexture.SetData(shiftedColors);
-
-        return shiftedTexture;
-    }
-    public static Color GetRgb(double r, double g, double b)
-    {
-        return new Color((byte)(r * 255.0), (byte)(g * 255.0), (byte)(b * 255.0), 255);
-    }
     public static void EnterShaderRegion(this SpriteBatch spriteBatch, BlendState newBlendState = null)
     {
         spriteBatch.End();
@@ -444,27 +411,18 @@ public static class ModdedUtils
         return num20;
     }
 
-    public static Texture2D MakeSilhouette(Texture2D inputTexture, int alpha, Color color)
+    internal static void MakeSilhouette(this Texture2D texture, int alpha, Color color)
     {
-        Color[] pixelData = new Color[inputTexture.Width * inputTexture.Height];
-        inputTexture.GetData(pixelData);
-
+        Color[] pixelData = new Color[texture.Width * texture.Height];
+        texture.GetData(pixelData);
         for (int i = 0; i < pixelData.Length; i++)
         {
             if (pixelData[i].A > alpha)
-            {
                 pixelData[i] = color;
-            }
             else
-            {
                 pixelData[i] = Color.Transparent;
-            }
-        }
-
-        Texture2D outputTexture = new(Main.graphics.GraphicsDevice, inputTexture.Width, inputTexture.Height);
-        outputTexture.SetData(pixelData);
-
-        return outputTexture;
+        }        
+        texture.SetData(pixelData);
     }
     internal static PlotDevice GetPlot(this Player player)
 	{

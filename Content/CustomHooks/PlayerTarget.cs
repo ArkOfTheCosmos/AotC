@@ -14,7 +14,6 @@ namespace AotC.Content.CustomHooks
 
     class PlayerTarget : HookGroup
     {
-        public static ArmorShaderData CelesteTrailShader;
         //Drawing Player to Target. Should be safe. Excuse me if im duplicating something that alr exists :p
         public static RenderTarget2D Target;
 
@@ -79,7 +78,16 @@ namespace AotC.Content.CustomHooks
             On_Lighting.GetColor_int_int_Color += GetColorOverride;
             On_Lighting.GetColor_Point_Color += GetColorOverride;
             On_Lighting.GetColorClamped += GetColorOverride;
-            DyeFindingSystem.FindDyeEvent += FindCelesteTrailShader;
+        }
+
+        public override void Unload()
+        {
+            On_Main.CheckMonoliths -= DrawTargets;
+            On_Lighting.GetColor_int_int -= GetColorOverride;
+            On_Lighting.GetColor_Point -= GetColorOverride;
+            On_Lighting.GetColor_int_int_Color -= GetColorOverride;
+            On_Lighting.GetColor_Point_Color -= GetColorOverride;
+            On_Lighting.GetColorClamped -= GetColorOverride;
         }
 
         private Color GetColorOverride(On_Lighting.orig_GetColorClamped orig, int x, int y, Color oldColor)
@@ -183,6 +191,8 @@ namespace AotC.Content.CustomHooks
                     {
                         PlayerIndexLookup[i] = activeCount;
                         activeCount++;
+                        Main.player[i].GetPlot().playerTexture?.Dispose();
+                        Main.player[i].GetPlot().playerTexture = new(Main.graphics.GraphicsDevice, sheetSquareY * activePlayerCount, sheetSquareY);
                     }
                 }
             }
@@ -230,14 +240,6 @@ namespace AotC.Content.CustomHooks
 
             Main.graphics.GraphicsDevice.SetRenderTargets(oldtargets2);
             canUseTarget = true;
-        }
-
-        private void FindCelesteTrailShader(Item armorItem, Item dyeItem)
-        {
-            if (armorItem.type == ModContent.ItemType<HeartoftheMountain>())
-            {
-                CelesteTrailShader = GameShaders.Armor.GetShaderFromItemId(dyeItem.type);
-            }
         }
 
         public void DrawScuffedPlayer(Player drawPlayer, Vector2 position, float rotation, Vector2 rotationOrigin, float shadow = 0f, float scale = 1f)

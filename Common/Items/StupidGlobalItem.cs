@@ -30,6 +30,19 @@ namespace AotC.Common.Items
         {
             tooltips.Insert(1, new TooltipLine(AotC.Instance, "FrontiersReferenceTwo", "Now face it you're just an enemy"));
             tooltips[1].OverrideColor = Color.Red;
+            if (item.favorited)
+            {
+                for (int i = 0; i < tooltips.Count; i++)
+                {
+                    if (tooltips[i].Name != "FrontiersReferenceTwo" && tooltips[i].Name != "ItemName")
+                    {
+                        tooltips.RemoveAt(i);
+                        i--;
+                    }
+                }
+            }
+            else
+                tooltips.Add(new(AotC.Instance, "AotC:FavouriteThingy", "Favourite this item to remove instructions"));
         }
         public override bool PreDrawTooltipLine(Item item, DrawableTooltipLine line, ref int yOffset)
         {

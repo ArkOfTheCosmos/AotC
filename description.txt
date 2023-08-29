@@ -1,7 +1,7 @@
-The AotC Rework is awesome, don't get me wrong, but I prefer the look of the old one WAY more. That as well as a few other things I'd change/add, caused me to make this mod.
-Scales in power depending on whether you have Calamity installed 
+The AotC rework is awesome, don't get me wrong, but I prefer the look of the old one WAY more. That as well as a few other things I'd change/add, caused me to make this mod.
+Scales in power depending on whether you have Calamity enabled 
 You can get the old ark by throwing the new one into shimmer.
 
 Also adds more random items that I just feel like making, maybe this will turn into a hybrid QoL/Content mod who knows
 
-please send bug reports or suggestions n stuff to aotc2669 on discord ok yes thanks
+Send any complaints/bugs/ideas to aotc2669 on discord
