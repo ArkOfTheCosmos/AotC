@@ -30,7 +30,7 @@ public class CelesteAfterImage : Particle
 
     public override void Update()
     {
-        opacity =  1f - LifetimeCompletion;
+        opacity = 1f - LifetimeCompletion;
     }
     public override void CustomDraw(SpriteBatch spriteBatch)
     {

@@ -152,25 +152,25 @@ namespace AotC.Common.Players
                         ArkoftheCosmos.SlashPoints.Clear();
                         SlashPoints = null;
                     }
-                        if (SlashPoints != null)
+                    if (SlashPoints != null)
+                    {
+                        if (ArkoftheCosmos.SlashLines.Count - 1 > SlashPoints.Count)
                         {
-                            if (ArkoftheCosmos.SlashLines.Count - 1 > SlashPoints.Count)
-                            {
-                                if (ArkoftheCosmos.SlashLines[0].ModProjectile is Constellation modProjectile)
-                                    modProjectile.death = true;
-                                ArkoftheCosmos.SlashLines.RemoveAt(0);
-                            }
-                        }
-                        else
-                        {
-                            blade = null;
                             if (ArkoftheCosmos.SlashLines[0].ModProjectile is Constellation modProjectile)
                                 modProjectile.death = true;
                             ArkoftheCosmos.SlashLines.RemoveAt(0);
-                            if (ArkoftheCosmos.SlashLines[0].ModProjectile is Constellation modProjectile2)
-                                modProjectile2.death = true;
-                            ArkoftheCosmos.SlashLines.RemoveAt(0);
                         }
+                    }
+                    else
+                    {
+                        blade = null;
+                        if (ArkoftheCosmos.SlashLines[0].ModProjectile is Constellation modProjectile)
+                            modProjectile.death = true;
+                        ArkoftheCosmos.SlashLines.RemoveAt(0);
+                        if (ArkoftheCosmos.SlashLines[0].ModProjectile is Constellation modProjectile2)
+                            modProjectile2.death = true;
+                        ArkoftheCosmos.SlashLines.RemoveAt(0);
+                    }
                 }
                 else
                 {
@@ -242,7 +242,7 @@ namespace AotC.Common.Players
                         break;
                     case Direction.Up:
                         Player.velocity = new(0, -18);
-                        break;                    
+                        break;
                     case Direction.Down:
                         Player.velocity = new(0, 18);
                         break;
@@ -310,7 +310,7 @@ namespace AotC.Common.Players
 
                 else if (dashDirection is Direction.DownLeft or Direction.Down or Direction.DownRight)
                     Player.velocity = new Vector2(direction * 20, -5);
-                
+
                 celesteDashTimer = -2;
             }
         }
@@ -389,11 +389,11 @@ namespace AotC.Common.Players
                 UIFlash -= 10;
         }
         private void On_Main_DrawProjectiles(On_Main.orig_DrawProjectiles orig, Main self)
-        { 
+        {
             orig(self);
             Texture2D value = ModContent.Request<Texture2D>("AotC/Assets/Textures/GenericBarBack", AssetRequestMode.ImmediateLoad).Value;
             Texture2D value2 = ModContent.Request<Texture2D>("AotC/Assets/Textures/GenericBarFront", AssetRequestMode.ImmediateLoad).Value;
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);    
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
             Color val2 = HsvToRgb(Main.GlobalTimeWrappedHourly, 1f, 1f);
             float ParryTime = 0;
             foreach (Player player in Main.player)

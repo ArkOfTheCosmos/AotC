@@ -1,3 +1,4 @@
+using AotC.Common.Players;
 using AotC.Content.Items.Accessories;
 using AotC.Core.GlobalInstances.Systems;
 using Microsoft.Xna.Framework;
