@@ -184,6 +184,8 @@ namespace AotC.Content.CustomHooks
                 Target.Dispose();
                 Target = new RenderTarget2D(Main.graphics.GraphicsDevice, sheetSquareY * activePlayerCount, sheetSquareY);
 
+                SilhouettePool.Clear();
+
                 int activeCount = 0;
 
                 for (int i = 0; i < Main.maxPlayers; i++)
@@ -192,8 +194,6 @@ namespace AotC.Content.CustomHooks
                     {
                         PlayerIndexLookup[i] = activeCount;
                         activeCount++;
-                        Main.player[i].GetPlot().playerTexture?.Dispose();
-                        Main.player[i].GetPlot().playerTexture = new(Main.graphics.GraphicsDevice, sheetSquareY * activePlayerCount, sheetSquareY);
                     }
                 }
             }

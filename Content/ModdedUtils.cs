@@ -411,7 +411,7 @@ public static class ModdedUtils
         return num20;
     }
 
-    internal static void MakeSilhouette(this Texture2D texture, int alpha, Color color)
+    internal static void MakeSilhouetteWithTexture(this Texture2D texture, int alpha, Color color)
     {
         Color[] pixelData = new Color[texture.Width * texture.Height];
         texture.GetData(pixelData);
@@ -423,6 +423,17 @@ public static class ModdedUtils
                 pixelData[i] = Color.Transparent;
         }        
         texture.SetData(pixelData);
+    }
+
+    internal static void MakeSilhouette(this Color[] pixelData, int alpha, Color color)
+    {
+        for (int i = 0; i < pixelData.Length; i++)
+        {
+            if (pixelData[i].A > alpha)
+                pixelData[i] = color;
+            else
+                pixelData[i] = Color.Transparent;
+        }
     }
     internal static PlotDevice GetPlot(this Player player)
 	{

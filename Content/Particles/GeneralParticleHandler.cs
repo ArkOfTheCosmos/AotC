@@ -95,6 +95,8 @@ namespace AotC.Content.Particles
                     particle.Time++;
                     particle.Update();
                 }
+                if ((particle.Time >= particle.Lifetime && particle.SetLifetime) || particlesToKill.Contains(particle))
+                    particle.OnKill();
             }
             particles.RemoveAll((Particle particle) => (particle.Time >= particle.Lifetime && particle.SetLifetime) || particlesToKill.Contains(particle));
             particlesToKill.Clear();

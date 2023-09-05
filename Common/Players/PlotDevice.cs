@@ -30,13 +30,10 @@ namespace AotC.Common.Players
         public int killStars;
         public bool done = true;
         public float ArkDamage;
-        public float moveSpeed = 100f;
         public float maxDistance = 50f;
         public float ArkThrowCooldown;
         public float celesteTrailDelay = 0f;
-        public List<Particle> Afterimages = new();
         public List<Vector2> SlashPoints;
-        public Texture2D playerTexture;
         public Projectile blade;
         public Direction dashDirection;
         public bool isDashing;
@@ -47,8 +44,7 @@ namespace AotC.Common.Players
             if (Main.dedServ)
                 return;
             On_Main.DrawProjectiles += On_Main_DrawProjectiles;
-            On_Main.DrawDust += On_Main_DrawDust;
-            Main.QueueMainThreadAction(() => playerTexture = new(Main.graphics.GraphicsDevice, 1, 1));
+            On_Main.DrawDust += On_Main_DrawDust;       
         }
 
         public override void Unload()
@@ -56,12 +52,11 @@ namespace AotC.Common.Players
             if (Main.dedServ)
                 return;
             On_Main.DrawProjectiles -= On_Main_DrawProjectiles;
-            On_Main.DrawDust -= On_Main_DrawDust;
-            Main.QueueMainThreadAction(playerTexture.Dispose);
+            On_Main.DrawDust -= On_Main_DrawDust;     
         }
         public void StartSlash(int damage)
         {
-            if (Vector2.Distance(Player.position, ArkoftheCosmos.SlashPoints[0]) <= 600f)
+            if (Vector2.Distance(Player.position, ArkoftheCosmos.SlashPoints[0]) <= 600f && Vector2.Distance(Player.position, ArkoftheCosmos.SlashPoints[0]) < Vector2.Distance(Player.position, ArkoftheCosmos.SlashPoints[1]))
             {
                 done = false;
                 ArkDamage = damage;
@@ -137,10 +132,8 @@ namespace AotC.Common.Players
                 {
                     SoundEngine.PlaySound(in AotCAudio.MeatySlash, Player.position);
                     float rand = Main.rand.NextFloat() * (float)Math.PI / 2f;
-                    Projectile.NewProjectileDirect(Player.GetSource_FromThis(), SlashPoints[0], rand.ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), (int)(ArkDamage * ArkoftheCosmos.DashStarMultiplier), 0f, Player.whoAmI, 0.65f, 0.15f).timeLeft = 100;
-                    Projectile.NewProjectileDirect(Player.GetSource_FromThis(), SlashPoints[0], (rand + (float)Math.PI / 2f).ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), (int)(ArkDamage * ArkoftheCosmos.DashStarMultiplier), 0f, Player.whoAmI, 0.65f, 0.15f).timeLeft = 100;
-                    Projectile.NewProjectileDirect(Player.GetSource_FromThis(), SlashPoints[0], (rand + (float)Math.PI).ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), (int)(ArkDamage * ArkoftheCosmos.DashStarMultiplier), 0f, Player.whoAmI, 0.65f, 0.15f).timeLeft = 100;
-                    Projectile.NewProjectileDirect(Player.GetSource_FromThis(), SlashPoints[0], (rand + (float)Math.PI * 1.5f).ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), (int)(ArkDamage * ArkoftheCosmos.DashStarMultiplier), 0f, Player.whoAmI, 0.65f, 0.15f).timeLeft = 100;
+                    for (int i = 0; i < 4; i++)
+                        Projectile.NewProjectileDirect(Player.GetSource_FromThis(), SlashPoints[0], (rand + (float)Math.PI * 0.5f * i).ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), (int)(ArkDamage * ArkoftheCosmos.DashStarMultiplier), 0f, Player.whoAmI, 0.65f, 0.15f).timeLeft = 100;
                     SlashPoints.RemoveAt(0);
                     if (SlashPoints.Count == 0)
                     {
@@ -174,7 +167,7 @@ namespace AotC.Common.Players
                 }
                 else
                 {
-                    Vector2 desiredMovement = direction * moveSpeed;
+                    Vector2 desiredMovement = direction * 100f;
                     Player.position += desiredMovement;
                 }
                 if (blade == null && SlashPoints != null)
@@ -214,21 +207,11 @@ namespace AotC.Common.Players
                 //make afterimages seperate to the normal afterimage system
                 if (celesteDashTimer % 3 == 0)
                 {
-                    if (PlayerTarget.canUseTarget)
-                    {
-                        Color[] data = new Color[PlayerTarget.Target.Width * PlayerTarget.Target.Height];
-                        PlayerTarget.Target.GetData(data);
-
-                        //playerTexture = new Texture2D(Main.graphics.GraphicsDevice, PlayerTarget.Target.Width, PlayerTarget.Target.Height);
-                        playerTexture.SetData(data);
-                        playerTexture.MakeSilhouette(50, Color.White);
-                    }
-                    Particle particle1 = new CelesteAfterImage(PlayerTarget.GetPlayerTargetPosition(Player.whoAmI) + Main.screenPosition, playerTexture, PlayerTarget.GetPlayerTargetSourceRectangle(Player.whoAmI));
-                    GeneralParticleHandler.SpawnParticle(particle1);
+                    GeneralParticleHandler.SpawnParticle(new CelesteAfterImage(Player));
                 }
                 switch (dashDirection)
                 {
-                    case Direction.Left:
+                    case Direction.Left: 
                         if (Player.velocity.X > -18)
                             Player.velocity = new(-18, 0.01f);
                         else
@@ -349,25 +332,11 @@ namespace AotC.Common.Players
             }
             // trans rights
             celesteTrailDelay--;
-            if (celesteTrail)
+            if (celesteTrail && (GetSpeed(Player) >= 30f || Player.dashDelay == -1) && celesteTrailDelay <= 0f && celesteDashTimer == 0)
             {
-                if ((GetSpeed(Player) >= 30f || Player.dashDelay == -1) && celesteTrailDelay <= 0f && celesteDashTimer == 0)
-                {
-                    celesteTrailDelay = 8f;
-                    if (PlayerTarget.canUseTarget)
-                    {
-                        Color[] data = new Color[PlayerTarget.Target.Width * PlayerTarget.Target.Height];
-                        PlayerTarget.Target.GetData(data);
-                        //playerTexture = new Texture2D(Main.graphics.GraphicsDevice, PlayerTarget.Target.Width, PlayerTarget.Target.Height);
-                        playerTexture.SetData(data);
-                        playerTexture.MakeSilhouette(50, Color.White);
-                    }
-                    Particle particle1 = new CelesteAfterImage(PlayerTarget.GetPlayerTargetPosition(Player.whoAmI) + Main.screenPosition, playerTexture, PlayerTarget.GetPlayerTargetSourceRectangle(Player.whoAmI));
-                    GeneralParticleHandler.SpawnParticle(particle1);
-                }
+                celesteTrailDelay = 8f;
+                GeneralParticleHandler.SpawnParticle(new CelesteAfterImage(Player));
             }
-            foreach (Particle particle in Afterimages)
-                particle?.Update();
         }
 
         public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
@@ -375,15 +344,6 @@ namespace AotC.Common.Players
             if (flash > 0)
             {
                 flash -= 10;
-                RenderTarget2D renderTarget = PlayerTarget.Target;
-                if (PlayerTarget.canUseTarget)
-                {
-                    Color[] data = new Color[renderTarget.Width * renderTarget.Height];
-                    renderTarget.GetData(data);
-                    //playerTexture = new Texture2D(Main.graphics.GraphicsDevice, renderTarget.Width, renderTarget.Height);
-                    playerTexture.SetData(data);
-                    playerTexture.MakeSilhouette(50, Color.White);
-                }
             }
             if (UIFlash > 0)
                 UIFlash -= 10;
@@ -425,14 +385,16 @@ namespace AotC.Common.Players
                 var p = player.GetPlot();
                 if (p.flash > 0)
                 {
+                    Texture2D texture = SilhouettePool.Get();
                     if (AotCSystem.CelesteTrailShader != null)
-                        AotCSystem.CelesteTrailShader.Apply(null, new(p.playerTexture, Vector2.Zero, Color.White));
+                        AotCSystem.CelesteTrailShader.Apply(null, new(texture, Vector2.Zero, Color.White));
                     else
                     {
                         GameShaders.Misc["CelesteTrailShader"].UseOpacity(p.flash / 170f);
                         GameShaders.Misc["CelesteTrailShader"].Apply();
                     }
-                    Main.spriteBatch.Draw(p.playerTexture, PlayerTarget.GetPlayerTargetPosition(player.whoAmI), PlayerTarget.GetPlayerTargetSourceRectangle(player.whoAmI), Color.White * (p.flash / 255f), 0, new(), 1f, 0, 0f);
+                    Main.spriteBatch.Draw(texture, PlayerTarget.GetPlayerTargetPosition(player.whoAmI), PlayerTarget.GetPlayerTargetSourceRectangle(player.whoAmI), Color.White * (p.flash / 255f), 0, new(), 1f, 0, 0f);
+                    SilhouettePool.Release(texture);
                 }
             }
             Main.spriteBatch.End();

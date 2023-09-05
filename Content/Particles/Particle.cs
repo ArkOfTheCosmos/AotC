@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria;
 
 namespace AotC.Content.Particles
 {
@@ -66,7 +67,10 @@ namespace AotC.Content.Particles
 		public virtual void Update()
 		{
 		}
-
+		
+		public virtual void OnKill()
+		{
+		}
 		public void Kill()
 		{
 			GeneralParticleHandler.RemoveParticle(this);

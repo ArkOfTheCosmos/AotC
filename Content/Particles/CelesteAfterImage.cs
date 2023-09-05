@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Graphics.Shaders;
 using AotC.Core.GlobalInstances.Systems;
+using System.Collections.Generic;
+using AotC.Content.CustomHooks;
 
 namespace AotC.Content.Particles;
 
@@ -20,12 +22,13 @@ public class CelesteAfterImage : Particle
 
     public override bool SetLifetime => true;
 
-    public CelesteAfterImage(Vector2 position, Texture2D PlayerTexture, Rectangle SourceRectangle)
+
+    public CelesteAfterImage(Player Player)
     {
-        Position = position;
+        Position = PlayerTarget.GetPlayerTargetPosition(Player.whoAmI) + Main.screenPosition;
         Lifetime = 60;
-        playerTexture = PlayerTexture;
-        sourceRectangle = SourceRectangle;
+        sourceRectangle = PlayerTarget.GetPlayerTargetSourceRectangle(Player.whoAmI);
+        playerTexture = SilhouettePool.Get();
     }
 
     public override void Update()
@@ -44,5 +47,10 @@ public class CelesteAfterImage : Particle
         }
         spriteBatch.Draw(playerTexture, Position - Main.screenPosition, sourceRectangle, Color.White * opacity, Rotation, new(), 1f, 0, 0f);
         spriteBatch.ExitShaderRegion();
+    }
+
+    public override void OnKill()
+    {
+        SilhouettePool.Release(playerTexture);
     }
 }
