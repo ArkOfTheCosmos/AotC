@@ -15,14 +15,13 @@ namespace AotC
     {
         internal Mod Calamity;
         internal static AotC Instance;
-        public const string ASSET_PATH = "AotC/Assets/";
         private List<IOrderedLoadable> loadCache;
     
         public override void Load()
         {
 
             var FadedUVMapStreakShader = new Ref<Effect>(Assets.Request<Effect>("Assets/Effects/FadedUVMapStreak", AssetRequestMode.ImmediateLoad).Value);
-            GameShaders.Misc["CalamityMod:TrailStreak"] = new MiscShaderData(FadedUVMapStreakShader, "TrailPass");
+            GameShaders.Misc["AotC:TrailStreak"] = new MiscShaderData(FadedUVMapStreakShader, "TrailPass");
             var TrailShader = new Ref<Effect>(Assets.Request<Effect>("Assets/Effects/CelesteTrailShader", AssetRequestMode.ImmediateLoad).Value);
             GameShaders.Misc["CelesteTrailShader"] = new MiscShaderData(TrailShader, "ExampleCyclePass");
             var ImageShader = new Ref<Effect>(Assets.Request<Effect>("Assets/Effects/ImageShader", AssetRequestMode.ImmediateLoad).Value);

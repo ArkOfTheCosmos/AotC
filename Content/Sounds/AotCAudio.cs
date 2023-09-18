@@ -12,6 +12,7 @@ internal class AotCAudio
     public static readonly SoundStyle KillerWail;
     public static readonly SoundStyle MeatySlash;
     public static readonly SoundStyle Dash;
+    public static readonly SoundStyle PlasmaShrimp;
 
     static AotCAudio()
     {
@@ -20,6 +21,7 @@ internal class AotCAudio
         Bell = new SoundStyle("AotC/Assets/Sounds/Bell", (SoundType)0);
         KillerWail = new SoundStyle("AotC/Assets/Sounds/KillerWail", (SoundType)0);
         MeatySlash = new SoundStyle("AotC/Assets/Sounds/MeatySlash", (SoundType)0);
+        PlasmaShrimp = new SoundStyle("AotC/Assets/Sounds/PlasmaShrimp", (SoundType)0);
         Dash = new SoundStyle("AotC/Assets/Sounds/Dash", 2, (SoundType)0);
         BloomingBlows = new SoundStyle("AotC/Assets/Sounds/BloomingBlows", 3, (SoundType)0)
         {

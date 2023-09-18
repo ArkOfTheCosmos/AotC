@@ -11,6 +11,7 @@ Mods: {
 			EonBeamLegacyV4.DisplayName: Beam
 			EonStarLegacy.DisplayName: Eon Star Legacy
 			Constellation.DisplayName: Constellation
+			PlasmaShrimpMissile.DisplayName: Plasma Shrimp Missile
 		}
 
 		Items: {
@@ -68,6 +69,15 @@ Mods: {
 					Fires different homing projectiles based on what biome you're in
 					Upon hitting an enemy you are granted a buff based on what biome you're in
 					Projectiles also change based on moon events
+					'''
+			}
+
+			PlasmaShrimp: {
+				DisplayName: Plasma Shrimp
+				Tooltip:
+					'''
+					Every hit fires a projectile for an additional 20% damage
+					Turn off visibility to stop the funny noise
 					'''
 			}
 		}

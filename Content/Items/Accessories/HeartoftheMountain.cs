@@ -21,7 +21,7 @@ namespace AotC.Content.Items.Accessories
             Item.maxStack = 1;
             Item.value = Item.sellPrice(gold: 9);
             Item.accessory = true;
-            Item.rare = ItemRarityID.Purple;
+            Item.rare = ItemRarityID.Red;
             Item.ResearchUnlockCount = 1;
             ItemID.Sets.ItemNoGravity[Item.type] = true;
             Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(5, 14));

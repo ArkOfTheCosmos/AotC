@@ -17,6 +17,7 @@ using AotC.Content.Items.Weapons.Melee;
 using AotC.Core.GlobalInstances.Systems;
 using Terraria.DataStructures;
 using Terraria.Graphics.Shaders;
+using Terraria.GameContent.UI.ResourceSets;
 
 namespace AotC.Common.Players
 {
@@ -38,6 +39,8 @@ namespace AotC.Common.Players
         public Direction dashDirection;
         public bool isDashing;
         public int maxDashes = 0;
+        public bool Plimp;
+        public bool PlimpFunny;
 
         public override void Load()
         {
@@ -302,8 +305,28 @@ namespace AotC.Common.Players
         {
             celesteTrail = false;
             maxDashes = 0;
-        }
 
+            Plimp = false;
+            PlimpFunny = true;
+        }
+        public override void OnHitNPCWithItem(Item item, NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            if (Plimp)
+            {
+                Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, new Vector2(), ModContent.ProjectileType<PlasmaShrimpMissile>(), (int)Math.Ceiling(hit.Damage / 5f), 0, -1, target.whoAmI, Main.rand.NextFloat(-20, 20));
+                if (PlimpFunny)
+                    SoundEngine.PlaySound(in AotCAudio.PlasmaShrimp, Player.position);
+            }
+        }
+        public override void OnHitNPCWithProj(Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            if (Plimp && proj.ModProjectile is not PlasmaShrimpMissile)
+            {
+                Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, new Vector2(), ModContent.ProjectileType<PlasmaShrimpMissile>(), (int)Math.Ceiling(hit.Damage / 5f), 0, -1, target.whoAmI, Main.rand.NextFloat(-20,20));
+                if (PlimpFunny)
+                    SoundEngine.PlaySound(in AotCAudio.PlasmaShrimp, Player.position);
+            }
+        }
         public override void PostUpdateRunSpeeds()
         {
             if (!done)
@@ -338,7 +361,6 @@ namespace AotC.Common.Players
                 GeneralParticleHandler.SpawnParticle(new CelesteAfterImage(Player));
             }
         }
-
         public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
         {
             if (flash > 0)

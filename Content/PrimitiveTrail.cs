@@ -65,16 +65,13 @@ public class PrimitiveTrail
         }
         WidthFunction = widthFunction;
         ColorFunction = colorFunction;
-        if (pointFunction == null)
-        {
-            pointFunction = SmoothBezierPointRetreivalFunction;
-        }
+        pointFunction ??= SmoothBezierPointRetreivalFunction;
         TrailPointFunction = pointFunction;
         if (specialShader != null)
         {
             SpecialShader = specialShader;
         }
-        BasicEffect val = new BasicEffect(Main.instance.GraphicsDevice);
+        BasicEffect val = new(Main.instance.GraphicsDevice);
         val.VertexColorEnabled = true;
         val.TextureEnabled = false;
         BaseEffect = val;

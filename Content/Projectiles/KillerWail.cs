@@ -19,7 +19,7 @@ public class KillerWail : BaseLaserbeamProjectile
 {
 
     public List<Particle> Particles;
-    public override string Texture => "AotC/Content/Projectiles/Beam";
+    public override string Texture => "AotC/Content/Projectiles/KillerWail";
     public ref float Dir => ref Projectile.ai[0];
     public Player Owner => Main.player[Projectile.owner];
     public bool initialized = false;
@@ -37,9 +37,9 @@ public class KillerWail : BaseLaserbeamProjectile
 
     public override float MaxLaserLength => 80f;
 
-    public override Texture2D LaserBeginTexture => ModContent.Request<Texture2D>("Aotc/Content/Projectiles/BeamBegin", (AssetRequestMode)1).Value;
-    public override Texture2D LaserMiddleTexture => ModContent.Request<Texture2D>("Aotc/Content/Projectiles/BeamMiddle", (AssetRequestMode)1).Value;
-    public override Texture2D LaserEndTexture => ModContent.Request<Texture2D>("Aotc/Content/Projectiles/BeamEnd", (AssetRequestMode)1).Value;
+    public override Texture2D LaserBeginTexture => null;
+    public override Texture2D LaserMiddleTexture => ModContent.Request<Texture2D>("Aotc/Content/Projectiles/KillerWail", (AssetRequestMode)1).Value;
+    public override Texture2D LaserEndTexture => null;
 
 
     public override void SetStaticDefaults()
@@ -134,7 +134,7 @@ public class KillerWail : BaseLaserbeamProjectile
         GameShaders.Misc["HueShiftShader"].Apply();
         Main.spriteBatch.Draw(LaserMiddleTexture, center - Main.screenPosition, val2, Color.White * (Wail ? 0.5f : 1f), Projectile.rotation, LaserMiddleTexture.Width * 0.5f * Vector2.UnitX, scale, 0, 0);
         Main.spriteBatch.ExitShaderRegion();
-        Texture2D value = ModContent.Request<Texture2D>("AotC/Content/Projectiles/BeamWave").Value;
+        Texture2D value = ModContent.Request<Texture2D>("AotC/Content/Projectiles/KillerWailWave").Value;
         Main.spriteBatch.Draw(value, center - Main.screenPosition, null, Color.White, Projectile.rotation, new Vector2(8, 0 - ear % 14), Projectile.scale, 0, 0);
         Vector2 vector = ModdedUtils.RandomVector2(Main.rand.NextFloat(0,30));
         int dust;
