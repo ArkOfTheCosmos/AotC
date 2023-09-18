@@ -76,7 +76,8 @@ Mods: {
 				DisplayName: Plasma Shrimp
 				Tooltip:
 					'''
-					Every hit fires a projectile for an additional 20% damage
+					Grants you a shield for 10% of your max health
+					While you have shield, every hit fires a projectile for an additional 40% damage
 					Turn off visibility to stop the funny noise
 					'''
 			}

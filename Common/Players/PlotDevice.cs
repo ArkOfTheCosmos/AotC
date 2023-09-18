@@ -17,37 +17,38 @@ using AotC.Content.Items.Weapons.Melee;
 using AotC.Core.GlobalInstances.Systems;
 using Terraria.DataStructures;
 using Terraria.Graphics.Shaders;
-using Terraria.GameContent.UI.ResourceSets;
 
 namespace AotC.Common.Players
 {
     internal class PlotDevice : ModPlayer
     {
         public bool celesteTrail;
-        public int flash = 0;
-        public int UIFlash = 0;
+        public int flash;
+        public int UIFlash;
         public int celesteDashTimer;
         public int dashCount;
         public int killStars;
         public bool done = true;
         public float ArkDamage;
-        public float maxDistance = 50f;
+        public const float maxDistance = 50f;
         public float ArkThrowCooldown;
-        public float celesteTrailDelay = 0f;
+        public float celesteTrailDelay;
         public List<Vector2> SlashPoints;
         public Projectile blade;
         public Direction dashDirection;
         public bool isDashing;
-        public int maxDashes = 0;
+        public int maxDashes;
         public bool Plimp;
         public bool PlimpFunny;
+        public int PlimpShield;
+        public int TimeSinceLastHit;
 
         public override void Load()
         {
             if (Main.dedServ)
                 return;
             On_Main.DrawProjectiles += On_Main_DrawProjectiles;
-            On_Main.DrawDust += On_Main_DrawDust;       
+            On_Main.DrawDust += On_Main_DrawDust;
         }
 
         public override void Unload()
@@ -55,7 +56,7 @@ namespace AotC.Common.Players
             if (Main.dedServ)
                 return;
             On_Main.DrawProjectiles -= On_Main_DrawProjectiles;
-            On_Main.DrawDust -= On_Main_DrawDust;     
+            On_Main.DrawDust -= On_Main_DrawDust;   
         }
         public void StartSlash(int damage)
         {
@@ -309,20 +310,49 @@ namespace AotC.Common.Players
             Plimp = false;
             PlimpFunny = true;
         }
+
+        public override void ModifyHurt (ref Player.HurtModifiers modifiers)
+        {
+            if (Plimp && PlimpShield > 0)
+                modifiers.ModifyHurtInfo += ModifyDamage;
+        }
+        public void ModifyDamage(ref Player.HurtInfo info)
+        {
+            if (PlimpShield > info.Damage)
+            {
+                CombatText.NewText(Player.Hitbox, Color.BlueViolet, info.Damage);
+                PlimpShield -= info.Damage;
+                info.Damage = 0;
+            }
+            else
+            {
+                CombatText.NewText(Player.Hitbox, Color.Red, PlimpShield);
+                info.Damage -= PlimpShield;
+                PlimpShield = 0;
+            }
+        }
+        public override void OnHitByNPC(NPC npc, Player.HurtInfo hurtInfo)
+        {
+            TimeSinceLastHit = 0;
+        }
+        public override void OnHitByProjectile(Projectile proj, Player.HurtInfo hurtInfo)
+        {
+            TimeSinceLastHit = 0;
+        }
         public override void OnHitNPCWithItem(Item item, NPC target, NPC.HitInfo hit, int damageDone)
         {
-            if (Plimp)
+            if (Plimp && PlimpShield > 0)
             {
-                Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, new Vector2(), ModContent.ProjectileType<PlasmaShrimpMissile>(), (int)Math.Ceiling(hit.Damage / 5f), 0, -1, target.whoAmI, Main.rand.NextFloat(-20, 20));
+                Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, new Vector2(), ModContent.ProjectileType<PlasmaShrimpMissile>(), (int)Math.Ceiling(hit.Damage / 2.5f), 0, -1, target.whoAmI, Main.rand.NextFloat(-20, 20));
                 if (PlimpFunny)
                     SoundEngine.PlaySound(in AotCAudio.PlasmaShrimp, Player.position);
             }
         }
         public override void OnHitNPCWithProj(Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
         {
-            if (Plimp && proj.ModProjectile is not PlasmaShrimpMissile)
+            if (Plimp && proj.ModProjectile is not PlasmaShrimpMissile && PlimpShield > 0)
             {
-                Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, new Vector2(), ModContent.ProjectileType<PlasmaShrimpMissile>(), (int)Math.Ceiling(hit.Damage / 5f), 0, -1, target.whoAmI, Main.rand.NextFloat(-20,20));
+                Projectile.NewProjectileDirect(Player.GetSource_FromThis(), Player.Center, new Vector2(), ModContent.ProjectileType<PlasmaShrimpMissile>(), (int)Math.Ceiling(hit.Damage / 2.5f), 0, -1, target.whoAmI, Main.rand.NextFloat(-20,20));
                 if (PlimpFunny)
                     SoundEngine.PlaySound(in AotCAudio.PlasmaShrimp, Player.position);
             }
@@ -334,7 +364,16 @@ namespace AotC.Common.Players
         }
         public override void UpdateBadLifeRegen()
         {
+            TimeSinceLastHit++;
             ArkThrowCooldown--;
+
+            if (Plimp && PlimpShield < Player.statLifeMax2 / 10f && TimeSinceLastHit > 480)
+            {
+                PlimpShield++;
+                if (TimeSinceLastHit == 481)
+                    SoundEngine.PlaySound(in AotCAudio.PlimpRecharge, Player.position);
+            }
+
             if (ArkThrowCooldown == 0)
             {
                 SoundStyle style = SoundID.Item35;

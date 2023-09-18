@@ -13,7 +13,7 @@ namespace AotC.Content.Items.Accessories
             Item.maxStack = 1;
             Item.value = Item.sellPrice(gold: 9);
             Item.accessory = true;
-            Item.rare = ItemRarityID.Pink;
+            Item.rare = ItemRarityID.LightPurple;
             Item.ResearchUnlockCount = 1;
         }
         public override void AddRecipes()
