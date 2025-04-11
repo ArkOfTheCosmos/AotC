@@ -60,7 +60,7 @@ namespace AotC.Content.Projectiles
                 }
                 else if (AnchorType == 5f)
                 {
-                    cachedStart??= ArkoftheCosmos.SlashPoints[(int)SlashLineNum - 1];
+                    cachedStart??= Main.player[Projectile.owner].GetPlot().SlashPoints[(int)SlashLineNum - 1];
                     return (Vector2)cachedStart;
                 }
                 else
@@ -95,9 +95,9 @@ namespace AotC.Content.Projectiles
                 }
                 else if (AnchorType == 5f)
                 {
-                    if (ArkoftheCosmos.SlashPoints.Count > SlashLineNum)
+                    if (Main.player[Projectile.owner].GetPlot().SlashPoints.Count > SlashLineNum)
                     {
-                        return ArkoftheCosmos.SlashPoints[(int)SlashLineNum];
+                        return Main.player[Projectile.owner].GetPlot().SlashPoints[(int)SlashLineNum];
                     }
                     return new();
                 }
@@ -300,7 +300,7 @@ namespace AotC.Content.Projectiles
                 if (!balls)
                 {
                     balls = true;
-                    if (SlashLineNum == ArkoftheCosmos.SlashPoints.Count)
+                    if (SlashLineNum == Main.player[Projectile.owner].GetPlot().SlashPoints.Count)
                     {
                         float num = Main.rand.NextFloat();
                         Color val = Main.hslToRgb(num, 1f, 0.5f);

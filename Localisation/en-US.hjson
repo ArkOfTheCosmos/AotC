@@ -12,6 +12,8 @@ Mods: {
 			EonStarLegacy.DisplayName: Eon Star Legacy
 			Constellation.DisplayName: Constellation
 			PlasmaShrimpMissile.DisplayName: Plasma Shrimp Missile
+			ChaosBusterHeld.DisplayName: Chaos Buster Held
+			ChaosBlast.DisplayName: Chaos Blast
 		}
 
 		Items: {
@@ -80,6 +82,11 @@ Mods: {
 					While you have shield, every hit fires a projectile for an additional 40% damage
 					Turn off visibility to stop the funny noise
 					'''
+			}
+
+			ChaosBuster: {
+				DisplayName: Chaos Buster
+				Tooltip: EXTREMELY UNFINISHED AND BROKEN
 			}
 		}
 

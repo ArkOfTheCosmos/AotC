@@ -18,7 +18,6 @@ public class EonStar : ModProjectile
 
     public NPC target;
     private Particle Head;
-    private bool initialized;
     private float colorRand;
     public float rotation = 0;
     public List<Particle> Particles;
@@ -26,7 +25,6 @@ public class EonStar : ModProjectile
     public Player Owner => Main.player[Projectile.owner];
     public ref float Hue => ref Projectile.ai[0];
     public ref float HomingStrength => ref Projectile.ai[1];
-    public ref float ChargeGain => ref Projectile.ai[2];
 
     public override void SetStaticDefaults()
 
@@ -42,6 +40,7 @@ public class EonStar : ModProjectile
         Projectile.timeLeft = 160;
         Projectile.DamageType = DamageClass.Melee;
         Projectile.tileCollide = false;
+        colorRand = Main.rand.NextFloat() / 5f;
     }
     public void BootlegSpawnParticle(Particle particle)
     {
@@ -53,11 +52,6 @@ public class EonStar : ModProjectile
     }
     public override void AI()
     {
-        if (!initialized)
-        {
-            colorRand = Main.rand.NextFloat() / 5f;
-            initialized = true;
-        }
         Particles ??= new List<Particle>();
         Projectile.rotation = Projectile.velocity.ToRotation() + (float)Math.PI / 2f;
         if (Head == null)
@@ -102,15 +96,6 @@ public class EonStar : ModProjectile
         Main.dust[dustIndex].noGravity = true;
         Main.dust[dustIndex].position = Projectile.Center + random * 12f;
     }
-    internal Color ColorFunction(float completionRatio)
-    {
-        return ModdedUtils.HsvToRgb(Main.GlobalTimeWrappedHourly + colorRand, 1f, 1f);
-    }
-    internal float WidthFunction(float completionRatio)
-    {
-        float num = (float)Math.Pow((double)(1f - completionRatio), 3.0);
-        return MathHelper.Lerp(0f, 22f * Projectile.scale * Projectile.Opacity, num);
-    }
     public override bool PreDraw(ref Color lightColor)
     {
         Main.spriteBatch.EnterShaderRegion(BlendState.Additive);
@@ -136,10 +121,13 @@ public class EonStar : ModProjectile
         Texture2D value = ModContent.Request<Texture2D>("AotC/Content/Projectiles/EonStar", (AssetRequestMode)2).Value;
         Main.EntitySpriteDraw(value, Projectile.Center - Main.screenPosition, null, Color.Lerp(lightColor, Color.White, 0.5f), Projectile.rotation + rotation, value.Size() / 2f, Projectile.scale, 0, 0);
     }
-    public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+    internal Color ColorFunction(float completionRatio)
     {
-        ArkoftheCosmos.charge += ChargeGain;
-        if (ArkoftheCosmos.charge > 100f)
-            ArkoftheCosmos.charge = 100f;
+        return ModdedUtils.HsvToRgb(Main.GlobalTimeWrappedHourly + colorRand, 1f, 1f);
+    }
+    internal float WidthFunction(float completionRatio)
+    {
+        float num = (float)Math.Pow((double)(1f - completionRatio), 3.0);
+        return MathHelper.Lerp(0f, 22f * Projectile.scale * Projectile.Opacity, num);
     }
 }

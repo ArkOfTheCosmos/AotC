@@ -29,6 +29,7 @@ namespace AotC.Content.Projectiles
             Projectile.width = Projectile.height = 8;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 34;
+            Projectile.extraUpdates = 1;
         }
         public override void AI()
         {
@@ -38,6 +39,7 @@ namespace AotC.Content.Projectiles
                 initVelocity.Y = Projectile.ai[1];
                 fricker = Main.rand.NextFloat(-0.1f,0.1f);
             }
+            Lighting.AddLight(Projectile.Center, 138 / 255f, 43 / 255f, 226 / 255f);
             Projectile.velocity = initVelocity + homingVelocity;
             homingVelocity = (Target.Center - Projectile.Center) * ((float)Math.Pow(3600 - Projectile.timeLeft, 2)  / 2900f);
             initVelocity.Y *= 0.9f;
@@ -50,7 +52,12 @@ namespace AotC.Content.Projectiles
             GameShaders.Misc["AotC:TrailStreak"].SetShaderTexture(ModContent.Request<Texture2D>("AotC/Assets/Textures/ScarletDevilStreak", (AssetRequestMode)2));
             TrailDrawer.Draw(Projectile.oldPos, Projectile.Size * 0.5f - Main.screenPosition, 30);
             Main.spriteBatch.ExitShaderRegion();
-            return true;
+            return false;
+        }
+        public override void PostDraw(Color lightColor)
+        {
+            Texture2D value = ModContent.Request<Texture2D>("AotC/Content/Projectiles/PlasmaShrimpMissile", (AssetRequestMode)2).Value;
+            Main.EntitySpriteDraw(value, Projectile.Center - Main.screenPosition, null, Color.Lerp(lightColor, Color.White, 0.5f), Projectile.rotation, value.Size() / 2f, Projectile.scale, 0, 0);
         }
         private Color ColorFunction(float completionRatio)
         {

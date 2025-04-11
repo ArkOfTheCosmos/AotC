@@ -1,32 +1,32 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Green Blizzard\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\AotC.csproj": {}
+    "C:\\Users\\ArkoftheCosmos\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\AotC.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Green Blizzard\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\AotC.csproj": {
+    "C:\\Users\\ArkoftheCosmos\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\AotC.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Green Blizzard\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\AotC.csproj",
+        "projectUniqueName": "C:\\Users\\ArkoftheCosmos\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\AotC.csproj",
         "projectName": "AotC",
-        "projectPath": "C:\\Users\\Green Blizzard\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\AotC.csproj",
-        "packagesPath": "C:\\Users\\Green Blizzard\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Green Blizzard\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\obj\\",
+        "projectPath": "C:\\Users\\ArkoftheCosmos\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\AotC.csproj",
+        "packagesPath": "C:\\Users\\ArkoftheCosmos\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ArkoftheCosmos\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Green Blizzard\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ArkoftheCosmos\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net6.0"
+          "net8.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net6.0": {
-            "targetAlias": "net6.0",
+          "net8.0": {
+            "targetAlias": "net8.0",
             "projectReferences": {}
           }
         },
@@ -34,16 +34,17 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
+        "net8.0": {
+          "targetAlias": "net8.0",
           "dependencies": {
-            "AngleSharp": {
-              "target": "Package",
-              "version": "[1.0.4, )"
-            },
             "tModLoader.CodeAssist": {
               "target": "Package",
               "version": "[0.1.*, )"
@@ -65,7 +66,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

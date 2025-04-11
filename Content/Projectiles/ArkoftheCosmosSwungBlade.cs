@@ -23,17 +23,13 @@ namespace AotC.Content.Projectiles
 
         private Vector2 direction = Vector2.Zero;
 
-        private Particle smear; //this is balls
+        private Particle smear;
 
         private readonly float SwingWidth = (float)Math.PI * 3f / 4f;
 
         public const float MaxThrowTime = 140f; //default is 140f
 
         public float ThrowReach;
-
-        public const float SnapWindowStart = 0.2f;
-
-        public const float SnapWindowEnd = 0.75f;
 
         public override string Texture => "AotC/Content/Items/Weapons/Melee/ArkoftheCosmos";
 
@@ -46,6 +42,8 @@ namespace AotC.Content.Projectiles
         public float MaxSwingTime => SwingType == 5f ? 10 : SwirlSwing ? 55 : 35;
 
         public bool SwirlSwing => SwingType == 2f;
+
+        public bool Stab => SwingType == 3f;
 
         public int SwingDirection
 
@@ -86,9 +84,7 @@ namespace AotC.Content.Projectiles
             get
             {
                 if (Owner.channel && !Owner.noItems && !Owner.CCed)
-                {
                     return Owner.HeldItem.type == ModContent.ItemType<ArkoftheCosmos>();
-                }
                 return false;
             }
         }
@@ -173,7 +169,7 @@ namespace AotC.Content.Projectiles
         public override void SetDefaults()
         {
             Projectile.DamageType = DamageClass.Melee;
-            Projectile.width = (Projectile.height = 60);
+            Projectile.width = Projectile.height = 60;
             Projectile.tileCollide = false;
             Projectile.friendly = true;
             Projectile.penetrate = -1;
@@ -221,11 +217,11 @@ namespace AotC.Content.Projectiles
 
 
         // this is where crap happens
-
         public override void AI()
         {
             if (!initialized)
             {
+                initialized = true;
                 Projectile.timeLeft = Thrown ? (int)MaxThrowTime : ((int)MaxSwingTime);
                 rng[0] = Main.rand.Next(-2, 2);
                 rng[1] = Main.rand.Next(-2, 2);
@@ -236,7 +232,6 @@ namespace AotC.Content.Projectiles
                 direction.Normalize();
                 Projectile.velocity = direction;
                 Projectile.rotation = direction.ToRotation();
-                initialized = true;
                 if (Owner.DirectionTo(Main.MouseWorld).ToRotation() > -(Math.PI / 2f) && Owner.DirectionTo(Main.MouseWorld).ToRotation() < (Math.PI / 2f))
                 {
                     dir = 1f;
@@ -245,7 +240,6 @@ namespace AotC.Content.Projectiles
                 {
                     dir = -1f;
                 }
-
                 if (SwirlSwing)
                 {
                     Projectile.damage *= 2;
@@ -257,7 +251,6 @@ namespace AotC.Content.Projectiles
                     Projectile.damage *= 3;
                     Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Owner.Center, Projectile.velocity, ModContent.ProjectileType<Constellation>(), (int)(Projectile.damage * ArkoftheCosmos.ConstellationMultiplier), 0f, Owner.whoAmI, (int)(Projectile.timeLeft / 2f), 3f).timeLeft = Charge >= 20f ? 100 : 35;
                 }
-
                 else if (SwingType is 0f or 1f)
                 {
                     SoundEngine.PlaySound(in SoundID.DD2_MonkStaffSwing, Projectile.position);
@@ -271,9 +264,6 @@ namespace AotC.Content.Projectiles
                 else
                     Projectile.localNPCHitCooldown = 0;
             }
-
-
-
 
             if (!Thrown)
             {
@@ -363,7 +353,7 @@ namespace AotC.Content.Projectiles
                     float val2 = Main.rand.NextFloat(-(float)Math.PI / 2, (float)Math.PI / 2);
                     for (int i = 0; i < 8; i++)
                     {
-                        Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Projectile.Center + f.ToRotationVector2() * 10f, (val2 + i * (float)Math.PI / 4f).ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), (int)(Projectile.damage * ArkoftheCosmos.ThrownStarMultiplier), 0f, Owner.whoAmI, 0.55f, 0.15f, 1f).timeLeft = 100;
+                        Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Projectile.Center + f.ToRotationVector2() * 10f, (val2 + i * (float)Math.PI / 4f).ToRotationVector2() * 20f, ModContent.ProjectileType<EonStar>(), (int)(Projectile.damage * ArkoftheCosmos.ThrownStarMultiplier), 0f, Owner.whoAmI, 0.55f, 0.15f).timeLeft = 100;
                         SoundEngine.PlaySound(in SoundID.Item9, Projectile.position);
                     }
                 }
@@ -453,7 +443,7 @@ namespace AotC.Content.Projectiles
                 Main.spriteBatch.Begin((SpriteSortMode)1, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
                 float num4 = (float)Math.Sin((double)(SwingCompletion * (float)Math.PI));
                 float num5 = (-(float)Math.PI / 8f + (float)Math.PI / 8f * SwingCompletion + ((SwingType == 2f) ? ((float)Math.PI / 4f) : 0f)) * SwingDirection;
-                Color val5 = Main.hslToRgb((SwingType == 0f) ? 0.15f : 0.3f, 1f, 0.6f);
+                Color val5 = new (77, 136, 236);
                 Main.EntitySpriteDraw(value3, Owner.Center - Main.screenPosition, null, val5 * 0.8f * num4, Projectile.velocity.ToRotation() + (float)Math.PI + num5, value3.Size() / 2f, Projectile.scale * 3.4f, 0, 0);
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(0, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
@@ -556,13 +546,11 @@ namespace AotC.Content.Projectiles
                 SoundEngine.PlaySound(in Sounds.AotCAudio.BloomingBlowsCrit, Projectile.position);
                 LilliaCrit = true;
             }
-            if (Thrown || SwirlSwing)
+            if (SwingType != 5f)
             {
-                ArkoftheCosmos.charge += 10f;
-                if (ArkoftheCosmos.charge > 100f)
-                {
-                    ArkoftheCosmos.charge = 100f;
-                }
+                Main.player[Projectile.owner].GetPlot().ArkCharge += 15f;
+                if (Main.player[Projectile.owner].GetPlot().ArkCharge > 100f)
+                    Main.player[Projectile.owner].GetPlot().ArkCharge = 100f;
             }
         }
 

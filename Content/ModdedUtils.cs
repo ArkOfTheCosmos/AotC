@@ -443,9 +443,9 @@ public static class ModdedUtils
 	{
 		return player.GetModPlayer<CalamityPlayer>();
 	}
-    internal static CalamityGlobalNPC Calamity(this NPC npc)
+    internal static AotCCalamityGlobalNPC Calamity(this NPC npc)
     {
-        return npc.GetGlobalNPC<CalamityGlobalNPC>();
+        return npc.GetGlobalNPC<AotCCalamityGlobalNPC>();
     }
     internal static CalamityGlobalProjectile Calamity(this Projectile proj)
     {

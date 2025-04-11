@@ -11,12 +11,14 @@ using AotC.Content.Projectiles;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using AotC.Content.CustomHooks;
-using static AotC.Content.ModdedUtils;
 using Microsoft.Xna.Framework.Graphics;
 using AotC.Content.Items.Weapons.Melee;
 using AotC.Core.GlobalInstances.Systems;
 using Terraria.DataStructures;
 using Terraria.Graphics.Shaders;
+using static AotC.Content.ModdedUtils;
+using Mono.Cecil;
+using Terraria.GameInput;
 
 namespace AotC.Common.Players
 {
@@ -28,12 +30,11 @@ namespace AotC.Common.Players
         public int celesteDashTimer;
         public int dashCount;
         public int killStars;
-        public bool done = true;
+        public bool SlashDone = true;
         public float ArkDamage;
         public const float maxDistance = 50f;
         public float ArkThrowCooldown;
         public float celesteTrailDelay;
-        public List<Vector2> SlashPoints;
         public Projectile blade;
         public Direction dashDirection;
         public bool isDashing;
@@ -42,6 +43,14 @@ namespace AotC.Common.Players
         public bool PlimpFunny;
         public int PlimpShield;
         public int TimeSinceLastHit;
+        public float ArkCharge;
+        public List<Vector2> SlashPoints = [];
+        public List<Projectile> SlashLines = [];
+        public float ChaosBusterCharge;
+        public bool previousPressedRightClick;
+        public bool justPressedRightClick;
+        public bool previousPressedLeftClick;
+        public bool justPressedLeftClick;
 
         public override void Load()
         {
@@ -60,23 +69,21 @@ namespace AotC.Common.Players
         }
         public void StartSlash(int damage)
         {
-            if (Vector2.Distance(Player.position, ArkoftheCosmos.SlashPoints[0]) <= 600f && Vector2.Distance(Player.position, ArkoftheCosmos.SlashPoints[0]) < Vector2.Distance(Player.position, ArkoftheCosmos.SlashPoints[1]))
+            if (Vector2.Distance(Player.position, SlashPoints[0]) <= 600f && Vector2.Distance(Player.position, SlashPoints[0]) < Vector2.Distance(Player.position, SlashPoints[1]))
             {
-                done = false;
+                SlashDone = false;
                 ArkDamage = damage;
                 blade = null;
-                SlashPoints = ArkoftheCosmos.SlashPoints;
                 Player.immune = true;
                 Player.immuneTime = 300;
                 SoundEngine.PlaySound(in AotCAudio.MeatySlash, Player.position);
             }
-            else if (Vector2.Distance(Player.position, ArkoftheCosmos.SlashPoints[^1]) <= 600f)
+            else if (Vector2.Distance(Player.position, SlashPoints[^1]) <= 600f)
             {
-                done = false;
+                SlashDone = false;
                 ArkDamage = damage;
                 blade = null;
-                ArkoftheCosmos.SlashPoints.Reverse();
-                SlashPoints = ArkoftheCosmos.SlashPoints;
+                SlashPoints.Reverse();
                 Player.immune = true;
                 Player.immuneTime = 300;
                 SoundEngine.PlaySound(in AotCAudio.MeatySlash, Player.position);
@@ -84,10 +91,46 @@ namespace AotC.Common.Players
             else
                 SoundEngine.PlaySound(in SoundID.Run);
         }
+        public void DrawConstellationStar()
+        {
+             ArkCharge -= 20f;
+             if (SlashPoints.Count > 0)
+             {
+                 if (Vector2.Distance(Main.MouseWorld, SlashPoints[^1]) < 666)
+                     SlashPoints.Add(SlashPoints[^1].DirectionTo(Main.MouseWorld + (Main.MouseWorld == SlashPoints[^1] ? new(Main.rand.NextFloat(-1, 1), Main.rand.NextFloat(-1, 1)) : new())) * 666 + SlashPoints[^1]);
+                 else
+                     SlashPoints.Add(Main.MouseWorld);
+             }
+             else
+                 SlashPoints.Add(Main.MouseWorld);
+             Projectile projectile = Projectile.NewProjectileDirect(Player.GetSource_Misc("WHAT THE FUCK IS A KILOMETER"), Player.position, Vector2.Zero, ModContent.ProjectileType<Constellation>(), 0, 0f, Player.whoAmI, 0f, 5f, SlashPoints.Count);
+             projectile.timeLeft = -1;
+             SlashLines.Add(projectile);
+             //redraws star if its no longer the end
+             if (SlashLines.Count > 1)
+             {
+                 Projectile projectile2 = SlashLines[^2];
+                 if (projectile2.ModProjectile is Constellation modProjectile)
+                     modProjectile.balls = false;
+             }
+        }
 
+        public override void ProcessTriggers(TriggersSet triggersSet)
+        {
+            if (justPressedRightClick && Player.controlUp && SlashDone && ArkCharge >= 20f && SlashPoints.Count < 10)
+            {
+                DrawConstellationStar();
+            }
+        }
 
         public override void PreUpdate()
         {
+            justPressedLeftClick = previousPressedLeftClick == false && Main.mouseLeft == true;
+            previousPressedLeftClick = Main.mouseLeft;
+
+            justPressedRightClick = previousPressedRightClick == false && Main.mouseRight == true;
+            previousPressedRightClick = Main.mouseRight;
+
             isDashing = celesteDashTimer > 0;
             if (AotCSystem.CelesteDash.JustPressed && celesteDashTimer == 0 && dashCount > 0)
             {
@@ -125,7 +168,7 @@ namespace AotC.Common.Players
             }
             if (celesteDashTimer == -2)
                 celesteDashTimer = 0;
-            if (SlashPoints != null && SlashPoints.Count > 0)
+            if (SlashPoints.Count > 0 && SlashDone == false)
             {
                 if (Player.itemAnimation == 0)
                     Player.itemAnimation++;
@@ -141,32 +184,31 @@ namespace AotC.Common.Players
                     SlashPoints.RemoveAt(0);
                     if (SlashPoints.Count == 0)
                     {
-                        if (!done)
+                        if (!SlashDone)
                         {
                             Player.immuneTime = 30;
-                            done = true;
+                            SlashDone = true;
                         }
-                        ArkoftheCosmos.SlashPoints.Clear();
-                        SlashPoints = null;
+                        SlashPoints.Clear();
                     }
-                    if (SlashPoints != null)
+                    if (!(SlashPoints.Count == 0))
                     {
-                        if (ArkoftheCosmos.SlashLines.Count - 1 > SlashPoints.Count)
+                        if (SlashLines.Count - 1 > SlashPoints.Count)
                         {
-                            if (ArkoftheCosmos.SlashLines[0].ModProjectile is Constellation modProjectile)
+                            if (SlashLines[0].ModProjectile is Constellation modProjectile)
                                 modProjectile.death = true;
-                            ArkoftheCosmos.SlashLines.RemoveAt(0);
+                                SlashLines.RemoveAt(0);
                         }
                     }
                     else
                     {
                         blade = null;
-                        if (ArkoftheCosmos.SlashLines[0].ModProjectile is Constellation modProjectile)
+                        if (SlashLines[0].ModProjectile is Constellation modProjectile)
                             modProjectile.death = true;
-                        ArkoftheCosmos.SlashLines.RemoveAt(0);
-                        if (ArkoftheCosmos.SlashLines[0].ModProjectile is Constellation modProjectile2)
+                        SlashLines.RemoveAt(0);
+                        if (SlashLines[0].ModProjectile is Constellation modProjectile2)
                             modProjectile2.death = true;
-                        ArkoftheCosmos.SlashLines.RemoveAt(0);
+                        SlashLines.RemoveAt(0);
                     }
                 }
                 else
@@ -359,7 +401,7 @@ namespace AotC.Common.Players
         }
         public override void PostUpdateRunSpeeds()
         {
-            if (!done)
+            if (!SlashDone)
                 Player.gravity = 0f;
         }
         public override void UpdateBadLifeRegen()
@@ -373,6 +415,8 @@ namespace AotC.Common.Players
                 if (TimeSinceLastHit == 481)
                     SoundEngine.PlaySound(in AotCAudio.PlimpRecharge, Player.position);
             }
+            if (!Plimp)
+                PlimpShield = 0;
 
             if (ArkThrowCooldown == 0)
             {
@@ -386,11 +430,11 @@ namespace AotC.Common.Players
                 killStars = 0;
             if (killStars > 60)
             {
-                foreach (Projectile projectile in ArkoftheCosmos.SlashLines)
+                foreach (Projectile projectile in SlashLines)
                     if (projectile.ModProjectile is Constellation asd)
                         asd.death = true;
-                ArkoftheCosmos.SlashLines.Clear();
-                ArkoftheCosmos.SlashPoints.Clear();
+                SlashLines.Clear();
+                SlashPoints.Clear();
             }
             // trans rights
             celesteTrailDelay--;

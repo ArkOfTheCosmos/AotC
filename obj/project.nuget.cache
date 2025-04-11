@@ -1,13 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "QSuBSotDxWV9pTHe20rf9d4FCnt356h4b39ZHgAQpGncZTL3LO8dMtCGRl9o0BJRS1Yah9thZAUTCkdnnER3vg==",
+  "dgSpecHash": "wIiM4njtB212yYtOIN0SXV5kYa0CUCDYhjM6IpzRyxbBOIPVqWPannpYor9cU2FAkFP+9rycOCgaiRaZXK11MQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Green Blizzard\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\AotC.csproj",
+  "projectFilePath": "C:\\Users\\ArkoftheCosmos\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\AotC.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Green Blizzard\\.nuget\\packages\\anglesharp\\1.0.4\\anglesharp.1.0.4.nupkg.sha512",
-    "C:\\Users\\Green Blizzard\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
-    "C:\\Users\\Green Blizzard\\.nuget\\packages\\system.text.encoding.codepages\\6.0.0\\system.text.encoding.codepages.6.0.0.nupkg.sha512",
-    "C:\\Users\\Green Blizzard\\.nuget\\packages\\tmodloader.codeassist\\0.1.5\\tmodloader.codeassist.0.1.5.nupkg.sha512"
+    "C:\\Users\\ArkoftheCosmos\\.nuget\\packages\\tmodloader.codeassist\\0.1.5\\tmodloader.codeassist.0.1.5.nupkg.sha512"
   ],
   "logs": []
 }

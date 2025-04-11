@@ -89,7 +89,7 @@ public class KillerWail : BaseLaserbeamProjectile
             if (Wail)
                 SoundEngine.PlaySound(in Sounds.AotCAudio.KillerWail, Projectile.position);
             else
-                SoundEngine.PlaySound(in Sounds.AotCAudio.ChaosBlasterFire, Projectile.position);
+                SoundEngine.PlaySound(in Sounds.AotCAudio.ChaosBusterLaser, Projectile.position);
             PlayedSound = true;
         }
         return true;
@@ -103,17 +103,10 @@ public class KillerWail : BaseLaserbeamProjectile
 
     public override void DetermineScale()
     {
-        try
+        Projectile.scale = (Wail ? 6f : 2f) * ModdedUtils.PiecewiseAnimation(Time / Lifetime, new ModdedUtils.CurveSegment[2] {balls, retract});
+        if (Projectile.scale > MaxScale)
         {
-            Projectile.scale = (Wail ? 6f : 2f) * ModdedUtils.PiecewiseAnimation(Time / Lifetime, new ModdedUtils.CurveSegment[2] {balls, retract});
-            if (Projectile.scale > MaxScale)
-            {
-                Projectile.scale = MaxScale;
-            }
-        }
-        catch
-        {
-            Main.NewText("if you see this it means my code sucks - ArkoftheCosmos");
+            Projectile.scale = MaxScale;
         }
     }
     public override bool PreDraw(ref Color lightColor)
