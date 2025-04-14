@@ -47,7 +47,7 @@ namespace AotC.Content.Items.Weapons.Melee
             Item.width = 102;
             Item.height = 102;
             Item.useTime = 20;
-            Item.damage = 333;
+            Item.damage = 300;
             Item.knockBack = 9.5f;
             Item.useAnimation = 20;
             Item.shootSpeed = 28f;
@@ -61,7 +61,6 @@ namespace AotC.Content.Items.Weapons.Melee
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.DamageType = DamageClass.Melee;
             Item.shoot = ProjectileID.PurificationPowder;
-            //Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(4, 30));
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
@@ -129,7 +128,7 @@ namespace AotC.Content.Items.Weapons.Melee
                     TooltipLine tooltipLine6 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip6" && x.Mod == "Terraria");
                     if (tooltipLine6 != null)
                     {
-                        tooltipLine6.Text = "Charge is consumed when attacking, causing swings to fire out three stars\ninstead of two. Blooming Blows will fire twice as many stars, and Beams will be\nupgraded to bigger and longer lasting Killer Wails with enough charge";
+                        tooltipLine6.Text = "Charge is consumed when attacking, causing swings to fire out three stars\ninstead of two. With enough charge, stab beams will be upgraded to bigger and longer lasting Killer Wails, and swirls will be upgraded to defense-piercing Blooming Blows";
                         tooltipLine6.OverrideColor = Color.Orange;
                     }
                     TooltipLine tooltipLine7 = tooltips.FirstOrDefault((TooltipLine x) => x.Name == "Tooltip7" && x.Mod == "Terraria");
@@ -249,7 +248,7 @@ namespace AotC.Content.Items.Weapons.Melee
                     Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, Vector2.Zero, ModContent.ProjectileType<KillerWail>(), (int)(damage * BeamMultiplier * BalanceMultiplier), 1f, player.whoAmI, f, 1f);
             }
             //decrease charge
-            if (pd.ArkCharge >= (num == 3f ? 50f :  10f))
+            if (pd.ArkCharge >= (num == 3f ? 50f : 10f))
                 pd.ArkCharge -= 10f;
             return false;
         }

@@ -89,7 +89,7 @@ public class KillerWail : BaseLaserbeamProjectile
             if (Wail)
                 SoundEngine.PlaySound(in Sounds.AotCAudio.KillerWail, Projectile.position);
             else
-                SoundEngine.PlaySound(in Sounds.AotCAudio.ChaosBusterLaser, Projectile.position);
+                SoundEngine.PlaySound(in SoundID.Item68, Projectile.position);
             PlayedSound = true;
         }
         return true;

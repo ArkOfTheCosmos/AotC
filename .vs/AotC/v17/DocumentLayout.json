@@ -1,0 +1,87 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\ArkoftheCosmos\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{23E15000-98DC-4543-B47D-1EEACB555912}|AotC.csproj|c:\\users\\arkofthecosmos\\documents\\my games\\terraria\\tmodloader\\modsources\\aotc\\content\\items\\weapons\\melee\\arkofthecosmos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{23E15000-98DC-4543-B47D-1EEACB555912}|AotC.csproj|solutionrelative:content\\items\\weapons\\melee\\arkofthecosmos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{23E15000-98DC-4543-B47D-1EEACB555912}|AotC.csproj|c:\\users\\arkofthecosmos\\documents\\my games\\terraria\\tmodloader\\modsources\\aotc\\content\\projectiles\\arkofthecosmosswungblade.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{23E15000-98DC-4543-B47D-1EEACB555912}|AotC.csproj|solutionrelative:content\\projectiles\\arkofthecosmosswungblade.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{23E15000-98DC-4543-B47D-1EEACB555912}|AotC.csproj|c:\\users\\arkofthecosmos\\documents\\my games\\terraria\\tmodloader\\modsources\\aotc\\content\\projectiles\\killerwail.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{23E15000-98DC-4543-B47D-1EEACB555912}|AotC.csproj|solutionrelative:content\\projectiles\\killerwail.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ArkoftheCosmos\\Documents\\old-stuff\\badly decompiled calamity\\CalamityMod\\Projectiles\\Melee\\ArkoftheCosmosSwungBlade.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 259,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "KillerWail.cs",
+              "DocumentMoniker": "C:\\Users\\ArkoftheCosmos\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\Content\\Projectiles\\KillerWail.cs",
+              "RelativeDocumentMoniker": "Content\\Projectiles\\KillerWail.cs",
+              "ToolTip": "C:\\Users\\ArkoftheCosmos\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\Content\\Projectiles\\KillerWail.cs",
+              "RelativeToolTip": "Content\\Projectiles\\KillerWail.cs",
+              "ViewState": "AQIAAEYAAAAAAAAAAIA2wFsAAAA3AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-14T05:07:17.268Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ArkoftheCosmosSwungBlade.cs",
+              "DocumentMoniker": "C:\\Users\\ArkoftheCosmos\\Documents\\old-stuff\\badly decompiled calamity\\CalamityMod\\Projectiles\\Melee\\ArkoftheCosmosSwungBlade.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\old-stuff\\badly decompiled calamity\\CalamityMod\\Projectiles\\Melee\\ArkoftheCosmosSwungBlade.cs",
+              "ToolTip": "C:\\Users\\ArkoftheCosmos\\Documents\\old-stuff\\badly decompiled calamity\\CalamityMod\\Projectiles\\Melee\\ArkoftheCosmosSwungBlade.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\old-stuff\\badly decompiled calamity\\CalamityMod\\Projectiles\\Melee\\ArkoftheCosmosSwungBlade.cs",
+              "ViewState": "AQIAACABAAAAAAAAAIA2wDABAABsAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-14T05:05:29.296Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ArkoftheCosmosSwungBlade.cs",
+              "DocumentMoniker": "C:\\Users\\ArkoftheCosmos\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\Content\\Projectiles\\ArkoftheCosmosSwungBlade.cs",
+              "RelativeDocumentMoniker": "Content\\Projectiles\\ArkoftheCosmosSwungBlade.cs",
+              "ToolTip": "C:\\Users\\ArkoftheCosmos\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\Content\\Projectiles\\ArkoftheCosmosSwungBlade.cs",
+              "RelativeToolTip": "Content\\Projectiles\\ArkoftheCosmosSwungBlade.cs",
+              "ViewState": "AQIAAOcAAAAAAAAAAIA2wPAAAAAeAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-11T10:34:55.525Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ArkoftheCosmos.cs",
+              "DocumentMoniker": "C:\\Users\\ArkoftheCosmos\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\Content\\Items\\Weapons\\Melee\\ArkoftheCosmos.cs",
+              "RelativeDocumentMoniker": "Content\\Items\\Weapons\\Melee\\ArkoftheCosmos.cs",
+              "ToolTip": "C:\\Users\\ArkoftheCosmos\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\AotC\\Content\\Items\\Weapons\\Melee\\ArkoftheCosmos.cs",
+              "RelativeToolTip": "Content\\Items\\Weapons\\Melee\\ArkoftheCosmos.cs",
+              "ViewState": "AQIAABoAAAAAAAAAAAAmwDEAAAAdAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-11T01:42:41.038Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

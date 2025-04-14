@@ -244,7 +244,14 @@ namespace AotC.Content.Projectiles
                 {
                     Projectile.damage *= 2;
                     Projectile.localNPCHitCooldown = (int)(Projectile.localNPCHitCooldown / 4f);
-                    SoundEngine.PlaySound(in Sounds.AotCAudio.BloomingBlows, Projectile.position);
+                    if (Charge < 50)
+                        SoundEngine.PlaySound(in SoundID.Item71, Projectile.position);
+                    else
+                    {
+                        SoundEngine.PlaySound(in Sounds.AotCAudio.BloomingBlows, Projectile.position);
+                        Projectile.ArmorPenetration = 2669;
+                    }
+
                 }
                 else if (SwingType == 3f)
                 {
@@ -468,7 +475,8 @@ namespace AotC.Content.Projectiles
                 dust.noGravity = true;
                 dust.fadeIn = 1.5f;
                 Main.EntitySpriteDraw(value3, Owner.Center - Main.screenPosition, null, val5, rotationVal, value3.Size() / 2f, 2.4f, 0, 0);
-                Main.EntitySpriteDraw(value4, Owner.Center - Main.screenPosition, null, val5, direction.ToRotation(), value4.Size() / 2f, 1.3f, 0, 0); ;
+                if (Charge >= 50)
+                    Main.EntitySpriteDraw(value4, Owner.Center - Main.screenPosition, null, val5, direction.ToRotation(), value4.Size() / 2f, 1.3f, 0, 0); ;
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(0, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
             }
@@ -541,7 +549,7 @@ namespace AotC.Content.Projectiles
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            if (LilliaCrit == false && SwirlSwing)
+            if (LilliaCrit == false && SwirlSwing && Charge >= 50)
             {
                 SoundEngine.PlaySound(in Sounds.AotCAudio.BloomingBlowsCrit, Projectile.position);
                 LilliaCrit = true;
